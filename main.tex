@@ -30,7 +30,7 @@
 % Local
 \usepackage{ISASmacros/isasmathmacros}
 % Equal last columns
-\usepackage{flushend}
+%\usepackage{flushend}
 
 
 % Environments
@@ -92,7 +92,7 @@
 
 \begin{document}
 % paper title
-\title{Cryptographically Privileged State Estimation Using Gaussian Keystreams}
+\title{Cryptographically Privileged State Estimation With Gaussian Keystreams}
 
 
 % author names and affiliations
@@ -156,22 +156,104 @@ The abstract goes here.
 
 \section{Introduction}
 % no \IEEEPARstart
-The intro goes here \cite{katzIntroductionModernCryptography2008}.
+Temporary token reference \cite{katzIntroductionModernCryptography2008}. Start:
 
-state estimation
+State estimation
 
-wireless and broadcast estimation
+Wireless and distributed estimation
+
+Security concerns
+
+Traditional methods hide all information, other use-cases exist
+
+Information may be divided into privilege levels authenticating different audiences to different amounts of information [gps, anonymisation]
+
+Contribution...
+
+Section summary
+
+\subsection{Notation}
+Define vectors, matrices, encryption, pseudorandom samples, positive-definitness and $\prec$ for matrices
 
 
+% 
+% 8888888b.  8888888b.   .d88888b.  888888b.   
+% 888   Y88b 888   Y88b d88P" "Y88b 888  "88b  
+% 888    888 888    888 888     888 888  .88P  
+% 888   d88P 888   d88P 888     888 8888888K.  
+% 8888888P"  8888888P"  888     888 888  "Y88b 
+% 888        888 T88b   888     888 888    888 
+% 888        888  T88b  Y88b. .d88P 888   d88P 
+% 888        888   T88b  "Y88888P"  8888888P"  
+%                                              
+%                                              
+%                                              
+% 
 
 \section{Problem Statement}
+Linear time-invariant system
 
+Kalman filter equations 
+
+KF meets the theoretical best estimator in terms of mean square error as evident from the CRLB [estimation book]
+
+The aim is to produce measurements such that estimators have different estimation lower bounds depending on their knowledge of a shared secret key with the sensor. This is in accordance with the Kirchoff principle [crypto book] and reduces all secrecy to a single, replaceable, uniformly random integer.
+
+We will refer to the estimator holding a shared key with the sensor as a privileged estimator, and the one without, an unprivileged estimator.
+
+
+% 
+% 8888888b.  8888888b.  8888888 888     888      8888888888 .d8888b. 88888888888 
+% 888   Y88b 888   Y88b   888   888     888      888       d88P  Y88b    888     
+% 888    888 888    888   888   888     888      888       Y88b.         888     
+% 888   d88P 888   d88P   888   Y88b   d88P      8888888    "Y888b.      888     
+% 8888888P"  8888888P"    888    Y88b d88P       888           "Y88b.    888     
+% 888        888 T88b     888     Y88o88P        888             "888    888     
+% 888        888  T88b    888      Y888P         888       Y88b  d88P    888     
+% 888        888   T88b 8888888     Y8P          8888888888 "Y8888P"     888     
+%                                                                                
+%                                                                                
+%                                                                                
+% 
 
 \section{Privileged Estimation}
+General idea
+
+(picture ?)
+
+Use a cryptographically secure key stream to generate pseudorandom Gaussian samples
+
+Samples are used to increase the uncertainty of estimation and are known and removable only by those with the key used to generate them
 
 \subsection{Gaussian Keystream}
+To generate pseudorandom Gaussian samples, we rely on first generating a traditional pseudorandom bitstream given a secret key.
+
+Using well-studied methods for the generation of pseudorandomness guarantees robustness and an easy means of updating only the relevant component when the methods used are no longer considered safe.
+
+Any implementation of a cryptographic stream cipher can be used for our purpose and will produce a stream of bits typically combined with plaintexts to provide secure encryption.
+
+Rather than encrypting plaintext, we interpret the bitstream as sequential pseudorandom integers and use these to generate pseudorandom uniform real numbers in the range (0,1). $u$
+
+While the uniform real samples are only approximated by floating-point numbers in the conversion from integers we argue this is sufficiently uniform and discuss this further in the Security section.
+
+Finally, independent standard Gaussian samples can then be generated from the uniform real numbers using the Box-Muller transform, and are ready to be used by our sensor and privileged filter. $z$
 
 \subsection{Additional Gaussian Noise}
+To use the pseudorandom Gaussian samples at the sensor and privileged estimator, they need to be converted to multivariate Gaussian samples suitable for use in the measurement model and need a means of controlling how much uncertainty is added to the unprivileged estimators.
+
+We define the additional noise term $Z>0$ and can transform the Gaussian samples $z$ into pseudorandom samples $o$ of a multivariate zero-mean Gaussian distribution with covariance $Z$.
+
+Prior to estimation, we assume that a secret key is shared between the sensor and the privileged estimator.
+
+During estimation, the sensor modifies its measurements at each timestep
+
+In the case where pseudorandomness is indistinguishable from randomness, as is the case at an unprivileged estimator when using cryptographically sounds keystreams for pseudorandomness, the measurement model can now been written as $R+Z$
+
+For the privileged estimator who holds the shared secret key, values $z$ and therefore $o$ can be computed at any time $k$ and recieved measurements modified to their original form. This inturn results in exactly the measurement model from the problem formulation.
+
+
+crlb here somewhere?
+
 
 \subsection{Multiple Privileges}
 
