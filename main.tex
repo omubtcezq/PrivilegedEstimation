@@ -245,17 +245,44 @@ We define the additional noise term $Z>0$ and can transform the Gaussian samples
 
 Prior to estimation, we assume that a secret key is shared between the sensor and the privileged estimator.
 
-During estimation, the sensor modifies its measurements at each timestep
+During estimation, the sensor modifies its measurements at each timestep.
 
-In the case where pseudorandomness is indistinguishable from randomness, as is the case at an unprivileged estimator when using cryptographically sounds keystreams for pseudorandomness, the measurement model can now been written as $R+Z$
+There are now two estimation problems present for the privileged and unprivileged estimators respectively.
 
 For the privileged estimator who holds the shared secret key, values $z$ and therefore $o$ can be computed at any time $k$ and recieved measurements modified to their original form. This inturn results in exactly the measurement model from the problem formulation.
 
+The CRLB can be computed exactly as with the original models.
 
-crlb here somewhere?
+In the case where pseudorandomness is indistinguishable from randomness, as is the case at an unprivileged estimator when using cryptographically sound Gaussian keystreams and no key is shared, the measurement model can now been written as $R+Z$.
 
+This leads to a new CRLB for the unprivileged estimator now given by different equation.
 
 \subsection{Multiple Privileges}
+In the above scenario we have considered a single privileged estimator and one shared key with the sensor, dividing estimation uncertainly lowerbounds into two groups, the privileged and the unprivileged estimators.
+
+In an intuitive extension, it may be desriable to define multiple levels of privilege, such that the best estimation performance would depend on the key or keys available to the estimator.
+
+In this work we consider the case where a single shared key exists for each privilege level, and that the sensor adds a noise term in the same way as in the additional noise section with each key individually.
+
+$N$ noise terms are added to the original measurement equation, with variances $Z_i$
+
+From the equation we can see that obtaining any single key $i$ would lead to a measureent model with added non-removable pseudorandom Gaussian noise with variance $Z_j$.
+
+The above restricts possible estimation error bounds of each privilege level due to the the dependence of measurement noise at an estimator with key $i$ on the noise terms $Z_j,j\neq i$.
+
+
+If we write the desired measurement model noise variances at each privileged estimator $i$ as $E_I$, we can cature this dependance as $E_i=\sum^N_{j=0,j\neq i}Z_j$.
+
+Since choosing values $E_i$ directly controls the estimation error bound computed using the CRLB, we are interested in the numerical restrictions on $E_i$ which will produce valid covariances $Z_j>0$ that can be used when adding noise at the sensor.
+
+The dependancies between the covariances can be captured by the block matrix equation.
+
+
+
+any e's achievable as long as condition met
+
+also say it's simple
+Alternative methods involving multiple or overlapping keys amoung privilege levels have been left as future work and will not be discussed here.
 
 
 \section{Scheme Security}
