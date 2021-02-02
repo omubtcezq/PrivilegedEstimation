@@ -173,7 +173,7 @@ Contribution...
 Section summary
 
 \subsection{Notation}
-Define vectors, matrices, encryption, pseudorandom samples, positive-definitness and $\prec$ for matrices
+Define vectors, matrices, encryption, pseudorandom samples, positive-definitiveness and $\prec$ for matrices
 
 
 % 
@@ -249,40 +249,40 @@ During estimation, the sensor modifies its measurements at each timestep.
 
 There are now two estimation problems present for the privileged and unprivileged estimators respectively.
 
-For the privileged estimator who holds the shared secret key, values $z$ and therefore $o$ can be computed at any time $k$ and recieved measurements modified to their original form. This inturn results in exactly the measurement model from the problem formulation.
+For the privileged estimator who holds the shared secret key, values $z$ and therefore $o$ can be computed at any time $k$ and received measurements modified to their original form. This in turn results in exactly the measurement model from the problem formulation.
 
 The CRLB can be computed exactly as with the original models.
 
-In the case where pseudorandomness is indistinguishable from randomness, as is the case at an unprivileged estimator when using cryptographically sound Gaussian keystreams and no key is shared, the measurement model can now been written as $R+Z$.
+In the case where pseudorandomness is indistinguishable from randomness, as is the case at an unprivileged estimator when using cryptographically sound Gaussian keystreams and no key is shared, the measurement model can now be written as $R+Z$.
 
 This leads to a new CRLB for the unprivileged estimator now given by different equation.
 
 \subsection{Multiple Privileges}
-In the above scenario we have considered a single privileged estimator and one shared key with the sensor, dividing estimation uncertainly lowerbounds into two groups, the privileged and the unprivileged estimators.
+In the above scenario, we have considered a single privileged estimator and one shared key with the sensor, dividing estimation uncertainly lower bounds into two groups, the privileged and the unprivileged estimators.
 
-As an intuitive extension, it may be desriable to define multiple levels of privilege, such that the best estimation performance would depend on the key or keys available to the estimator.
+As an intuitive extension, it may be desirable to define multiple levels of privilege, such that the best estimation performance would depend on the key or keys available to the estimator.
 
 In this work we consider the case where a single shared key exists for each privilege level, and that the sensor adds a noise term in the same way as in the additional noise section with each key individually.
 
 $N$ noise terms are added to the original measurement equation, with variances $Z_i$
 
-From the equation we can see that obtaining any single key $i$ would lead to a measureent model with added non-removable pseudorandom Gaussian noise with variance $Z_j$.
+From the equation, we can see that obtaining any single key $i$ would lead to a measurement model with added non-removable pseudorandom Gaussian noise with variance $Z_j$.
 
-The above restricts possible estimation error bounds of each privilege level due to the the dependence of measurement noise at an estimator with key $i$ on the noise terms $Z_j,j\neq i$.
+The above restricts possible estimation error bounds of each privilege level due to the dependence of measurement noise at an estimator with key $i$ on the noise terms $Z_j,j\neq i$.
 
 If we write the desired measurement model noise variances at each privileged estimator $i$ as $E_i$, we can cature this dependance as $E_i=\sum^N_{j=0,j\neq i}Z_j$ where both $E_i>0$ and $Z_i>0$.
 
 Since choosing values $E_i$ directly controls the estimation error bound computed using the CRLB, we are interested in the numerical restrictions on $E_i>0$ which will produce valid covariances $Z_j>0$, that can be used when adding noise at the sensor.
 
-The dependancies between the covariances can be captured by the block matrix equation.
+The dependencies between the covariances can be captured by the block matrix equation.
 
 ...equation and also block matrix inequality (might need some defining as it uses $\prec$)
 
-From the equation we can see that the only restriction on arbitrary choices of additional noise variances $E_i$ at each privilege level, can be chosen as long as the condition is met.
+From the equation, we can see that the only restriction on arbitrary choices of additional noise variances $E_i$ at each privilege level, can be chosen as long as the condition is met.
 
-We have chosen the case with a single shared key per privilege level due to its simlpicity and the ability to change privilege estimation error bounds without the need for key redistribution.
+We have chosen the case with a single shared key per privilege level due to its simplicity and the ability to change privilege estimation error bounds without the need for key redistribution.
 
-Alternative methods involving multiple or overlapping keys among privilege levels may allow choices of $E_i$ to be less restricted than in the equation above, and have been left as future work the topic.
+Alternative methods involving multiple or overlapping keys among privilege levels may allow choices of $E_i$ to be less restricted than in the equation above and have been left as future work the topic.
 
 % 
 %  .d8888b.  8888888888 .d8888b.  888     888 8888888b.  8888888 88888888888 Y88b   d88P 
@@ -301,14 +301,49 @@ Alternative methods involving multiple or overlapping keys among privilege level
 \section{Scheme Security}
 The security of the proposed scheme will be primarily considered in the single privileged and unprivileged estimator case.
 
-A sketch of cryptographic priviliege will be provided
+A sketch of cryptographic privilege will be provided
 a proof sketch will be provided to show the cryptographic guarantees of the scheme.
 
 The extension to multiple privilege levels as described in the section above will be informally reduced to the same proof sketch afterwards.
 
 \subsection{Single Additional Noise}
-Typical cryptographic security is captured 
-Rather than achieve cryptographic indistinguishabilty, we want to show 
+Typical cryptographic security is captured by a cryptographic game which captures desired privacy properties as well as attacker capabilities. 
+
+The most commonly desired privacy property, cryptographic indistinguishability, is not suitable for our estimation scenario due to the desire for unprivileged estimators to gain information from measurements, albeit comparatively ``less'' than privileged ones.
+
+Instead, we provide a time series of known error lower-bounds for estimating the plaintext, in the context of known Bayesian process and measurement models, such that no attacker can estimate the plaintext with more accuracy than this bound. 
+
+(and the error lower-bound property as follows)
+Informally, we capture state estimation problem as a form of encryption as follows
+
+\begin{LaTeXdescription}
+   \item[Initialisation] A known process model, measurement model, initial state estimate and state estimate error are made public parameters. A secret key is created and shared between the sensor and the privileged estimator only.
+   \item[Encryption] At each timestep $k$, the sensor ``encrypts'' the current state $x_k$ with its shared private key and produces the measurement $z_k$.
+\end{LaTeXdescription}
+
+%Decryption. At each timestep $k$, an encrypted state can be ``decrypted'' by the privileged estimator with its shared private key. (is this required?)
+
+With the estimation problem considered in terms of an encryption scheme above, we can give the desired privacy property of the encryption time series as follows
+
+\begin{LaTeXdescription}
+   \item[Error lower-bound differences $\{D_k\}$] Assuming a global Bayesian interpretation of probability theory, at time $k$ and given measurements $z_1,\dots,z_k$, we can denote the lowest possible estimation covariance of $x_k$ by the privileged sensor as $P_k$ and that of an unprivileged sensor, or attacker, as $U_k$. A state estimation encryption scheme meets error lower-bound differences $\{D_k\}$, if at any time $k$ given all measurements $z_1,\dots,z_k$, it is the case that $D_k<U_k-P_k$.
+\end{LaTeXdescription}
+
+To capture the semantics of the above property, we can formalise its notion as follows.
+
+An privilieged estimation encryption scheme meets error lower-bounds difference $\{D_k\}$ if for every 
+
+To capture the capabilities of the attacker as well as the property above, we can fomulate the security notion in the form of a game. Since the encryption scheme provides no decryption function, and encryptions are not unique (noise terms may make measurements of different states equal), we
+
+CPA goes here somewhere
+The cryptographic property we aim to show is that 
+
+The cryptographic property we wish to guarantee is that access
+
+
+explicit assumption is Bayesian interpretation
+implicit assumption is that model is exactly correct
+
 
 it is proven that the minimum estimation error of a linear system with regards to least-square error is given by the CRLB.
 
