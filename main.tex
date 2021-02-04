@@ -321,7 +321,7 @@ We first assume the existance of a process following a known model exactly, with
 
 To help define the security notion we want to achieve, we first introduce the following definitions.
 \begin{LaTeXdescription}
-   \item[Estimator] Any algorithm which produces a guess of the state $\vec{x}_k$ for a time $k$.
+   \item[Estimator] Any algorithm which produces a guess of the state $\vec{x}_k$ for a given time $k$.
    \item[Negligible Covariance Function] A function 
    \begin{equation}
       \mathsf{neglCov}_m(\kappa):\mathbb{N}\rightarrow \mathbb{R}^{m\times m}
@@ -335,56 +335,66 @@ The security notion we want to achieve is introduced with the above definitions 
    A privileged estimation scheme meets \textit{$\{\mat{D}_1,\mat{D}_2,\dots\}$-Estimator Covariance Privilege for Models $\mathcal{M}_P$ and $\mathcal{M}_M$} if for any probabilistic polynomial-time (PPT) estimator $\mathcal{A}$, there exists a PPT estimator $\mathcal{A}^\prime$, such that
    \begin{equation}
       \begin{split}
-         &\operatorfont{Cov}\left[\mathcal{A}\left(k, \kappa, \mathcal{M}_P, \mathcal{M}_M, \vec{y}^\prime_1,\dots,\vec{y}^\prime_k\right) - \vec{x}_k \right]\\
-         &-\operatorfont{Cov}\left[\mathcal{A}^\prime\left(k, \kappa, \mathcal{M}_P, \mathcal{M}_M, \vec{y}_1,\dots,\vec{y}_k\right) - \vec{x}_k \right]\\
+         &\operatorfont{Cov}\left[\mathcal{A}\left(k, \kappa, \mathsf{pub}, \mathcal{M}_P, \mathcal{M}_M, \vec{y}^\prime_1,\dots,\vec{y}^\prime_k\right) - \vec{x}_k \right]\\
+         &-\operatorfont{Cov}\left[\mathcal{A}^\prime\left(k, \kappa, \mathsf{pub}, \mathcal{M}_P, \mathcal{M}_M, \vec{y}_1,\dots,\vec{y}_k\right) - \vec{x}_k \right]\\
          &\quad\succeq \mat{D}_k + \mathsf{neglCov}_m(\kappa)
       \end{split}
    \end{equation}
    for valid covariances $\mat{D}_1,\dots,\mat{D}_k$ and some negligible covariance for all $k>0$. Here, estimators $\mathcal{A}$ and $\mathcal{A}^\prime$ are running in polynomial-time with respect to the security parameter $\kappa$, and all probabilities are taken over models $\mathcal{M}_P$ and $\mathcal{M}_M$, estimators $\mathcal{A}$ and $\mathcal{A}^\prime$, and algorithms $\mathsf{Setup}$ and $\mathsf{Noise}$.
-\end{definition}
+\end{definition}% does covariance above specifically consider the sameples y, or is it taken as k->inf (may be more than a negligible difference with concrete measurements?)!! - NO (prob. taken over Noise function, means its correct)[leaving this here to confuse me less later]
 
-Informally, the above definition says that a privileged estimation scheme meets the security notion if no estimator observing the noisey measaurements can have a certainty 
+Informally, the above definition states that no estimator with access to only noisey measurements $\vec{y}^\prime_1,\dots,\vec{y}^\prime_k$ can estimate a state $\vec{x}_k$ with an RMSE covariance less than an equivalent estimator with normal measurements $\vec{y}_1,\dots,\vec{y}_k$, by a margin of at least $\mat{D}_k$.
+
+With the security notion we aim for defined formally above, we can now provide a proof sketch, with conditions on $\mathcal{M}_P$ and $\mathcal{M}_M$, and a covariance series $\mat{D}_1,\dots,\mat{D}_k$, for which our privileged estimation scheme meets the defined security notion.
+
+% our scheme in terms of the setup and noise function above should ge here somwhere no?
+% init estimate is in the pub variable, but D_i should be defined so that it's tru for any init guess
+
+Proof sketch:
+We consider the process model () and measurement model () exactly, that is, any linear models with known zero-mean Gaussian additive noises.
+
+The idea behind the proof relies on the fact that the CRLB gives the smallest RMSE covariance achievable for \textit{any} estimator when all measurements $\vec{y}_1,\dots,\vec{y}_k$ are observed, and can be computed exactly when process and measurement models are linear and Gaussian.
+
+The CRLB at time $k$ can, denoted $\mat{J}^{-1}_k$ satisfies
+\begin{equation}
+   \mat{J}^{-1}_k \preceq \operatorfont{Cov}\left[\mathcal{A}\left(k, \mathcal{M}_P, \mathcal{M}_M, \vec{y}_1,\dots,\vec{y}_k\right) - \vec{x}_k \right]
+\end{equation}
+for any estimator $\mathcal{A}$
+
+As we use a cryptographically pseudorandom keystream, noisey measurements $\vec{y}^\prime_k$ are indistinguiashable from measurements following the modified measurement model () exactly.
+
+Similarly, the generation of uniform
+%floating point
+% also greater than less then covariance here somewhere?CRLB definition?
+
+We can compute the CRLB recursively for both the true measurement model () and the modified model (), and take their differences to get the infinite covariance series $\mat{D}_1,\mat{D}_2,\dots$. 
+
+
+As we know from the CRLB proof, any estimators with the two models () and () will at least differ by $\mat{D}_k$ at time $k$. Given an estimator
+
+
+In addition to the security definitions and proof above, we stress two aditional implicit assumptions when dealing with real physical processes 
+
+To apply the privileged scheme to a physical process, the security definitions and requirements above make some implicit assumptions about 
+
+explicit assumption is Bayesian interpretation
+implicit assumption is that model is exactly correct
+assumption that uniform floating points are uniform enough
+
+
+it is proven that the minimum estimation error of a linear system with regards to least-square error is given by the CRLB.
+also that uniform floating points are really uniform
+
 
 --
 
 Scratch pad of crypto ideas:
 
-(and the error lower-bound property as follows)
-Informally, we capture state estimation problem as a form of encryption as follows
-
 point out the crypto is specific to our use case
 
 
-
-With the estimation problem considered in terms of an encryption scheme above, we can give the desired privacy property of the encryption time series as follows
-
-\begin{LaTeXdescription}
-   \item[Error lower-bound differences $\{D_k\}$] Assuming a global Bayesian interpretation of probability theory, at time $k$ and given measurements $z_1,\dots,z_k$, we can denote the lowest possible estimation covariance of $x_k$ by the privileged sensor as $P_k$ and that of an unprivileged sensor, or attacker, as $U_k$. A state estimation encryption scheme meets error lower-bound differences $\{D_k\}$, if at any time $k$ given all measurements $z_1,\dots,z_k$, it is the case that $D_k<U_k-P_k$.
-\end{LaTeXdescription}
-
 Since the encryption scheme provides no decryption function, and there is no requirement for encryptions to be unique (as noise terms may make measurements of different states equal), we consider achieving the above security notion under the chosen plaintext-attack. This can be captured formally in the following cryptographic game.
 
-\begin{LaTeXdescription}
-   \item[Setup] The challenger chooses a process model, measurement model, initial state estimate and initial state estimate covariance and makes these known to the adversary. In addition, a secret key is generated and retained by the challenger.
-   \item[Queries] The adversary can choose a polynomially bounded number of plaintexts $x\in\mathbb{R}^n$ and submit them to the challenger, who will return 
-   \item[Challenge] submit ks get back process model ks
-   \item[More Queries] same as the above
-   \item[Guess] 
-\end{LaTeXdescription}
-
-\begin{definition}
-   
-\end{definition}
-
-intuitively the game says that...
-
-explicit assumption is Bayesian interpretation
-implicit assumption is that model is exactly correct
-
-with the assumptions above, give proof sketch
-
-it is proven that the minimum estimation error of a linear system with regards to least-square error is given by the CRLB.
-also that uniform floating points are really uniform
 
 \subsection{Multiple Additional Noises}
 
