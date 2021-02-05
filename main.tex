@@ -136,7 +136,7 @@ The abstract goes here.
 
 % no keywords
 
-% For peerreview papers, this IEEEtran command inserts a page break and
+% For peer review papers, this IEEEtran command inserts a page break and
 % creates the second title. It will be ignored for other modes.
 \IEEEpeerreviewmaketitle
 
@@ -168,7 +168,7 @@ Traditional methods hide all information, other use-cases exist
 
 Information may be divided into privilege levels authenticating different audiences to different amounts of information [gps, anonymisation]
 
-Contribution...
+Our contribution in this work is comprised of a formal definition of privileged state estimation, which allows the quantification of estimation error covariance differences between privileged and unprivileged estimators, before proposing a solution to the problem accompanied by a cryptographic sketch proof and simulation results.
 
 Section summary
 
@@ -191,15 +191,33 @@ Define vectors, matrices, encryption, pseudorandom samples, positive-definitiven
 % 
 
 \section{Problem Statement}
-Linear time-invariant system
+The estimation scenario that we consider is for known process and measurement models, where state estimators are either privileged estimators possessing a secret key, or unprivileged estimators without. We aim to develop a scheme for which the difference in their estimation errors is quantifiable and cryptographically guaranteed when process and measurement models are Gaussian, linear and time-invariant.
 
-Kalman filter equations 
+The process model gives the state $\vec{x}_k\in\mathbb{R}^n$ at a timestep $k$ and is given by
+\begin{equation}\label{eqn:linear_process_model}
+   \vec{x}_k = \mat{F}\vec{x}_{k-1} + \vec{w}\,,
+\end{equation}
+with noise term $\vec{w}\sim \mathcal{N}(\vec{0}, \mat{Q})$ and a known covariance $\mat{Q}\in \mathbb{R}^{n\times n}$. Similarly, the measurement model gives the measurement $\vec{y}_k$ at time $k$ and is given by
+\begin{equation}\label{eqn:linear_measurement_model}
+   \vec{y}_k = \mat{H}\vec{x}_k + \vec{v}\,,
+\end{equation}
+with noise term $\vec{v}\sim \mathcal{N}(\vec{0}, \mat{R})$ and a known covariance $\mat{R}\in \mathbb{R}^{m\times m}$.
 
-KF meets the theoretical best estimator in terms of mean square error as evident from the CRLB [estimation book]
+% Move the CRLB comments to the proof section
 
-The aim is to produce measurements such that estimators have different estimation lower bounds depending on their knowledge of a shared secret key with the sensor. This is in accordance with the Kirchoff principle [crypto book] and reduces all secrecy to a single, replaceable, uniformly random integer.
+Given the models \eqref{eqn:linear_process_model} and \eqref{eqn:linear_measurement_model}, the optimal estimator with respect to mean squared error is given by the linear Kalman filter []. Estimates are computed recursively, following the combined state prediction and update equations
+\begin{equation}
+   \hat{\vec{x}}_k = \dots
+\end{equation}
 
-We will refer to the estimator holding a shared key with the sensor as a privileged estimator, and the one without, an unprivileged estimator.
+Optimality in terms of estimation error covariance has been proved by the Cramér–Rao lower bound (CRLB) []
+
+(CRLB details - unbiased/biased/when is it the best/what assumptions)
+
+
+%maybe for reshuffle - In the next section, we introduce cryptographic notions for general state estimation and estimation error privilege, and will define the formal goal of our estimation scheme.
+
+%Michhael says to put the Cryptographic problem formalisation here and CRLB before the proof (makes sense)
 
 
 % 
@@ -243,7 +261,7 @@ To use the pseudorandom Gaussian samples at the sensor and privileged estimator,
 
 We define the additional noise term $Z>0$ and can transform the Gaussian samples $z$ into pseudorandom samples $o$ of a multivariate zero-mean Gaussian distribution with covariance $Z$.
 
-Prior to estimation, we assume that a secret key is shared between the sensor and the privileged estimator.
+Before estimation, we assume that a secret key is shared between the sensor and the privileged estimator.
 
 During estimation, the sensor modifies its measurements at each timestep.
 
@@ -313,7 +331,7 @@ The most commonly desired privacy property, cryptographic indistinguishability, 
 
 Instead, we provide a time series of known error lower-bounds for estimating the plaintext, in the context of known Bayesian process and measurement models, such that no attacker can estimate the plaintext with more accuracy than this bound. 
 
-We first assume the existance of a process following a known model exactly, with model parameters $\mathcal{M}_P$ and the state at time $k$ denoted as $\vec{x}_k\in\mathbb{R}^n$. Similarly, we assume the existance of a means of process measurement following a known measurement model exactly, with model parameters $\mathcal{M}_M$ and the measurement at time $k$ denoted as $\vec{y}_k\in\mathbb{R}^m$. We can now define a privileged estimation scheme as a pair of algorithms $(\mathsf{Setup},\mathsf{Noise})$ given by
+We first assume the existence of a process following a known model exactly, with model parameters $\mathcal{M}_P$ and the state at time $k$ denoted as $\vec{x}_k\in\mathbb{R}^n$. Similarly, we assume the existence of a means of process measurement following a known measurement model exactly, with model parameters $\mathcal{M}_M$ and the measurement at time $k$ denoted as $\vec{y}_k\in\mathbb{R}^m$. We can now define a privileged estimation scheme as a pair of algorithms $(\mathsf{Setup},\mathsf{Noise})$ given by
 \begin{LaTeXdescription}
    \item[$\mathsf{Setup}(\mathcal{M}_P, \mathcal{M}_M, \kappa)$] On the input of models and the security parameter $\kappa$, public parameters $\mathsf{pub}$ and a secret key $\mathsf{sk}$ are created.
    \item[$\mathsf{Noise}(\mathsf{sk}, k, \mathcal{M}_P, \mathcal{M}_M, \vec{y}_1, \dots, \vec{y}_k)$] On input of secret key $\mathsf{sk}$, time $k$, models $\mathcal{M}_P$ and $\mathcal{M}_M$, and measaurements $y_1,\dots,y_k$, a noisey measurement $\vec{y}^\prime_k$ (with no required model constraints) is created.
@@ -329,7 +347,6 @@ To help define the security notion we want to achieve, we first introduce the fo
    that returns a matrix $\mat{A}$ such that $\mat{A}$ is a valid covariance ($\mat{A}\succ 0$ and $\mat{A}=\mat{A}^\top$) and that for each of its eigenvalues $e\in\operatorfont{eig}(\mat{A})$, there exists a negligible function $\eta$ such that $e\leq\eta(\kappa)$.
 \end{LaTeXdescription}
 
-
 The security notion we want to achieve is introduced with the above definitions as follows. 
 \begin{definition}
    A privileged estimation scheme meets \textit{$\{\mat{D}_1,\mat{D}_2,\dots\}$-Estimator Covariance Privilege for Models $\mathcal{M}_P$ and $\mathcal{M}_M$} if for any probabilistic polynomial-time (PPT) estimator $\mathcal{A}$, there exists a PPT estimator $\mathcal{A}^\prime$, such that
@@ -341,19 +358,22 @@ The security notion we want to achieve is introduced with the above definitions 
       \end{split}
    \end{equation}
    for valid covariances $\mat{D}_1,\dots,\mat{D}_k$ and some negligible covariance for all $k>0$. Here, estimators $\mathcal{A}$ and $\mathcal{A}^\prime$ are running in polynomial-time with respect to the security parameter $\kappa$, and all probabilities are taken over models $\mathcal{M}_P$ and $\mathcal{M}_M$, estimators $\mathcal{A}$ and $\mathcal{A}^\prime$, and algorithms $\mathsf{Setup}$ and $\mathsf{Noise}$.
-\end{definition}% does covariance above specifically consider the sameples y, or is it taken as k->inf (may be more than a negligible difference with concrete measurements?)!! - NO (prob. taken over Noise function, means its correct)[leaving this here to confuse me less later]
+\end{definition}% does covariance above specifically consider the samples y, or is it taken as k->inf (maybe more than a negligible difference with concrete measurements?)!! - NO (prob. taken over Noise function, means its correct)[leaving this here to confuse me less later]
 
 Informally, the above definition states that no estimator with access to only noisey measurements $\vec{y}^\prime_1,\dots,\vec{y}^\prime_k$ can estimate a state $\vec{x}_k$ with an RMSE covariance less than an equivalent estimator with normal measurements $\vec{y}_1,\dots,\vec{y}_k$, by a margin of at least $\mat{D}_k$.
 
+--
+
 With the security notion we aim for defined formally above, we can now provide a proof sketch, with conditions on $\mathcal{M}_P$ and $\mathcal{M}_M$, and a covariance series $\mat{D}_1,\dots,\mat{D}_k$, for which our privileged estimation scheme meets the defined security notion.
 
-% our scheme in terms of the setup and noise function above should ge here somwhere no?
-% init estimate is in the pub variable, but D_i should be defined so that it's tru for any init guess
+% our scheme in terms of the setup and noise function above should be here somewhere no?
+% init estimate is in the pub variable, but D_i should be defined so that it's true for any init guess
+Our proposed method in the sections previously can be seen as an implementation of a privileged estimation scheme as defined above, where parameter $\kappa$ is the security parameter for the required stream cipher and the secret key $\mathsf{sk}$ is the same as the stream cipher key, while $/mathsf{pub}$ contains the covariance of the added pseudorandom Gaussian noise and an initial estimate and covariance. The noise algorithm corresponds to ().
 
 Proof sketch:
 We consider the process model () and measurement model () exactly, that is, any linear models with known zero-mean Gaussian additive noises.
 
-The idea behind the proof relies on the fact that the CRLB gives the smallest RMSE covariance achievable for \textit{any} estimator when all measurements $\vec{y}_1,\dots,\vec{y}_k$ are observed, and can be computed exactly when process and measurement models are linear and Gaussian.
+The idea behind the proof relies on the fact that the CRLB gives the smallest RMSE covariance achievable for \textit{any} estimator, when all measurements $\vec{y}_1,\dots,\vec{y}_k$ are observed and can be computed exactly when process and measurement models are linear and Gaussian.
 
 The CRLB at time $k$ can, denoted $\mat{J}^{-1}_k$ satisfies
 \begin{equation}
@@ -361,39 +381,35 @@ The CRLB at time $k$ can, denoted $\mat{J}^{-1}_k$ satisfies
 \end{equation}
 for any estimator $\mathcal{A}$
 
-As we use a cryptographically pseudorandom keystream, noisey measurements $\vec{y}^\prime_k$ are indistinguiashable from measurements following the modified measurement model () exactly.
+As we use a cryptographically pseudorandom keystream, noisy measurements $\vec{y}^\prime_k$ are indistinguishable from measurements following the modified measurement model () exactly.
 
-Similarly, the generation of uniform
+Similarly, the generation of uniform ...
 %floating point
 % also greater than less then covariance here somewhere?CRLB definition?
 
 We can compute the CRLB recursively for both the true measurement model () and the modified model (), and take their differences to get the infinite covariance series $\mat{D}_1,\mat{D}_2,\dots$. 
 
 
-As we know from the CRLB proof, any estimators with the two models () and () will at least differ by $\mat{D}_k$ at time $k$. Given an estimator
+As we know from the CRLB proof, any estimators with the two models () and () will at least differ by $\mat{D}_k$ at time $k$.
 
+A reduction proof can be easily constructed where an unprivileged estimator in our scheme, which produces estimates such that (neglcov eq) does not hold, can be used to construct an estimator with an error covariance lower than that of the CRLB given the modified model, known to be impossible.
 
-In addition to the security definitions and proof above, we stress two aditional implicit assumptions when dealing with real physical processes 
+In addition to the security definitions and proof above, we stress caution when assuming such guarantees in the presence of a measured physical process. The following implicit assumptions are made when applying models $\mathcal{M}_P$ and $\mathcal{M}_M$ to an observable phenomenon.
 
-To apply the privileged scheme to a physical process, the security definitions and requirements above make some implicit assumptions about 
+the Bayesian interpretation of probability
 
-explicit assumption is Bayesian interpretation
-implicit assumption is that model is exactly correct
-assumption that uniform floating points are uniform enough
+the assumption is that model is exactly correct
 
-
-it is proven that the minimum estimation error of a linear system with regards to least-square error is given by the CRLB.
-also that uniform floating points are really uniform
-
+an assumption that uniform floating points are uniform enough (here or in negligible difference discussion above?)
 
 --
 
-Scratch pad of crypto ideas:
+%Scratchpad of crypto ideas:
 
-point out the crypto is specific to our use case
+%point out the crypto is specific to our use case
 
 
-Since the encryption scheme provides no decryption function, and there is no requirement for encryptions to be unique (as noise terms may make measurements of different states equal), we consider achieving the above security notion under the chosen plaintext-attack. This can be captured formally in the following cryptographic game.
+%Since the encryption scheme provides no decryption function, and there is no requirement for encryptions to be unique (as noise terms may make measurements of different states equal), we consider achieving the above security notion under the chosen plaintext-attack. This can be captured formally in the following cryptographic game.
 
 
 \subsection{Multiple Additional Noises}
@@ -401,100 +417,6 @@ Since the encryption scheme provides no decryption function, and there is no req
 
 \section{Simulation and Results}
 
-
-% An example of a floating figure using the graphicx package.
-% Note that \label must occur AFTER (or within) \caption.
-% For figures, \caption should occur after the \includegraphics.
-% Note that IEEEtran v1.7 and later has special internal code that
-% is designed to preserve the operation of \label within \caption
-% even when the captionsoff option is in effect. However, because
-% of issues like this, it may be the safest practice to put all your
-% \label just after \caption rather than within \caption{}.
-%
-% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
-% option should be used if it is desired that the figures are to be
-% displayed while in draft mode.
-%
-%\begin{figure}[!t]
-%\centering
-%\includegraphics[width=2.5in]{myfigure}
-% where an .eps filename suffix will be assumed under latex, 
-% and a .pdf suffix will be assumed for pdflatex; or what has been declared
-% via \DeclareGraphicsExtensions.
-%\caption{Simulation results for the network.}
-%\label{fig_sim}
-%\end{figure}
-
-% Note that the IEEE typically puts floats only at the top, even when this
-% results in a large percentage of a column being occupied by floats.
-
-
-% An example of a double column floating figure using two subfigures.
-% (The subfig.sty package must be loaded for this to work.)
-% The subfigure \label commands are set within each subfloat command,
-% and the \label for the overall figure must come after \caption.
-% \hfil is used as a separator to get equal spacing.
-% Watch out that the combined width of all the subfigures on a 
-% line do not exceed the text width or a line break will occur.
-%
-%\begin{figure*}[!t]
-%\centering
-%\subfloat[Case I]{\includegraphics[width=2.5in]{box}%
-%\label{fig_first_case}}
-%\hfil
-%\subfloat[Case II]{\includegraphics[width=2.5in]{box}%
-%\label{fig_second_case}}
-%\caption{Simulation results for the network.}
-%\label{fig_sim}
-%\end{figure*}
-%
-% Note that often IEEE papers with subfigures do not employ subfigure
-% captions (using the optional argument to \subfloat[]), but instead will
-% reference/describe all of them (a), (b), etc., within the main caption.
-% Be aware that for subfig.sty to generate the (a), (b), etc., subfigure
-% labels, the optional argument to \subfloat must be present. If a
-% subcaption is not desired, just leave its contents blank,
-% e.g., \subfloat[].
-
-
-% An example of a floating table. Note that, for IEEE style tables, the
-% \caption command should come BEFORE the table and, given that table
-% captions serve much like titles, are usually capitalized except for words
-% such as a, an, and, as, at, but, by, for, in, nor, of, on, or, the, to
-% and up, which are usually not capitalized unless they are the first or
-% last word of the caption. Table text will default to \footnotesize as
-% the IEEE normally uses this smaller font for tables.
-% The \label must come after \caption as always.
-%
-%\begin{table}[!t]
-%% increase table row spacing, adjust to taste
-%\renewcommand{\arraystretch}{1.3}
-% if using array.sty, it might be a good idea to tweak the value of
-% \extrarowheight as needed to properly center the text within the cells
-%\caption{An Example of a Table}
-%\label{table_example}
-%\centering
-%% Some packages, such as MDW tools, offer better commands for making tables
-%% than the plain LaTeX2e tabular which is used here.
-%\begin{tabular}{|c||c|}
-%\hline
-%One & Two\\
-%\hline
-%Three & Four\\
-%\hline
-%\end{tabular}
-%\end{table}
-
-
-% Note that the IEEE does not put floats in the very first column
-% - or typically anywhere on the first page for that matter. Also,
-% in-text middle ("here") positioning is typically not used, but it
-% is allowed and encouraged for Computer Society conferences (but
-% not Computer Society journals). Most IEEE journals/conferences use
-% top floats exclusively. 
-% Note that, LaTeX2e, unlike IEEE journals/conferences, places
-% footnotes above bottom floats. This can be corrected via the
-% \fnbelowfloat command of the stfloats package.
 
 
 
