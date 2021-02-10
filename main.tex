@@ -170,8 +170,18 @@ Our contribution in this work is comprised of a formal definition of privileged 
 
 Section summary
 
+% 
+% ##    ##  #######  ########    ###    ######## ####  #######  ##    ## 
+% ###   ## ##     ##    ##      ## ##      ##     ##  ##     ## ###   ## 
+% ####  ## ##     ##    ##     ##   ##     ##     ##  ##     ## ####  ## 
+% ## ## ## ##     ##    ##    ##     ##    ##     ##  ##     ## ## ## ## 
+% ##  #### ##     ##    ##    #########    ##     ##  ##     ## ##  #### 
+% ##   ### ##     ##    ##    ##     ##    ##     ##  ##     ## ##   ### 
+% ##    ##  #######     ##    ##     ##    ##    ####  #######  ##    ## 
+% 
+
 \subsection{Notation}
-Define vectors, matrices, encryption, pseudorandom samples, positive-definitiveness and $\prec$ for matrices, negligible function
+Define vectors, matrices, encryption, pseudorandom samples, positive-definitiveness and $\prec$ for matrices, negligible function, I for identity matrix of relevant size
 
 
 % 
@@ -188,7 +198,7 @@ Define vectors, matrices, encryption, pseudorandom samples, positive-definitiven
 %                                              
 % 
 
-\section{Problem Statement}\label{sec:problem}
+\section{Problem Statement}\label{sec:est_problem}
 The estimation scenario that we consider is for known process and measurement models, where state estimators are either privileged estimators possessing a secret key, or unprivileged estimators without. We aim to develop a scheme for which the difference in their estimation errors is quantifiable and cryptographically guaranteed when process and measurement models are Gaussian, linear and time-invariant.
 
 The process model we consider gives the state $\vec{x}_k\in\mathbb{R}^n$ at a timestep $k$ and is given by
@@ -204,25 +214,21 @@ with noise term $\vec{v}\sim \mathcal{N}(\vec{0}, \mat{R})$ and a known covarian
 To capture our aim of creating a ``better'' and ``worse'' estimator, we need to define how to assess estimator privilege and what algorithms are required to provide a privileged estimation scheme. In the following section, we give relevant formal definitions, which are later referred to when assessing the security of our proposed scheme.
 
 % 
-%  .d8888b.  8888888b. Y88b   d88P 8888888b. 88888888888 
-% d88P  Y88b 888   Y88b Y88b d88P  888   Y88b    888     
-% 888    888 888    888  Y88o88P   888    888    888     
-% 888        888   d88P   Y888P    888   d88P    888     
-% 888        8888888P"     888     8888888P"     888     
-% 888    888 888 T88b      888     888           888     
-% Y88b  d88P 888  T88b     888     888           888     
-%  "Y8888P"  888   T88b    888     888           888     
-%                                                        
-%                                                        
-%                                                        
+%  ######  ########  ##    ## ########  ########  #######  
+% ##    ## ##     ##  ##  ##  ##     ##    ##    ##     ## 
+% ##       ##     ##   ####   ##     ##    ##    ##     ## 
+% ##       ########     ##    ########     ##    ##     ## 
+% ##       ##   ##      ##    ##           ##    ##     ## 
+% ##    ## ##    ##     ##    ##           ##    ##     ## 
+%  ######  ##     ##    ##    ##           ##     #######  
 % 
 
-\section{Formal cryptographic Problem}\label{sec:crypto_problem}
+\subsection{Formal cryptographic Problem}\label{subsec:crypto_problem}
 While we are interested in Gaussian, linear and time-invariant models, it is of more use to define a broader security notion that can be satisfied given specified conditions on the models. This will allow the use of the same notion in future literature and is more closely in-line with cryptography practice. Later, we will show our proposed scheme meets this broad security notion under the Gaussian, linear and time-invariant model assumptions.
 
 Typical formal cryptographic security notions capture desired privacy properties as well as attacker capabilities \cite{katzIntroductionModernCryptography2008}. The most commonly desired privacy property, cryptographic indistinguishability, is not suitable for our estimation scenario due to our desire for unprivileged estimators to still gain \text{some} information from measurements. Instead, we will require a time series of estimation error covariance differences, given arbitrary known Bayesian models, such that the difference in estimation error between estimators with and without the secret key is lower-bounded at all times by the series.
 
-To formalise this, we introduce the following notations and definitions. We assume the existence of an arbitrary process following a known model exactly, with the state at time $k$ denoted $\vec{x}_k\in\mathbb{R}^n$, as in section \ref{sec:problem}, and model parameters $\mathcal{M}_P$. Similarly, we assume the existence of a means of process measurement following a known measurement model exactly, with the measurement at time $k$ denoted as $\vec{y}_k\in\mathbb{R}^m$, and model parameters $\mathcal{M}_M$. We can now define a \textit{privileged estimation scheme} as a pair of algorithms $(\mathsf{Setup},\mathsf{Noise})$ given by
+To formalise this, we introduce the following notations and definitions. We assume the existence of an arbitrary process following a known model exactly, with the state at time $k$ denoted $\vec{x}_k\in\mathbb{R}^n$, as in section \ref{sec:est_problem}, and model parameters $\mathcal{M}_P$. Similarly, we assume the existence of a means of process measurement following a known measurement model exactly, with the measurement at time $k$ denoted as $\vec{y}_k\in\mathbb{R}^m$, and model parameters $\mathcal{M}_M$. We can now define a \textit{privileged estimation scheme} as a pair of algorithms $(\mathsf{Setup},\mathsf{Noise})$ given by
 \begin{LaTeXdescription}
    \item[$\mathsf{Setup}(\mathcal{M}_P, \mathcal{M}_M, \kappa)$] On the input of models $\mathcal{M}_P$, $\mathcal{M}_M$ and the security parameter $\kappa$, public parameters $\mathsf{pub}$ and a secret key $\mathsf{sk}$ are created.
    \item[$\mathsf{Noise}(\mathsf{sk}, k, \mathcal{M}_P, \mathcal{M}_M, \vec{y}_1, \dots, \vec{y}_k)$] On input of secret key $\mathsf{sk}$, time $k$, models $\mathcal{M}_P$, $\mathcal{M}_M$ and measaurements $y_1,\dots,y_k$, a noisey measurement $\vec{y}^\prime_k$ (with no required model constraints) is created.
@@ -277,6 +283,16 @@ Use a cryptographically secure key stream to generate pseudorandom Gaussian samp
 
 Samples are used to increase the uncertainty of estimation and are known and removable only by those with the key used to generate them
 
+% 
+% ##    ## ######## ##    ##  ######  ######## ########  ########    ###    ##     ## 
+% ##   ##  ##        ##  ##  ##    ##    ##    ##     ## ##         ## ##   ###   ### 
+% ##  ##   ##         ####   ##          ##    ##     ## ##        ##   ##  #### #### 
+% #####    ######      ##     ######     ##    ########  ######   ##     ## ## ### ## 
+% ##  ##   ##          ##          ##    ##    ##   ##   ##       ######### ##     ## 
+% ##   ##  ##          ##    ##    ##    ##    ##    ##  ##       ##     ## ##     ## 
+% ##    ## ########    ##     ######     ##    ##     ## ######## ##     ## ##     ## 
+% 
+
 \subsection{Gaussian Keystream}
 To generate pseudorandom Gaussian samples, we rely on first generating a traditional pseudorandom bitstream given a secret key.
 
@@ -289,6 +305,16 @@ Rather than encrypting plaintext, we interpret the bitstream as sequential pseud
 While the uniform real samples are only approximated by floating-point numbers in the conversion from integers, we argue this is sufficiently random and discuss this further in the Security section.
 
 Finally, independent standard Gaussian samples can then be generated from the uniform real numbers using the Box-Muller transform, and are ready to be used by our sensor and privileged filter. $z$
+
+% 
+%    ###    ########  ########     ##    ##  #######  ####  ######  ######## 
+%   ## ##   ##     ## ##     ##    ###   ## ##     ##  ##  ##    ## ##       
+%  ##   ##  ##     ## ##     ##    ####  ## ##     ##  ##  ##       ##       
+% ##     ## ##     ## ##     ##    ## ## ## ##     ##  ##   ######  ######   
+% ######### ##     ## ##     ##    ##  #### ##     ##  ##        ## ##       
+% ##     ## ##     ## ##     ##    ##   ### ##     ##  ##  ##    ## ##       
+% ##     ## ########  ########     ##    ##  #######  ####  ######  ######## 
+% 
 
 \subsection{Additional Gaussian Noise}
 To use the pseudorandom Gaussian samples at the sensor and privileged estimator, they need to be converted to multivariate Gaussian samples suitable for use in the measurement model and need a means of controlling how much uncertainty is added to the unprivileged estimators.
@@ -306,6 +332,16 @@ For the privileged estimator who holds the shared secret key, values $z$, and th
 In the case where pseudorandomness is indistinguishable from randomness, as is the case at an unprivileged estimator when using cryptographically secure Gaussian keystreams and the secret key is not known, the measurement model noise covariance can now be written as $R+Z$.
 
 Intuitively, we can already see that the two estimators will have an estimation error covariance differing by some value dependent on $Z$ at each time $k$. In the security section, we will show that the best possible error covariances achievable by the privileged and unprivileged estimators can be computed exactly by computing the Cramér–Rao lower-bound for both measurement models and that the difference between them will give an exact lower-bound on the difference between the two estimator error covariances.
+
+% 
+% ##     ## ##     ## ##       ########    ########  ########  #### ##     ## 
+% ###   ### ##     ## ##          ##       ##     ## ##     ##  ##  ##     ## 
+% #### #### ##     ## ##          ##       ##     ## ##     ##  ##  ##     ## 
+% ## ### ## ##     ## ##          ##       ########  ########   ##  ##     ## 
+% ##     ## ##     ## ##          ##       ##        ##   ##    ##   ##   ##  
+% ##     ## ##     ## ##          ##       ##        ##    ##   ##    ## ##   
+% ##     ##  #######  ########    ##       ##        ##     ## ####    ###    
+% 
 
 \subsection{Multiple Privileges}
 In the above scenario, we have considered a single level of estimation privileged with one private key, dividing estimation error covariance into two groups; privileged and unprivileged estimators.
@@ -357,6 +393,16 @@ A proof sketch will be provided to show how the proposed scheme meets the crypto
 
 The extension to multiple privilege levels as described in the section () will be informally discussed afterwards.
 
+% 
+%  ######  #### ##    ##  ######   ##       ######## 
+% ##    ##  ##  ###   ## ##    ##  ##       ##       
+% ##        ##  ####  ## ##        ##       ##       
+%  ######   ##  ## ## ## ##   #### ##       ######   
+%       ##  ##  ##  #### ##    ##  ##       ##       
+% ##    ##  ##  ##   ### ##    ##  ##       ##       
+%  ######  #### ##    ##  ######   ######## ######## 
+% 
+
 \subsection{Single Privileged Case}
 Recalling the introduced security notion in section \eqref{eqn:linear_measurement_model}, we aim to show how our introduce privileged esitmation scheme, given conditions on $\mathcal{M}_P$ and $\mathcal{M}_M$, meets the desired security for a computable series $\mat{D}_1,\dots,\mat{D}_k$ dependent on the additional noise variable $Z$.
 
@@ -405,15 +451,24 @@ End proof sketch.
 
 In addition to the proof sketch above, we stress caution when assuming accepting a cryptographic guarantee in terms of models $\mathcal{M}_P$ and $\mathcal{M}_M$ when used to predict a measured physical process. The following implicit assumptions would be made in such a scenario.
 \begin{LaTeXdescription}
-   \item[Exact models] When assigning a model to a physical process, our scheme involving the model only guarantees the same security of estimating the physical process when it follows the model \textit{exactly}. It is often the case that models are chosen to be Gaussian and linear in part to simplify estimation, resulting in the possibility of better estimation with alternative, more complicated, models. To minimise this possibility, it is therefore important to to use the models which most accurately describe the modelled process.
+   \item[Exact models] When assigning a model to a physical process, our scheme involving the model only guarantees the same security of estimating the physical process when it follows the model \textit{exactly}. It is often the case that models are chosen to be Gaussian and linear in part to simplify estimation, resulting in the possibility of better estimation with alternative, more complicated, models. While it may be likely that the estimation of an unprivileged estimator is worse even when this is the case, it cannot be proved by our methodology here.
    \item[Bayesian interpretation] We also note that the model requirements and security definitions we have put forward assume a Bayesian interpretation of probability theory. Although this is the standard for state estimation problems due to its applicability and performance, without stating this assumption it may be arguable that the security definition \ref{eqn:cov_privilege} may not hold.
 \end{LaTeXdescription}
 
-\subsection{Multiple Additional Noises}
+% 
+% ##     ## ##     ## ##       ######## 
+% ###   ### ##     ## ##          ##    
+% #### #### ##     ## ##          ##    
+% ## ### ## ##     ## ##          ##    
+% ##     ## ##     ## ##          ##    
+% ##     ## ##     ## ##          ##    
+% ##     ##  #######  ########    ##    
+% 
 
+\subsection{Multiple Additional Noises}
 While we have not defined a security notion for multiple levels of privileged estimation, an intuitive and informal extension can be described.
 
-The security notion desired would require that for any subset of corrupted estimators, and therefore the knowledge of any subset of different privilege level secret keys $s \subset \{\mathsf{sk}_i,\,0 \leq i < N\}$ and noisy meausmrents, an estimator given true measurements exists, such that the difference between the corrupted subset's error covariance and its own is at least $\mat{D}^{(s)}_k$ at time $k$.
+The security notion desired would require that for any subset of corrupted estimators, and therefore the knowledge of any subset of different privilege level secret keys $s \subset \{\mathsf{sk}_i,\,0 \leq i < N\}$ and noisy measurements, an estimator which is given true measurements can be constructed, such that the difference between the corrupted subset's error covariance and its own is at least $\mat{D}^{(s)}_k$ at time $k$.
 
 Although this definition requires an infinite series for every possible subset of privilege level keys $s$, complicating its form specification, it captures the exact advantage of every such subset making it a more general definition.
 
@@ -434,16 +489,16 @@ Given the structure of our scheme in section () it can be readily seen how the a
 % 
 
 \section{Simulation and Results}
-As well as showing the theoretical security of our scheme, we have simulated the estimation problem using estimators which achieve the CRLB error covariances for varying privileges.
+As well as showing the theoretical security of our scheme, we have simulated the estimation problem using linear Kalman filter estimators which achieve the CRLB error covariances for the different measurement models. Simulations have been implemented in the Python programming language and use the AES block cipher in CTR mode as a cryptographically secure stream cipher (AES-CTR) [].
 
-We have considered simulations for both bounded and unbounded error covariances to demonstrate the method. The process model followed a two-dimensional constant velocity model, with
+We have considered two simulations, both following the same two-dimensional constant-velocity process model, given by
 \begin{equation*}
    \mat{F}=
    \begin{bmatrix}
       1 & 0.5 & 0 & 0\\
       0 & 1 & 0 & 0\\
       0 & 0 & 1 & 0.5\\
-      0 & 0 & 0 & 1\\
+      0 & 0 & 0 & 1
    \end{bmatrix}
 \end{equation*}
 and
@@ -453,21 +508,54 @@ and
       0.0417 & 0.1250 & 0 & 0\\
       0.1250 & 0.5000 & 0 & 0\\
       0 & 0 & 0.0417 & 0.1250\\
-      0 & 0 & 0.1250 & 0.5000\\
-   \end{bmatrix}\,.
+      0 & 0 & 0.1250 & 0.5000
+   \end{bmatrix}\,,
 \end{equation*}
+with differing measurement models. In all cases, estimators were initialised with the same initial conditions, equal to the true starting condition of the processes they were estimating.
 
---
-%give F, H, Q, R, Z's
+The first measurement model measures location and leads to an observable system with bounded CRLB error covariances as $k \rightarrow \infty$. It is given by
+\begin{equation*}
+   \mat{H}=
+   \begin{bmatrix}
+      1 & 0 & 0 & 0\\
+      0 & 0 & 1 & 0
+   \end{bmatrix}
+   \text{ and }
+   \mat{R}=
+   \begin{bmatrix}
+      5 & 2\\
+      2 & 5
+   \end{bmatrix}\,,
+\end{equation*}
+and the sensor adds pseudorandom Gaussian samples with covariance
+\begin{equation*}
+   \mat{Z}=
+   \begin{bmatrix}
+      35 & 0\\
+      0 & 35
+   \end{bmatrix}
+\end{equation*}
+to create an estimator privilege level. Figures () and () show the average error covariance traces and RMSE of estimation from 1000 runs of our privileged estimation scheme, respectively, where the above models are followed. It can be seen that the trace of the privileged estimator error covariance is lower than that of the unprivileged one. Both traces are equivalent to the those of respective estimator CRLB covariances and their difference equal to the trace of the estimation privilege covariance $\mat{D}_k$ at any time $k$.
 
+% Figure one <here>
 
-Simulations were implemented in the Python programming language, using the AES block cipher in CTR mode as a crytographically secure stream cipher (AES-CTR) [].
+The second simulation considers an unobservable system where only the velocity is measured and has an unbounded CRLB error covariance as $k \rightarrow \infty$. It is given by
+\begin{equation*}
+   \mat{H}=
+   \begin{bmatrix}
+      0 & 1 & 0 & 0\\
+      0 & 0 & 0 & 1
+   \end{bmatrix}
+\end{equation*}
+and uses the same values for $\mat{R}$ and $\mat{Z}$ as given for the previous model. Figures () and () show the average error covariance traces and RMSE of estimation from 1000 runs using this model and capture how error covariance boundedness does not affect the privileged estimation scheme's properties.
 
-In figure (), the average error covariance over 1000 runs has been plotted for each privilege level (solid) and the special cases where estimator held all the secret key (dashed green) and none of them (dashed red).
+% Figure two <here>
 
-It can be clearly seen that the
+Lastly, a simulation of multiple privilege levels was also performed using the bounded error covariance measurement model () and using pseudorandom Gaussian sample with variances $\mat{Z}_0=20 \cdot \mat{I}$, $\mat{Z}_1=14 \cdot \mat{I}$ and $\mat{Z}_2=17 \cdot \mat{I}$. Note that the three matrices $\mat{Z}_i$, $0 \leq i < 3$ are such that () is satisfied. Figures () and () again show the average traces and RMSE of estimation from 1000 runs and display the distinct difference in estimation error of the different privilege levels. Additionally, two special case bounding estimators are included, one holding all privilege level keys and one holding none.
 
+% Figure three <here>
 
+All of the included figures capture the difference in estimation error of the best possible estimators given the simulated processes (with respect to RMSE) and support the proposed security proof sketch given in section ().
 
 % 
 %  .d8888b.   .d88888b.  888b    888  .d8888b.  
@@ -484,7 +572,13 @@ It can be clearly seen that the
 % 
 
 \section{Conclusion}
-The conclusion goes here.
+Presented the idea of privileged estimation and gave a formal cryptographic definition.
+
+Demonstrated a concrete privileged estimation scheme and gave a proof sketch for it meeting the desired security notion.
+
+Additionally supported the proof sketch by simulation using the best possible estimators for the simulated processes.
+
+Future work includes reducing the requirement () for multiple levels of private estimation, discussing the formal security in this case further and implementing privileged estimation on hardware to demonstrate the real-time capability of the method.
 
 % conference papers do not normally have an appendix
 
