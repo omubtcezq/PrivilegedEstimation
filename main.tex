@@ -328,7 +328,7 @@ The dependencies between the covariances can be captured by the block matrix equ
 
 ...equation and also block matrix inequality (might need some defining as it uses $\prec$)
 
-Since we require $Z_i>0$ for all $0\leq i< N$, the restriction on the choices of privilege level additional noises $E_i$ can be rewritten as
+Since we require $Z_i>0$ for all $0 \leq i < N$, the restriction on the choices of privilege level additional noises $E_i$ can be rewritten as
 \begin{equation}
    E_i \prec \frac{1}{N-2}\sum_{i=0}^{N-1}E_i
 \end{equation}
@@ -401,18 +401,23 @@ Since both series $\mat{P}_k$ and $\mat{P}^\prime_k$ give the lowest possible er
 
 A reduction proof can be easily constructed where the existence of an unprivileged estimator in our scheme that can produce estimates such that \eqref{eqn:cov_privilege} does not hold, can be used to construct an estimator with an error covariance lower than $\mat{P}^\prime_k$ given the modified model. As we know that no such estimator exists, we conclude that our scheme meets $\{\mat{D}_1,\mat{D}_2,\dots\}$-Covariance Privilege for Models $\mathcal{M}_P$ and $\mathcal{M}_M$, when $\mathcal{M}_P$ and $\mathcal{M}_M$ are Gaussian, linear and time-invariant.
 
--- TODO:
+End proof sketch.
 
-In addition to the security definitions and proof above, we stress caution when assuming such guarantees in the presence of a measured physical process. The following implicit assumptions are made when applying models $\mathcal{M}_P$ and $\mathcal{M}_M$ to an observable phenomenon.
-
-the Bayesian interpretation of probability
-
-the assumption is that model is exactly correct
-
-an assumption that uniform floating points are uniform enough (here or in negligible difference discussion above?)
+In addition to the proof sketch above, we stress caution when assuming accepting a cryptographic guarantee in terms of models $\mathcal{M}_P$ and $\mathcal{M}_M$ when used to predict a measured physical process. The following implicit assumptions would be made in such a scenario.
+\begin{LaTeXdescription}
+   \item[Exact models] When assigning a model to a physical process, our scheme involving the model only guarantees the same security of estimating the physical process when it follows the model \textit{exactly}. It is often the case that models are chosen to be Gaussian and linear in part to simplify estimation, resulting in the possibility of better estimation with alternative, more complicated, models. To minimise this possibility, it is therefore important to to use the models which most accurately describe the modelled process.
+   \item[Bayesian interpretation] We also note that the model requirements and security definitions we have put forward assume a Bayesian interpretation of probability theory. Although this is the standard for state estimation problems due to its applicability and performance, without stating this assumption it may be arguable that the security definition \ref{eqn:cov_privilege} may not hold.
+\end{LaTeXdescription}
 
 \subsection{Multiple Additional Noises}
 
+While we have not defined a security notion for multiple levels of privileged estimation, an intuitive and informal extension can be described.
+
+The security notion desired would require that for any subset of corrupted estimators, and therefore the knowledge of any subset of different privilege level secret keys $s \subset \{\mathsf{sk}_i,\,0 \leq i < N\}$ and noisy meausmrents, an estimator given true measurements exists, such that the difference between the corrupted subset's error covariance and its own is at least $\mat{D}^{(s)}_k$ at time $k$.
+
+Although this definition requires an infinite series for every possible subset of privilege level keys $s$, complicating its form specification, it captures the exact advantage of every such subset making it a more general definition.
+
+Given the structure of our scheme in section () it can be readily seen how the above notion would be met. Similarly to the single level case, the CRLB can be used to compute the minimum error covariances for all compromised key subsets as well as for an estimator with the true measurements, and the relevant infinite covariance series' can be defined.
 
 % 
 %  .d8888b. 8888888 888b     d888 
@@ -429,7 +434,38 @@ an assumption that uniform floating points are uniform enough (here or in neglig
 % 
 
 \section{Simulation and Results}
+As well as showing the theoretical security of our scheme, we have simulated the estimation problem using estimators which achieve the CRLB error covariances for varying privileges.
 
+We have considered simulations for both bounded and unbounded error covariances to demonstrate the method. The process model followed a two-dimensional constant velocity model, with
+\begin{equation*}
+   \mat{F}=
+   \begin{bmatrix}
+      1 & 0.5 & 0 & 0\\
+      0 & 1 & 0 & 0\\
+      0 & 0 & 1 & 0.5\\
+      0 & 0 & 0 & 1\\
+   \end{bmatrix}
+\end{equation*}
+and
+\begin{equation*}
+   \mat{Q}=0.01\cdot
+   \begin{bmatrix}
+      0.0417 & 0.1250 & 0 & 0\\
+      0.1250 & 0.5000 & 0 & 0\\
+      0 & 0 & 0.0417 & 0.1250\\
+      0 & 0 & 0.1250 & 0.5000\\
+   \end{bmatrix}\,.
+\end{equation*}
+
+--
+%give F, H, Q, R, Z's
+
+
+Simulations were implemented in the Python programming language, using the AES block cipher in CTR mode as a crytographically secure stream cipher (AES-CTR) [].
+
+In figure (), the average error covariance over 1000 runs has been plotted for each privilege level (solid) and the special cases where estimator held all the secret key (dashed green) and none of them (dashed red).
+
+It can be clearly seen that the
 
 
 
