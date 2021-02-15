@@ -96,22 +96,29 @@
 
 
 % author names and affiliations
-\author{\IEEEauthorblockN{Michael Shell}
-\IEEEauthorblockA{School of Electrical and\\Computer Engineering\\
-Georgia Institute of Technology\\
-Atlanta, Georgia 30332--0250\\
-Email: http://www.michaelshell.org/contact.html}
+\author{\IEEEauthorblockN{Marko Ristic}
+\IEEEauthorblockA{Intelligent Sensor-Actuator-\\
+Systems (ISAS)\\
+Karlsruhe Institute of\\
+Technology (KIT), Germany\\
+Email: marko.ristic@kit.edu\\
+Phone: +49 721 608--45250}
 \and
-\IEEEauthorblockN{Homer Simpson}
-\IEEEauthorblockA{Twentieth Century Fox\\
-Springfield, USA\\
-Email: homer@thesimpsons.com}
+\IEEEauthorblockN{Benjamin Noack}
+\IEEEauthorblockA{Intelligent Sensor-Actuator-\\
+Systems (ISAS)\\
+Karlsruhe Institute of\\
+Technology (KIT), Germany\\
+Email: noack@kit.edu\\
+Phone: +49 721 608--44024}
 \and
-\IEEEauthorblockN{James Kirk\\ and Montgomery Scott}
-\IEEEauthorblockA{Starfleet Academy\\
-San Francisco, California 96678--2391\\
-Telephone: (800) 555--1212\\
-Fax: (888) 555--1212}}
+\IEEEauthorblockN{Uwe D. Hanebeck}
+\IEEEauthorblockA{Intelligent Sensor-Actuator-\\
+Systems (ISAS)\\
+Karlsruhe Institute of\\
+Technology (KIT), Germany\\
+Email: uwe.hanebeck@kit.edu\\
+Telephone: +49 721 608--43909}}
 
 % make the title area
 \maketitle
@@ -131,7 +138,7 @@ Fax: (888) 555--1212}}
 % 
 
 \begin{abstract}
-The abstract goes here.
+State estimation via public channels requires additional planning with regards to state privacy and the information leakage of involved parties. In some scenarios it is desirable to allow partial leakage of state information, thus distinguishing between privileged and unprivileged estimators and their capabilities. Existing methods identifying privileged and unprivileged or trusted and untrusted estimators typically result in reduced estimation quality for both parties or require additional secure channels of communication. We introduce a method to diminish the estimation quality at unprivileged estimators using a stream of pseudorandom Gaussian samples while leaving privileged estimation unaffected and requiring no additional transmission beyond an initial key exchange. A cryptographic definition of privileged estimation is first presented, capturing the definition of the difference between estimation qualities, before we develop a Gaussian keystream privileged estimation scheme meeting the security criteria defined. Achieving privileged estimation without additional channel requirements allows quantifiable estimation to be made available to the public while keeping the best estimation private to trusted privileged parties and can find uses in a variety of service providing and privacy-preserving scenarios.
 \end{abstract}
 
 % no keywords
@@ -156,19 +163,32 @@ The abstract goes here.
 
 \section{Introduction}
 % no \IEEEPARstart
-State estimation
+The role of state estimation and sensor data processing has become increasingly prevalent in modern systems []. Since the development of Kalman estimation theory, Bayesian state estimation has found particularly common application, varying from autonomous systems to remote estimation [] and has naturally led to a 
 
-Wireless and distributed estimation
+large interest in estimating and reducing the errors associated with state estimates [].
 
-Security concerns
+% twice word 'remote' remove one
+As advancements in distributed algorithms and cloud computing develop, the use of wireless and public communication channels for data transmission has become widespread [], bringing to light the requirements of data privacy and state secrecy more than ever [].
 
-Traditional methods hide all information, other use-cases exist
+Typically use-cases for preserving data privacy over public channels has seen sent information encrypted with 
 
-Information may be divided into privilege levels authenticating different audiences to different amounts of information [gps, anonymisation]
+
+
+
+% State estimation
+
+% Wireless and distributed estimation
+
+% Security concerns
+
+% Traditional methods hide all information, other use-cases exist
+
+% Information may be divided into privilege levels authenticating different audiences to different amounts of information [gps, anonymisation]
 
 Our contribution in this work is comprised of a formal definition of privileged state estimation, which allows the quantification of estimation error covariance differences between privileged and unprivileged estimators, before proposing a solution to the problem accompanied by a cryptographic sketch proof and simulation results.
 
-Section summary
+% Section summary
+In section \ref{sec:problem_statement} we introduce the relevant privileged estimation problem followed by a cryptographic formalisation of desired properties. Section \ref{sec:priv_estimation} introduces our proposed privileged estimation scheme and in section \ref{sec:security} a cryptographic proof sketch is given. A simulation of the method is then demonstrated and explained in section \ref{sec:simulation}, while concluding remarks and future work are discussed in section \ref{sec:conclusion}.
 
 % 
 % ##    ##  #######  ########    ###    ######## ####  #######  ##    ## 
@@ -181,8 +201,8 @@ Section summary
 % 
 
 \subsection{Notation}
-Define vectors, matrices, encryption, pseudorandom samples, positive-definitiveness and $\prec$ for matrices, negligible function, I for identity matrix of relevant size
-
+Throughout this work the following notation is used. Lowercase underlined characters $\vec{a}$ denote vectors, while uppercase bold characters $\mat{M}$ denote matrices. $\mat{M}\succ 0$ and $\mat{M} \succeq 0$ denote positive definitiveness and positive semi-definitiveness, respectively, and $\mat{M} \succ \mat{N}$ is short for $\mat{M}-\mat{N}\succ 0$. Function $\mathsf{eig}(\mat{M})$ gives the set of eigenvalues for matrix $\mat{M}$, $\mathsf{Cov}[\cdot]$ computes the covariance of a random vector, $\mat{I}$ is the identity matrix with context-inferrable size and $\mathsf{negl}(\cdot)$ denotes a negligible function in $\mathbb{N}\rightarrow\mathbb{R}$.
+% missing: encryption things, distribution things (not certain these will be required yet)
 
 % 
 % 8888888b.  8888888b.   .d88888b.  888888b.   
@@ -198,7 +218,7 @@ Define vectors, matrices, encryption, pseudorandom samples, positive-definitiven
 %                                              
 % 
 
-\section{Problem Statement}\label{sec:est_problem}
+\section{Problem Statement}\label{sec:problem_statement}
 The estimation scenario that we consider is for known process and measurement models, where state estimators are either privileged estimators possessing a secret key, or unprivileged estimators without. We aim to develop a scheme for which the difference in their estimation errors is quantifiable and cryptographically guaranteed when process and measurement models are Gaussian, linear and time-invariant.
 
 The process model we consider gives the state $\vec{x}_k\in\mathbb{R}^n$ at a timestep $k$ and is given by
@@ -228,7 +248,7 @@ While we are interested in Gaussian, linear and time-invariant models, it is of 
 
 Typical formal cryptographic security notions capture desired privacy properties as well as attacker capabilities \cite{katzIntroductionModernCryptography2008}. The most commonly desired privacy property, cryptographic indistinguishability, is not suitable for our estimation scenario due to our desire for unprivileged estimators to still gain \text{some} information from measurements. Instead, we will require a time series of estimation error covariance differences, given arbitrary known Bayesian models, such that the difference in estimation error between estimators with and without the secret key is lower-bounded at all times by the series.
 
-To formalise this, we introduce the following notations and definitions. We assume the existence of an arbitrary process following a known model exactly, with the state at time $k$ denoted $\vec{x}_k\in\mathbb{R}^n$, as in section \ref{sec:est_problem}, and model parameters $\mathcal{M}_P$. Similarly, we assume the existence of a means of process measurement following a known measurement model exactly, with the measurement at time $k$ denoted as $\vec{y}_k\in\mathbb{R}^m$, and model parameters $\mathcal{M}_M$. We can now define a \textit{privileged estimation scheme} as a pair of algorithms $(\mathsf{Setup},\mathsf{Noise})$ given by
+To formalise this, we introduce the following notations and definitions. We assume the existence of an arbitrary process following a known model exactly, with the state at time $k$ denoted $\vec{x}_k\in\mathbb{R}^n$, as in section \ref{sec:problem_statement}, and model parameters $\mathcal{M}_P$. Similarly, we assume the existence of a means of process measurement following a known measurement model exactly, with the measurement at time $k$ denoted as $\vec{y}_k\in\mathbb{R}^m$, and model parameters $\mathcal{M}_M$. We can now define a \textit{privileged estimation scheme} as a pair of algorithms $(\mathsf{Setup},\mathsf{Noise})$ given by
 \begin{LaTeXdescription}
    \item[$\mathsf{Setup}(\mathcal{M}_P, \mathcal{M}_M, \kappa)$] On the input of models $\mathcal{M}_P$, $\mathcal{M}_M$ and the security parameter $\kappa$, public parameters $\mathsf{pub}$ and a secret key $\mathsf{sk}$ are created.
    \item[$\mathsf{Noise}(\mathsf{sk}, k, \mathcal{M}_P, \mathcal{M}_M, \vec{y}_1, \dots, \vec{y}_k)$] On input of secret key $\mathsf{sk}$, time $k$, models $\mathcal{M}_P$, $\mathcal{M}_M$ and measaurements $y_1,\dots,y_k$, a noisey measurement $\vec{y}^\prime_k$ (with no required model constraints) is created.
@@ -274,7 +294,7 @@ Informally, the above definition states that no estimator with access to only no
 %                                                                                
 % 
 
-\section{Privileged Estimation}
+\section{Privileged Estimation}\label{sec:priv_estimation}
 General idea
 
 (picture ?)
@@ -386,7 +406,7 @@ Alternative methods involving multiple or overlapping keys among privilege level
 %                                                                                        
 % 
 
-\section{Scheme Security}
+\section{Scheme Security}\label{sec:security}
 The security of the proposed scheme will be primarily considered in the single privileged estimation level as introduced in section ().
 
 A proof sketch will be provided to show how the proposed scheme meets the cryptographic notion in section ().
@@ -488,7 +508,7 @@ Given the structure of our scheme in section () it can be readily seen how the a
 %                                 
 % 
 
-\section{Simulation and Results}
+\section{Simulation and Results}\label{sec:simulation}
 As well as showing the theoretical security of our scheme, we have simulated the estimation problem using linear Kalman filter estimators which achieve the CRLB error covariances for the different measurement models. Simulations have been implemented in the Python programming language and use the AES block cipher in CTR mode as a cryptographically secure stream cipher (AES-CTR) [].
 
 We have considered two simulations, both following the same two-dimensional constant-velocity process model, given by
@@ -571,7 +591,7 @@ All of the included figures capture the difference in estimation error of the be
 %                                               
 % 
 
-\section{Conclusion}
+\section{Conclusion}\label{sec:conclusion}
 Presented the idea of privileged estimation and gave a formal cryptographic definition.
 
 Demonstrated a concrete privileged estimation scheme and gave a proof sketch for it meeting the desired security notion.
