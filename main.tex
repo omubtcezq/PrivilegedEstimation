@@ -188,9 +188,9 @@ Throughout this work the following notation is used. Lowercase underlined charac
 % 
 
 \section{Problem Statement}\label{sec:problem_statement}
-The estimation scenario that we consider is for known process and measurement models, where state estimators are either privileged estimators possessing a secret key, or unprivileged estimators without. We aim to develop a scheme for which the difference in their estimation errors is quantifiable and cryptographically guaranteed when process and measurement models are Gaussian, linear and time-invariant.
+We consider the estimation scenario with known process and measurement models, where state estimators are either privileged estimators possessing a secret key, or unprivileged estimators without. We aim to develop a scheme for which the difference in their estimation errors is quantifiable and cryptographically guaranteed when process and measurement models are Gaussian, linear and time-invariant.
 
-The process model we consider gives the state $\vec{x}_k\in\mathbb{R}^n$ at a timestep $k$ and is given by
+The process model we consider gives the state $\vec{x}_k\in\mathbb{R}^n$ at a time $k$ and is given by
 \begin{equation}\label{eqn:linear_process_model}
    \vec{x}_k = \mat{F}\vec{x}_{k-1} + \vec{w}\,,
 \end{equation}
@@ -200,7 +200,7 @@ with noise term $\vec{w}\sim \mathcal{N}(\vec{0}, \mat{Q})$ and a known covarian
 \end{equation}
 with noise term $\vec{v}\sim \mathcal{N}(\vec{0}, \mat{R})$ and a known covariance $\mat{R}\in \mathbb{R}^{m\times m}$.
 
-To capture our aim of creating a ``better'' and ``worse'' estimator, we need to define how to assess estimator privilege and what algorithms are required to provide a privileged estimation scheme. In the following section, we give relevant formal definitions, which are later referred to when assessing the security of our proposed scheme.
+To capture our aim of creating a privileged and unprivileged estimator, we must first define how to assess the estimation advantage between estimators, and which algorithms are required to characterise a privileged estimation scheme. In the following section, we give relevant formal definitions, which will be used when assessing the security of our proposed scheme.
 
 % 
 %  ######  ########  ##    ## ########  ########  #######  
@@ -213,14 +213,14 @@ To capture our aim of creating a ``better'' and ``worse'' estimator, we need to 
 % 
 
 \subsection{Formal cryptographic Problem}\label{subsec:crypto_problem}
-While we are interested in Gaussian, linear and time-invariant models, it is of more use to define a broader security notion that can be satisfied given specified conditions on the models. This will allow the use of the same notion in future literature and is more closely in-line with cryptography practice. Later, we will show our proposed scheme meets this broad security notion under the Gaussian, linear and time-invariant model assumptions.
+While we are interested in Gaussian and linear models, it is more practical to define a broader security notion that can be satisfied under arbitrary specified conditions on the models. This allows the use of the security notion in future literature and is more in-line with typical cryptographic practice. We will later show that our proposed scheme meets this security notion under the specific Gaussian and linear model assumptions.
 
-Typical formal cryptographic security notions capture desired privacy properties as well as attacker capabilities \cite{katzIntroductionModernCryptography2008}. The most commonly desired privacy property, cryptographic indistinguishability, is not suitable for our estimation scenario due to our desire for unprivileged estimators to still gain \text{some} information from measurements. Instead, we will require a time series of estimation error covariance differences, given arbitrary known Bayesian models, such that the difference in estimation error between estimators with and without the secret key is lower-bounded at all times by the series.
+Typical formal cryptographic security notions are given in terms of probabilistic polynomial-time (PPT) attackers and capture desired privacy properties as well as attacker capabilities \cite{katzIntroductionModernCryptography2008}. The most commonly desired privacy property, cryptographic indistinguishability, is not suitable for our estimation scenario due to our desire for unprivileged estimators to gain \text{some} information from measurements. Instead, we will define security with respect to a time series of covariances, given arbitrary known Bayesian models, such that the difference in estimation error between estimators with and without the secret key is bounded by the series at all times.
 
-To formalise this, we introduce the following notations and definitions. We assume the existence of an arbitrary process following a known model exactly, with the state at time $k$ denoted $\vec{x}_k\in\mathbb{R}^n$, as in section \ref{sec:problem_statement}, and model parameters $\mathcal{M}_P$. Similarly, we assume the existence of a means of process measurement following a known measurement model exactly, with the measurement at time $k$ denoted as $\vec{y}_k\in\mathbb{R}^m$, and model parameters $\mathcal{M}_M$. We can now define a \textit{privileged estimation scheme} as a pair of algorithms $(\mathsf{Setup},\mathsf{Noise})$ given by
+To formalise this, we introduce the following notations and definitions. We assume the existence of an arbitrary process (not necessarily Gaussian or linear) following a known model exactly, with the state at time $k$ denoted $\vec{x}_k\in\mathbb{R}^n$ and model parameters $\mathcal{M}_P$. Similarly, we assume the existence of a means of process measurement following a known measurement model exactly, with the measurement at time $k$ denoted $\vec{y}_k\in\mathbb{R}^m$ and model parameters $\mathcal{M}_M$. We can now define a \textit{privileged estimation scheme} as a pair of algorithms $(\mathsf{Setup},\mathsf{Noise})$ given by
 \begin{LaTeXdescription}
-   \item[$\mathsf{Setup}(\mathcal{M}_P, \mathcal{M}_M, \kappa)$] On the input of models $\mathcal{M}_P$, $\mathcal{M}_M$ and the security parameter $\kappa$, public parameters $\mathsf{pub}$ and a secret key $\mathsf{sk}$ are created.
-   \item[$\mathsf{Noise}(\mathsf{sk}, k, \mathcal{M}_P, \mathcal{M}_M, \vec{y}_1, \dots, \vec{y}_k)$] On input of secret key $\mathsf{sk}$, time $k$, models $\mathcal{M}_P$, $\mathcal{M}_M$ and measaurements $y_1,\dots,y_k$, a noisey measurement $\vec{y}^\prime_k$ (with no required model constraints) is created.
+   \item[$\mathsf{Setup}(\mathcal{M}_P, \mathcal{M}_M, \kappa)$] On the input of models $\mathcal{M}_P$ and $\mathcal{M}_M$, and the security parameter $\kappa$, public parameters $\mathsf{pub}$ and a secret key $\mathsf{sk}$ are created.
+   \item[$\mathsf{Noise}(\mathsf{sk}, k, \mathcal{M}_P, \mathcal{M}_M, \vec{y}_1, \dots, \vec{y}_k)$] On input of secret key $\mathsf{sk}$, time $k$, models $\mathcal{M}_P$ and $\mathcal{M}_M$, and measaurements $y_1,\dots,y_k$, a noisey measurement $\vec{y}^\prime_k$ (with no required model constraints) is created.
 \end{LaTeXdescription}
 In addition to the scheme description above, we also give the following definitions to help formalise our desired security notion.
 \begin{definition}\label{def:estimator}
@@ -231,23 +231,23 @@ In addition to the scheme description above, we also give the following definiti
    \begin{equation}
       \mathsf{neglCov}_m(\kappa):\mathbb{N}\rightarrow \mathbb{R}^{m\times m}
    \end{equation}
-   that returns a matrix $\mat{A}$ such that $\mat{A}$ is a valid covariance ($\mat{A}\succ 0$ and $\mat{A}=\mat{A}^\top$) and that for each of its eigenvalues $e\in\operatorfont{eig}(\mat{A})$, there exists a negligible function $\eta$ such that $e\leq\eta(\kappa)$.
+   that returns a matrix $\mat{A}$ such that $\mat{A}$ is a valid covariance ($\mat{A}\succ 0$ and $\mat{A}=\mat{A}^\top$) and that for each of its eigenvalues $e\in\mathsf{eig}(\mat{A})$, there exists a negligible function $\eta$ such that $e\leq\eta(\kappa)$.
 \end{definition}
 
-With the terminology above, we can now introduce the security notion which captures the formal requirements of the estimation problem we want to solve.
+With the terminology above, we can now introduce the security notion which captures the formal requirements of the estimation problem that we want to solve.
 \begin{definition}\label{def:cov_privilege_security_notion}
-   A privileged estimation scheme meets \textit{$\{\mat{D}_1,\mat{D}_2,\dots\}$-Covariance Privilege for Models $\mathcal{M}_P$ and $\mathcal{M}_M$} if for any probabilistic polynomial-time (PPT) estimator $\mathcal{A}$, there exists a PPT estimator $\mathcal{A}^\prime$, such that
+   A privileged estimation scheme meets notion \textit{$\{\mat{D}_1,\mat{D}_2,\dots\}$-Covariance Privilege for Models $\mathcal{M}_P$ and $\mathcal{M}_M$} if for any PPT estimator $\mathcal{A}$, there exists a PPT estimator $\mathcal{A}^\prime$, such that
    \begin{equation}\label{eqn:cov_privilege}
       \begin{split}
-         &\operatorfont{Cov}\left[\mathcal{A}\left(k, \kappa, \mathsf{pub}, \mathcal{M}_P, \mathcal{M}_M, \vec{y}^\prime_1,\dots,\vec{y}^\prime_k\right) - \vec{x}_k \right]\\
-         &-\operatorfont{Cov}\left[\mathcal{A}^\prime\left(k, \kappa, \mathsf{pub}, \mathcal{M}_P, \mathcal{M}_M, \vec{y}_1,\dots,\vec{y}_k\right) - \vec{x}_k \right]\\
+         &\mathsf{Cov}\left[\mathcal{A}\left(k, \kappa, \mathsf{pub}, \mathcal{M}_P, \mathcal{M}_M, \vec{y}^\prime_1,\dots,\vec{y}^\prime_k\right) - \vec{x}_k \right]\\
+         &-\mathsf{Cov}\left[\mathcal{A}^\prime\left(k, \kappa, \mathsf{pub}, \mathcal{M}_P, \mathcal{M}_M, \vec{y}_1,\dots,\vec{y}_k\right) - \vec{x}_k \right]\\
          &\quad\succeq \mat{D}_k + \mathsf{neglCov}_m(\kappa)
       \end{split}
    \end{equation}
-   for valid covariances $\mat{D}_1,\dots,\mat{D}_k$ and some negligible covariance for all $k>0$. Here, estimators $\mathcal{A}$ and $\mathcal{A}^\prime$ are running in polynomial-time with respect to the security parameter $\kappa$, and all probabilities are taken over models $\mathcal{M}_P$ and $\mathcal{M}_M$, estimators $\mathcal{A}$ and $\mathcal{A}^\prime$, and algorithms $\mathsf{Setup}$ and $\mathsf{Noise}$.
+   for valid covariances $\mat{D}_1,\mat{D}_2,\dots$ and some negligible covariance for all $k>0$. Here, estimators $\mathcal{A}$ and $\mathcal{A}^\prime$ are running in polynomial-time with respect to the security parameter $\kappa$, and all probabilities are taken over models $\mathcal{M}_P$ and $\mathcal{M}_M$, estimators $\mathcal{A}$ and $\mathcal{A}^\prime$, and algorithms $\mathsf{Setup}$ and $\mathsf{Noise}$.
 \end{definition}
 
-Informally, the above definition states that no estimator with access to only noisy measurements $\vec{y}^\prime_1,\dots,\vec{y}^\prime_k$ can estimate a state $\vec{x}_k$ at time $k$ with an RMSE covariance less than an equivalent estimator with normal measurements $\vec{y}_1,\dots,\vec{y}_k$, by a margin of at least $\mat{D}_k$. Next, we will propose a scheme meeting the aforementioned notion for a derivable series of covariances given Gaussian, linear, and time-invariant models $\mathcal{M}_P$ and $\mathcal{M}$.
+Informally, the above definition states that no estimator that can only access noisy measurements $\vec{y}^\prime_1,\dots,\vec{y}^\prime_k$ can estimate a state $\vec{x}_k$ for a time $k$ with a mean square error (MSE) covariance less than an equivalent estimator with access to true measurements $\vec{y}_1,\dots,\vec{y}_k$, by a margin of at least $\mat{D}_k$. Next, we will propose a scheme meeting the aforementioned notion for a derivable series of covariances when models $\mathcal{M}_P$ and $\mathcal{M}_M$ are Gaussian and linear.
 
 % 
 % 8888888b.  8888888b.  8888888 888     888      8888888888 .d8888b. 88888888888 
@@ -412,7 +412,7 @@ The CRLB can also be computed recursively for time $k$, in which case it reduces
 
 which gives us a value $\mat{P}_k$ at time $k$, such that
 \begin{equation}
-   \mat{P}_k \preceq \operatorfont{Cov}\left[\mathcal{A}\left(k, \mathcal{M}_P, \mathcal{M}_M, \vec{y}_1,\dots,\vec{y}_k\right) - \vec{x}_k \right]
+   \mat{P}_k \preceq \mathsf{Cov}\left[\mathcal{A}\left(k, \mathcal{M}_P, \mathcal{M}_M, \vec{y}_1,\dots,\vec{y}_k\right) - \vec{x}_k \right]
 \end{equation}
 for any estimator $\mathcal{A}$ following definition \ref{def:estimator} and any Gaussian, linear, time-invariant models $\mathcal{M}_P$ and $\mathcal{M}_M$.
 
