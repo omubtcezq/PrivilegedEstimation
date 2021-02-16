@@ -1,6 +1,6 @@
 % Marko Ristic
 
-\documentclass[letterpaper, 10 pt, conference]{IEEEtran}
+\documentclass[conference]{IEEEtran}
 
 % 
 % 8888888 888b     d888 8888888b.   .d88888b.  8888888b. 88888888888 .d8888b.  
@@ -24,10 +24,14 @@
 \usepackage{amsfonts}
 \usepackage{amsthm}
 \usepackage{mathtools}
+% Algorithms
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 % Local
 \usepackage{ISASmacros/isasmathmacros}
 % Equal last columns
 %\usepackage{flushend}
+
 
 % Environments
 \theoremstyle{definition}
@@ -38,6 +42,9 @@
 
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
+
+% Algorithm settings
+\algnewcommand{\LineComment}[1]{\State \(\triangleright\) #1}
 
 % Tikz settings
 \usetikzlibrary{math}
@@ -94,21 +101,24 @@
 Systems (ISAS)\\
 Karlsruhe Institute of\\
 Technology (KIT), Germany\\
-Email: marko.ristic@kit.edu}
+Email: marko.ristic@kit.edu\\
+Phone: +49 721 608--45250}
 \and
 \IEEEauthorblockN{Benjamin Noack}
 \IEEEauthorblockA{Intelligent Sensor-Actuator-\\
 Systems (ISAS)\\
 Karlsruhe Institute of\\
 Technology (KIT), Germany\\
-Email: noack@kit.edu}
+Email: noack@kit.edu\\
+Phone: +49 721 608--44024}
 \and
 \IEEEauthorblockN{Uwe D. Hanebeck}
 \IEEEauthorblockA{Intelligent Sensor-Actuator-\\
 Systems (ISAS)\\
 Karlsruhe Institute of\\
 Technology (KIT), Germany\\
-Email: uwe.hanebeck@kit.edu}}
+Email: uwe.hanebeck@kit.edu\\
+Telephone: +49 721 608--43909}}
 
 % make the title area
 \maketitle
@@ -153,9 +163,9 @@ State estimation via public channels requires additional planning with regards t
 
 \section{Introduction}
 % no \IEEEPARstart
-The role of state estimation and sensor data processing has become increasingly prevalent in modern systems \cite{ligginsDistributedDataFusion2012}. Particularly, since the development of Kalman estimation theory, Bayesian state estimation has found common application, varying from autonomous systems to remote estimation \cite{mutambaraDecentralizedEstimationControl1998,sinopoliKalmanFilteringIntermittent2004}. As advancements in distributed algorithms and cloud computing develop, the use of wireless and public communication channels for data transmission has become widespread, bringing to light the requirements of data privacy and state secrecy \cite{renSecurityChallengesPublic2012,brennerSecretProgramExecution2011}.
+The role of state estimation and sensor data processing has become increasingly prevalent in modern systems \cite{ligginsDistributedDataFusion2012}. Particularly since the development of Kalman estimation theory, Bayesian state estimation has found common application, varying from autonomous systems to remote estimation \cite{mutambaraDecentralizedEstimationControl1998,sinopoliKalmanFilteringIntermittent2004}. As advancements in distributed algorithms and cloud computing develop, the use of wireless and public communication channels for data transmission has become widespread, bringing to light the requirements of data privacy and state secrecy \cite{renSecurityChallengesPublic2012,brennerSecretProgramExecution2011}.
 
-Typically, use-cases for preserving data privacy over public channels involve hiding all transferred information such that eavesdroppers or present untrusted parties learn no additional information from the observed data. This is achievable using common encryption schemes such as AES \cite{gueronIntelAdvancedEncryption2010} or RSA \cite{rivestMethodObtainingDigital1978} which formally capture this security requirement by satisfying cryptographic ciphertext indistinguishability \cite{katzIntroductionModernCryptography2008}. Some more advanced requirements using public channels also exist. When partial information needs to be made public, or computations need to be performed on data, homomorphic or aggregation encryption schemes can be used. \cite{alanwarPrOLocResilientLocalization2017} proposes localisation where individual sensors and measurements remain private using homomorphic encryption. \cite{alexandruPrivateWeightedSum2020} has distributed control inputs aggregated without parties learning individual contributions, while \cite{alexandruEncryptedCooperativeControl2019,farokhiSecurePrivateControl2017} use homomorphic encryption to allow control inputs to be computed without decryption. In the context of estimation, a quantifiable difference in estimation performance between untrusted and trusted parties can provide different levels of estimation privilege. This was achieved in the initial release of the Global Positioning System (GPS) \cite{grovesPrinciplesGNSSInertial2015}, which relied on a second, encrypted, stream of information required for accurate estimation. Another example is seen in \cite{leongTransmissionSchedulingRemote2019}, where intermittent sending is proposed to increase eavesdropper estimation error while using a secure feedback channel to ensure better estimation for trusted parties. Our contribution in this work considers this context of privileged and unprivileged estimation and is comprised of a formal definition of privileged state estimation, crucial for providing cryptographic security albeit often neglected, before proposing an estimation scheme which provides privileged levels of estimation without reliance on additional secure channels or privileged estimator feedback. We accompany the method with a cryptographic proof sketch and simulation results.
+Typically, use-cases for preserving data privacy over public channels involve hiding all transferred information such that eavesdroppers or present untrusted parties learn no additional information from the observed data. This is achievable using common encryption schemes such as AES \cite{gueronIntelAdvancedEncryption2010} or RSA \cite{rivestMethodObtainingDigital1978} which formally capture this security requirement by satisfying cryptographic ciphertext indistinguishability \cite{katzIntroductionModernCryptography2008}. Some more advanced requirements using public channels also exist. When partial information needs to be made public, or computations need to be performed on data, homomorphic or aggregation encryption schemes can be used. In \cite{alanwarPrOLocResilientLocalization2017}, localisation where individual sensors and measurements remain private is proposed using homomorphic encryption. \cite{alexandruPrivateWeightedSum2020} has distributed control inputs aggregated without parties learning individual contributions, while \cite{alexandruEncryptedCooperativeControl2019,farokhiSecurePrivateControl2017} use homomorphic encryption to allow control inputs to be computed without decryption. In the context of estimation, a quantifiable difference in estimation performance between untrusted and trusted parties can provide different levels of estimation privilege. This was done in the initial release of the Global Positioning System (GPS) \cite{grovesPrinciplesGNSSInertial2015}, which relied on a second, encrypted, stream of information required for accurate estimation. Another example is seen in \cite{leongTransmissionSchedulingRemote2019}, where intermittent sending is proposed to drive eavesdropper estimation error up while using a secure feedback channel to ensure better estimation for trusted parties. Our contribution in this work considers the same context and is comprised of a formal definition of privileged state estimation, crucial for providing cryptographic security albeit often neglected, before proposing an estimation scheme which provides privileged levels of estimation without reliance on additional secure channels or privileged estimator feedback. We accompany the method by a cryptographic sketch proof and simulation results.
 
 In section \ref{sec:problem_statement} we introduce the relevant privileged estimation problem followed by a cryptographic formalisation of desired properties. Section \ref{sec:priv_estimation} introduces our proposed privileged estimation scheme and in section \ref{sec:security} a cryptographic proof sketch is given. A simulation of the method is then demonstrated and explained in section \ref{sec:simulation}, while concluding remarks and future work are discussed in section \ref{sec:conclusion}.
 
@@ -170,8 +180,9 @@ In section \ref{sec:problem_statement} we introduce the relevant privileged esti
 % 
 
 \subsection{Notation}
-Throughout this work the following notation is used. Lowercase underlined characters $\vec{a}$ denote vectors, while uppercase bold characters $\mat{M}$ denote matrices. $\mat{M}\succ 0$ and $\mat{M} \succeq 0$ denote positive definitiveness and positive semi-definitiveness, respectively, and $\mat{M} \succ \mat{N}$ is used as shorthand for $\mat{M}-\mat{N}\succ 0$. Function $\mathsf{eig}(\mat{M})$ gives the set of eigenvalues for matrix $\mat{M}$, $\mathsf{Cov}[\cdot]$ computes the covariance of a random vector and $\mat{I}$ is the identity matrix with size inferrable from context.
-% missing: encryption things, distribution things, zero matrices (don't need negligible functions)
+Throughout this work the following notation is used. Lowercase underlined characters $\vec{a}$ denote vectors, while uppercase bold characters $\mat{M}$ denote matrices. $\mat{M}\succ 0$ and $\mat{M} \succeq 0$ denote positive definitiveness and positive semi-definitiveness, respectively, and $\mat{M} \succ \mat{N}$ is short for $\mat{M}-\mat{N}\succ 0$. Function $\mathsf{eig}(\mat{M})$ gives the set of eigenvalues for matrix $\mat{M}$, $\mathsf{Cov}[\cdot]$ computes the covariance of a random vector and $\mat{I}$ is the identity matrix with size inferrable from context.
+% missing: encryption things, distribution things (not certain these will be required yet)
+% DONT NEED negl (not used)
 
 % 
 % 8888888b.  8888888b.   .d88888b.  888888b.   
