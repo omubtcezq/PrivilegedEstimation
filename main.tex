@@ -461,7 +461,7 @@ As a cryptographically pseudorandom stream cipher is used in section \ref{subsec
    \end{split}
 \end{equation}
 Taking the difference of bounds \eqref{eqn:unprivileged_lower_bound_error_cov} and \eqref{eqn:lower_bound_error_cov} produces the series
-\begin{equation}
+\begin{equation}\label{eqn:covariance_difference_series}
    \mat{D}_k = \mat{P}_k^{\prime(l)} - \mat{P}_k^{(l)}\,,
 \end{equation}
 which can be scaled by the parameter $\mat{Z}$. Since both series $\mat{P}_k^{(l)}$ and $\mat{P}_k^{\prime(l)}$ give the lowest possible error covariance of the respective estimators, an estimator following model \eqref{eqn:linear_measurement_model} can always be created for one following the model \eqref{eqn:unprivileged_measurement_model} such that their error covariances at any time $k$ differ by at least $\mat{D}_k$. A reduction proof can be easily constructed where the existence of an unprivileged estimator in our scheme that can produce estimates such that \eqref{eqn:cov_privilege} does not hold, can be used to construct an estimator with an error covariance lower than $\mat{P}_k^{\prime(l)}$ given a known model of the form \eqref{eqn:unprivileged_measurement_model}. As no such estimator exists, we conclude that our scheme meets $\{\mat{D}_1,\mat{D}_2,\dots\}$-Covariance Privilege for Models $\mathcal{M}_P$ and $\mathcal{M}_M$, when $\mathcal{M}_P$ and $\mathcal{M}_M$ are Gaussian, linear and time-invariant. This concludes our proof sketch.
@@ -483,13 +483,11 @@ In addition to the proof sketch, we stress caution when accepting a cryptographi
 % 
 
 \subsection{Multiple Additional Noises}
-While we have not defined a security notion for multiple levels of privileged estimation, an intuitive and informal extension can be described.
+We have not defined a security notion for multiple levels of privileged estimation, but an intuitive and informal extension is briefly described here. 
 
-The security notion desired would require that for any subset of corrupted estimators, and therefore the knowledge of any subset of different privilege level secret keys $s \subset \{\mathsf{sk}_i,\,0 \leq i < N\}$ and noisy measurements, an estimator which is given true measurements can be constructed, such that the difference between the corrupted subset's error covariance and its own is at least $\mat{D}^{(s)}_k$ at time $k$.
+A suitable notion would require that for any subset of corrupted estimators, and thus any subset of secret keys $S \subset \{\mathsf{sk}_i,\,1\leq i\leq N\}$, given noisy measurements $\vec{y}_k^\prime$, an estimator given true measurements $\vec{y}_k$ can be constructed such that the difference between the corrupted subset's error covariance and its own is at least $\mat{D}^{(S)}_k$ at time $k$. Although this definition requires a series $\mat{D}^{(S)}_k$ for every possible subset of privilege level keys, $S$, complicating its formal specification, it captures the exact advantage of every such subset producing a general definition.
 
-Although this definition requires an infinite series for every possible subset of privilege level keys $s$, complicating its form specification, it captures the exact advantage of every such subset making it a more general definition.
-
-Given the structure of our scheme in section () it can be readily seen how the above notion would be met. Similarly to the single level case, the CRLB can be used to compute the minimum error covariances for all compromised key subsets as well as for an estimator with the true measurements, and the relevant infinite covariance series' can be defined.
+Given the structure of our scheme in section \ref{subsec:mult_privileges} it can be readily seen how the above notion would be met. Similarly to the single level case, the KF can be used to compute the minimum error covariances for all compromised key subsets as well as for an estimator with the true measurements, and the relevant difference series $\mat{D}^{(S)}_k$ can be defined. 
 
 % 
 %  .d8888b. 8888888 888b     d888 
@@ -506,7 +504,7 @@ Given the structure of our scheme in section () it can be readily seen how the a
 % 
 
 \section{Simulation and Results}\label{sec:simulation}
-As well as showing the theoretical security of our scheme, we have simulated the estimation problem using linear Kalman filter estimators which achieve the CRLB error covariances for the different measurement models. Simulations have been implemented in the Python programming language and use the AES block cipher in CTR mode as a cryptographically secure stream cipher (AES-CTR) [].
+As well as showing the theoretical security of our scheme, we have simulated the estimation problem using linear Kalman filter estimators for the different measurement models. Simulations have been implemented in the Python programming language and use the AES block cipher in CTR mode as a cryptographically secure stream cipher (AES-CTR) \cite{gueronIntelAdvancedEncryption2010}.
 
 We have considered two simulations, both following the same two-dimensional constant-velocity process model, given by
 \begin{equation*}
@@ -530,8 +528,8 @@ and
 \end{equation*}
 with differing measurement models. In all cases, estimators were initialised with the same initial conditions, equal to the true starting condition of the processes they were estimating.
 
-The first measurement model measures location and leads to an observable system with bounded CRLB error covariances as $k \rightarrow \infty$. It is given by
-\begin{equation*}
+The first measurement model measures location and leads to an observable system with bounded error covariances as $k \rightarrow \infty$. It is given by
+\begin{equation*}\label{eqn:bounded_sim_measurement_model}
    \mat{H}=
    \begin{bmatrix}
       1 & 0 & 0 & 0\\
@@ -552,11 +550,11 @@ and the sensor adds pseudorandom Gaussian samples with covariance
       0 & 35
    \end{bmatrix}
 \end{equation*}
-to create an estimator privilege level. Figures () and () show the average error covariance traces and RMSE of estimation from 1000 runs of our privileged estimation scheme, respectively, where the above models are followed. It can be seen that the trace of the privileged estimator error covariance is lower than that of the unprivileged one. Both traces are equivalent to the those of respective estimator CRLB covariances and their difference equal to the trace of the estimation privilege covariance $\mat{D}_k$ at any time $k$.
+to create an estimator privilege level. Figures () and () show the average error covariance traces and the root of mean square error (RMSE) of estimation from 1000 runs of our privileged estimation scheme, respectively, where the above models are followed. It can be seen that the trace of the privileged estimator's error covariance stays lower than that of the unprivileged one and that privileged estimation has lower RMSE. The difference in trace between the two estimators has also been plotted and exceeds the trace of the difference series \eqref{eqn:covariance_difference_series} at all times $k$ as expected.
 
 % Figure one <here>
 
-The second simulation considers an unobservable system where only the velocity is measured and has an unbounded CRLB error covariance as $k \rightarrow \infty$. It is given by
+The second simulation considers an unobservable system where only the velocity is measured and has an unbounded error covariance as $k \rightarrow \infty$. It is given by
 \begin{equation*}
    \mat{H}=
    \begin{bmatrix}
@@ -568,11 +566,11 @@ and uses the same values for $\mat{R}$ and $\mat{Z}$ as given for the previous m
 
 % Figure two <here>
 
-Lastly, a simulation of multiple privilege levels was also performed using the bounded error covariance measurement model () and using pseudorandom Gaussian sample with variances $\mat{Z}_0=20 \cdot \mat{I}$, $\mat{Z}_1=14 \cdot \mat{I}$ and $\mat{Z}_2=17 \cdot \mat{I}$. Note that the three matrices $\mat{Z}_i$, $0 \leq i < 3$ are such that () is satisfied. Figures () and () again show the average traces and RMSE of estimation from 1000 runs and display the distinct difference in estimation error of the different privilege levels. Additionally, two special case bounding estimators are included, one holding all privilege level keys and one holding none.
+Lastly, a simulation of multiple privilege levels was also performed using the bounded error covariance measurement model \eqref{eqn:bounded_sim_measurement_model} and using pseudorandom Gaussian samples with variances $\mat{Z}_0=20 \cdot \mat{I}$, $\mat{Z}_1=14 \cdot \mat{I}$ and $\mat{Z}_2=17 \cdot \mat{I}$. Note that the three matrices $\mat{Z}_i$, $0 \leq i < 3$ are such that \eqref{eqn:mult_covariance_restriction} is satisfied. Figures () and () again show the average traces and RMSE of estimation from 1000 runs and display the distinct difference in estimation error of the different privilege levels. Additionally, two special cases that bound all estimators are included, one holding all privilege level keys and another holding none.
 
 % Figure three <here>
 
-All of the included figures capture the difference in estimation error of the best possible estimators given the simulated processes (with respect to RMSE) and support the proposed security proof sketch given in section ().
+All of the included figures capture the difference in estimation error between the best possible estimators given the simulated processes (in terms of RMSE) and support the proposed security proof sketch given in section \ref{sec:scheme_security}.
 
 % 
 %  .d8888b.   .d88888b.  888b    888  .d8888b.  
@@ -589,13 +587,7 @@ All of the included figures capture the difference in estimation error of the be
 % 
 
 \section{Conclusion}\label{sec:conclusion}
-Presented the idea of privileged estimation and gave a formal cryptographic definition.
-
-Demonstrated a concrete privileged estimation scheme and gave a proof sketch for it meeting the desired security notion.
-
-Additionally supported the proof sketch by simulation using the best possible estimators for the simulated processes.
-
-Future work includes reducing the requirement () for multiple levels of private estimation, discussing the formal security in this case further and implementing privileged estimation on hardware to demonstrate the real-time capability of the method.
+In this work, we have presented the idea of a privileged estimation scheme and given a formal cryptographic definition for its security. A concrete scheme was provided with a proof sketch for meeting this notion and an intuitive extension to multiple privileged levels was discussed. The benefits of controlling estimation accuracy on a per-party basis have countless applications from privatised localisation hardware to subscription-based data access and a simulation demonstrating a simple use-case for object tracking has also been presented. Possible future work on the topic includes reducing the requirement in \eqref{eqn:mult_covariance_restriction} to make multiple privilege levels more applicable, discussing the formal security in the multiple level case further and implementing a privileged estimation scheme on hardware to demonstrate the real-time capability of the method.
 
 % conference papers do not normally have an appendix
 
