@@ -17,13 +17,12 @@
 % 
 
 % Graphics
-\usepackage{tikz}
 \usepackage{graphicx}
 % Maths
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amsthm}
-\usepackage{mathtools}
+%\usepackage{mathtools}
 % Local
 \usepackage{ISASmacros/isasmathmacros}
 % Equal last columns
@@ -33,60 +32,13 @@
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
 
-\theoremstyle{definition}
-\newtheorem{theorem}{Theorem}[section]
-
-\theoremstyle{remark}
-\newtheorem*{remark}{Remark}
-
-% Tikz settings
-\usetikzlibrary{math}
-
-% Tikz reused pics
-\tikzset{
-   plane/.pic = {
-    \draw[fill]  plot[smooth, tension=0.6] coordinates {
-        (-0.65,-0.9) 
-        (-0.6,-0.85) 
-        (-0.4,-0.75) 
-        (-0.25,-0.65) 
-        (-0.15,-0.5) 
-        (-0.12,-0.3) 
-        (-0.1,-0.1) 
-        (0,0) 
-        (0.1,-0.1) 
-        (0.12,-0.3) 
-        (0.15,-0.5) 
-        (0.25,-0.65) 
-        (0.4,-0.75) 
-        (0.6,-0.85) 
-        (0.65,-0.9)
-        } -- plot[smooth, tension=0.6] coordinates {
-        (0.65,-0.9) 
-        (0.15,-0.91)
-        (0.35,-1.1) 
-        (0.37,-1.15)
-        } -- plot[smooth, tension=0.6] coordinates {
-        (0.37,-1.15)
-        (0,-1.12) 
-        (-0.37,-1.15) 
-        } -- plot[smooth, tension=0.6] coordinates {
-        (-0.37,-1.15)
-        (-0.35,-1.1) 
-        (-0.15,-0.91) 
-        (-0.65,-0.9) 
-        } -- cycle;
-   }
-}
-
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-
 \begin{document}
+
 % paper title
 \title{Cryptographically Privileged State Estimation With Gaussian Keystreams}
-
 
 % author names and affiliations
 \author{\IEEEauthorblockN{Marko Ristic}
@@ -128,7 +80,7 @@ Email: uwe.hanebeck@kit.edu}}
 % 
 
 \begin{abstract}
-State estimation via public channels requires additional planning with regards to state privacy and the information leakage of involved parties. In some scenarios it is desirable to allow partial leakage of state information, thus distinguishing between privileged and unprivileged estimators and their capabilities. Existing methods identifying privileged and unprivileged or trusted and untrusted estimators typically result in reduced estimation quality for both parties or require additional secure channels of communication. We introduce a method to diminish the estimation quality at unprivileged estimators using a stream of pseudorandom Gaussian samples while leaving privileged estimation unaffected and requiring no additional transmission beyond an initial key exchange. A cryptographic definition of privileged estimation is first presented, capturing the definition of the difference between estimation qualities, before we develop a Gaussian keystream privileged estimation scheme meeting the security criteria defined. Achieving privileged estimation without additional channel requirements allows quantifiable estimation to be made available to the public while keeping the best estimation private to trusted privileged parties and can find uses in a variety of service providing and privacy-preserving scenarios.
+State estimation via public channels requires additional planning with regards to state privacy and the information leakage of involved parties. In some scenarios it is desirable to allow partial leakage of state information, thus distinguishing between privileged and unprivileged estimators and their capabilities. Existing methods identifying privileged and unprivileged or trusted and untrusted estimators typically result in reduced estimation quality for both parties or require additional secure channels of communication. We introduce a method to diminish the estimation quality at an unprivileged estimator using a stream of pseudorandom Gaussian samples while leaving privileged estimation unaffected and requiring no additional transmission beyond an initial key exchange. A cryptographic definition of privileged estimation is first presented, capturing the definition of the difference between estimation qualities, before we develop a Gaussian keystream privileged estimation scheme meeting the security criteria defined. Achieving privileged estimation without additional channel requirements allows quantifiable estimation to be made available to the public while keeping the best estimation private to trusted privileged parties and can find uses in a variety of service providing and privacy-preserving scenarios.
 \end{abstract}
 
 % no keywords
@@ -170,11 +122,7 @@ In section \ref{sec:problem_statement} we introduce the relevant privileged esti
 % 
 
 \subsection{Notation}
-Throughout this work the following notation is used. Lowercase underlined characters $\vec{a}$ denote vectors, while uppercase bold characters $\mat{M}$ denote matrices. $\mat{M}\succ 0$ and $\mat{M} \succeq 0$ denote positive definitiveness and positive semi-definitiveness, respectively, and $\mat{M} \succ \mat{N}$ is used as shorthand for $\mat{M}-\mat{N}\succ 0$. Function $\mathsf{eig}(\mat{M})$ gives the set of eigenvalues for matrix $\mat{M}$, $\mathsf{Cov}[\cdot]$ computes the covariance of a random vector and $\mat{I}$ is the identity matrix with size inferrable from context.
-% TODO update as needed
-% $\ \sim\ $ used to mean ``randomly distributed as'' and $\ \dot{\sim}\ $ as ``pseudorandomly distributed as
-% zero matrices
-% Missing: encryption things, distribution things (don't need negligible functions)
+Throughout this work the following notation is used. Lowercase underlined characters $\vec{a}$ denote vectors, while uppercase bold characters $\mat{M}$ denote matrices. $\mat{M}\succ 0$ and $\mat{M} \succeq 0$ denote positive definitiveness and positive semi-definitiveness, respectively, and $\mat{M} \succ \mat{N}$ is used as shorthand for $\mat{M}-\mat{N}\succ 0$. Function $\mathsf{eig}(\mat{M})$ gives the set of eigenvalues for matrix $\mat{M}$, $\mathsf{Cov}[\cdot]$ computes the covariance of a random vector, $\mat{I}$ and $\mat{0}$ are the identity and zero matrices, respectively, with size inferrable from context, and $\sim$ denotes ``is distributed as'' while $\ \dot{\sim}\ $ denotes ``is pseudorandomly distributed as''.
 
 % 
 % 8888888b.  8888888b.   .d88888b.  888888b.   
@@ -218,7 +166,7 @@ To capture our aim of creating a privileged and unprivileged estimator, we must 
 \subsection{Formal cryptographic Problem}\label{subsec:crypto_problem}
 While we are interested in Gaussian, linear and time-invariant models, it is more practical to define a broader security notion that can be satisfied under arbitrary specified conditions on the models. This allows the use of the security notion in future literature and is more in-line with typical cryptographic practice. We will later show that our proposed scheme meets this security notion under the specific Gaussian, linear and time-invariant model assumptions.
 
-Typical formal cryptographic security notions are given in terms of probabilistic polynomial-time (PPT) attackers and capture desired privacy properties as well as attacker capabilities \cite{katzIntroductionModernCryptography2008}. The most commonly desired privacy property, cryptographic indistinguishability, is not suitable for our estimation scenario due to our desire for unprivileged estimators to gain \text{some} information from measurements. Instead, we will define security with respect to a time series of covariances, given arbitrary known Bayesian models, such that the difference in estimation error between estimators with and without the secret key is bounded by the series at all times.
+Typical formal cryptographic security notions are given in terms of probabilistic polynomial-time (PPT) attackers and capture desired privacy properties as well as attacker capabilities \cite{katzIntroductionModernCryptography2008}. The most commonly desired privacy property, cryptographic indistinguishability, is not suitable for our estimation scenario due to our desire for unprivileged estimators to gain \text{some} information from measurements. Instead, we will define security in terms of a time series of covariances, given arbitrary known Bayesian models, such that the difference in estimation error between estimators with and without the secret key is bounded by the series at all times.
 
 To formalise this, we introduce the following notations and definitions. We assume the existence of an arbitrary process (not necessarily Gaussian or linear) following a known model exactly, with the state at time $k$ denoted $\vec{x}_k\in\mathbb{R}^n$ and model parameters $\mathcal{M}_P$. Similarly, we assume the existence of a means of process measurement following a known measurement model exactly, with the measurement at time $k$ denoted $\vec{y}_k\in\mathbb{R}^m$ and model parameters $\mathcal{M}_M$. We can now define a \textit{privileged estimation scheme} as a pair of algorithms $(\mathsf{Setup},\mathsf{Noise})$ given by
 \begin{LaTeXdescription}
@@ -247,7 +195,7 @@ With the terminology above, we can now introduce the security notion which captu
          &\quad\succeq \mat{D}_k + \mathsf{neglCov}_m(\kappa)
       \end{split}
    \end{equation}
-   for valid covariances $\mat{D}_1,\mat{D}_2,\dots$ and some negligible covariance for all $k>0$. Here, estimators $\mathcal{A}$ and $\mathcal{A}^\prime$ are running in polynomial-time with respect to the security parameter $\kappa$, and all probabilities are taken over models $\mathcal{M}_P$ and $\mathcal{M}_M$, estimators $\mathcal{A}$ and $\mathcal{A}^\prime$, and algorithms $\mathsf{Setup}$ and $\mathsf{Noise}$.
+   for valid covariances $\mat{D}_1,\mat{D}_2,\dots$ and some negligible covariance function for all $k>0$. Here, estimators $\mathcal{A}$ and $\mathcal{A}^\prime$ are running in polynomial-time with respect to the security parameter $\kappa$, and all probabilities are taken over models $\mathcal{M}_P$ and $\mathcal{M}_M$, estimators $\mathcal{A}$ and $\mathcal{A}^\prime$, and algorithms $\mathsf{Setup}$ and $\mathsf{Noise}$.
 \end{definition}
 
 Informally, the above definition states that no estimator that can only access noisy measurements $\vec{y}^\prime_1,\dots,\vec{y}^\prime_k$ can estimate a state $\vec{x}_k$ for a time $k$ with a mean square error (MSE) covariance less than an equivalent estimator with access to true measurements $\vec{y}_1,\dots,\vec{y}_k$, by a margin of at least $\mat{D}_k$. Next, we will propose a scheme meeting the aforementioned notion for a derivable series of covariances when models $\mathcal{M}_P$ and $\mathcal{M}_M$ are Gaussian, linear and time-invariant.
@@ -283,7 +231,7 @@ To allow meeting the cryptographic notion in section \ref{subsec:crypto_problem}
 % 
 
 \subsection{Gaussian Keystream}\label{subsec:gaussian_keystream}
-To generate pseudorandom Gaussian samples, we rely on first generating a typical cryptographic pseudorandom bitstream given a secret key $\mathsf{sk}$. Using a well-studied method for the generation of pseudorandomness guarantees robustness and easy updating should a used scheme no longer be considered safe. Any cryptographic stream cipher can be used and we interpret the bitstream as sequential pseudorandom integers $q_t \in \mathbb{N}$, $0<t$, of a suitable size, and use them to generate a sequence of pseudorandom uniform real numbers $u_t\ \dot{\sim}\ \mathcal{U}(0,1)$.
+To generate pseudorandom Gaussian samples, we rely on first generating a typical cryptographic pseudorandom bitstream given a secret key $\mathsf{sk}$. Using a well-studied method for the generation of pseudorandomness guarantees robustness and easy updating should a used scheme no longer be considered safe. Any cryptographic stream cipher can be used and we interpret the bitstream as sequential pseudorandom integers $q_t \in \mathbb{N}$ for $t>0$, of a suitable size, and use them to generate a sequence of pseudorandom uniform real numbers $u_t\ \dot{\sim}\ \mathcal{U}(0,1)$.
 
 The conversion of $q_t$ to $u_t$ is cryptographically non-trivial due to the floating-point representation of $u_t$. Since it cannot be truly representative of the distribution $\mathcal{U}(0,1)$, the pseudorandomness of samples is affected and meeting the desired cryptographic notion complicated. For now, we will assume that the uniform floating-point numbers (floats) are sufficiently close to true uniform reals, as is the current industry standard, and rely on any common method for choosing the bit size of integers $q_t$ and the pseudorandom generation of uniforms $u_t$ \cite{goualardGeneratingRandomFloatingPoint2020}. In section \ref{sec:scheme_security} we will state and further discuss this assumption.
 
@@ -308,7 +256,7 @@ to obtain two sequential, independent, standard normal Gaussian samples from two
 % 
 
 \subsection{Additional Gaussian Noise}\label{subsec:adding_privilege_noise}
-To use the series of pseudorandom Gaussian samples $z_t$, $0<t$, at the sensor and privileged estimator, they need to be converted to $n$-dimension zero-mean multivariate Gaussian samples suitable for use in the measurement model \eqref{eqn:linear_measurement_model}, at every time $k$. In addition, we want control over the difference in estimation error between privileged and unprivileged estimators, and do so by including the symettric matrix parameter $\mat{Z}\succ 0$, such that added pseudorandom noise $\vec{p}_k$ at time $k$ is such that $\vec{p}_k\ \dot{\sim}\ \mathcal{N}(\vec{0},\mat{Z})$. Given $\mat{Z}$, $\vec{p}_k$ is computed using the next $n$ Gaussian keystream samples, that is $(k-1)n+1\leq t\leq kn$, as
+To use the series of pseudorandom Gaussian samples $z_t$, $t>0$, at the sensor and privileged estimator, they need to be converted to $n$-dimension zero-mean multivariate Gaussian samples suitable for use in the measurement model \eqref{eqn:linear_measurement_model}, at every time $k$. In addition, we want control over the difference in estimation error between privileged and unprivileged estimators, and do so by including the symettric matrix parameter $\mat{Z}\succ 0$, in a way that added pseudorandom noise $\vec{p}_k$ at time $k$ is such that $\vec{p}_k\ \dot{\sim}\ \mathcal{N}(\vec{0},\mat{Z})$. Given $\mat{Z}$, $\vec{p}_k$ is computed using the next $n$ Gaussian keystream samples, that is $(k-1)n+1\leq t\leq kn$, as
 \begin{equation}
    \vec{p}_k = \mat{Z}\cdot
    \begin{bmatrix}
@@ -334,7 +282,7 @@ with $\vec{v}_k\sim \mathcal{N}(\vec{0},\mat{R})$ and $\vec{p}_k\ \dot{\sim}\ \m
    with $\vec{v}^\prime_k\sim \mathcal{N}(\vec{0},\mat{R}+\mat{Z})$, exactly.
 \end{LaTeXdescription}
 
-Intuitively, we can see that the two estimators will have their difference in estimation error dependent on matrix $\mat{Z}$. In the security section, we will show that the best possible error covariances achievable by the privileged and unprivileged estimators can be computed exactly for both measurement models and that the difference between them will give the series $\{\mat{D}_1,\mat{D}_2,\dots\}$ required for the security notion \eqref{eqn:cov_privilege}.
+Intuitively, we can see that the two estimators will have their difference in estimation error dependent on matrix $\mat{Z}$. In the security section, we will show that the best possible error covariances achievable by the privileged and unprivileged estimators can be computed exactly for both measurement models and that the difference between them will give the series $\mat{D}_k$, $k>0$, required for the security notion \eqref{eqn:cov_privilege}.
 
 % 
 % ##     ## ##     ## ##       ########    ########  ########  #### ##     ## 
@@ -351,11 +299,11 @@ In the above scenario, we have considered a single level of estimation privilege
 
 We now have $N$ secret keys $\mathsf{sk}_i$ and covariances for the added noises $\mat{Z}_i$, $1\leq i \leq N$. Sensor measurements are modified by
 \begin{equation}\label{eqn:mult_modified_measurement}
-   \vec{y}^\prime_k = \vec{y}_k + \vec{p}^{(1)}_k + \cdots + \vec{p}^{(N)}_k\,,
+   \vec{y}_k^{\prime\prime} = \vec{y}_k + \vec{p}^{(1)}_k + \cdots + \vec{p}^{(N)}_k\,,
 \end{equation}
-with $\vec{p}^{(i)}_k \dot{\sim} \mathcal{N}(\vec{0}, \mat{Z}_i)$, $1\leq i \leq N$. From \eqref{eqn:mult_modified_measurement}, we see that obtaining any single key $\mathsf{sk}_i$ leads to a measurement model where only a single pseudorandom Gaussian sample, of covariance $Z_i$, is removed, resulting in measurements indistinguishable from those following the unprivileged measurement model
+with $\vec{p}^{(i)}_k\ \dot{\sim}\ \mathcal{N}(\vec{0}, \mat{Z}_i)$, $1\leq i \leq N$. From \eqref{eqn:mult_modified_measurement}, we see that obtaining any single key $\mathsf{sk}_i$ leads to a measurement model where only a single pseudorandom Gaussian sample, of covariance $Z_i$, is removed, resulting in measurements indistinguishable from those following the unprivileged measurement model
 \begin{equation}
-   \vec{y}^\prime_k = \mat{H}\vec{x}_k + \vec{v}^{(i)}_k\,,
+   \vec{y}_k^{(i)} = \mat{H}\vec{x}_k + \vec{v}^{(i)}_k\,,
 \end{equation}
 where $\vec{v}_k\sim \mathcal{N}(\vec{0},\mat{R}+\mat{E}_i)$, with
 \begin{equation}\label{eqn:mult_privilege_covariances}
@@ -422,7 +370,7 @@ The security of the proposed scheme will be primarily considered in the single p
 % 
 
 \subsection{Single Privileged Case}
-Recalling the security notion in section \eqref{eqn:linear_measurement_model}, we now aim to show how our single privilege level estimation scheme in section \ref{subsec:adding_privilege_noise}, given conditions on $\mathcal{M}_P$ and $\mathcal{M}_M$, meets the notion for a computable series $\mat{D}_1,\mat{D}_2,\dots$ dependent on the noise parameter $\mat{Z}$.
+Recalling the security notion in section \eqref{eqn:linear_measurement_model}, we now aim to show how our single privilege level estimation scheme in section \ref{subsec:adding_privilege_noise}, given conditions on $\mathcal{M}_P$ and $\mathcal{M}_M$, meets the notion for a computable series $\mat{D}_k$, $k>0$, dependent on the noise parameter $\mat{Z}$.
 
 We consider the process model \eqref{eqn:linear_process_model} and measurement model \eqref{eqn:linear_measurement_model} exactly, that is, any time-invariant linear models with known zero-mean Gaussian additive noises. We define these are our model conditions and capture all relevant parameter from the respective equations in $\mathcal{M}_P$ and $\mathcal{M}_M$. Our scheme fulfils the two required algorithms for a privileged estimation scheme, $\mathsf{Setup}$ and $\mathsf{Noise}$, as follows.
 \begin{LaTeXdescription}
@@ -431,9 +379,11 @@ We consider the process model \eqref{eqn:linear_process_model} and measurement m
 \end{LaTeXdescription}
 Additionally, we note that in the above $\mathsf{Setup}$ algorithm, the inclusion of the initial state and additional noise covariance are not a requirement for the security of the scheme, but merely make relevant estimation parameters public for completeness.
 
+%This has been proved using the orthogonailty princple and the unbiased Cramér–Rao lower bound (CRLB) []
+
 The idea behind our security roof relies on the optimality of the linear Kalman Filter (KF) \cite{kalmanNewApproachLinear1960}. Given an initial estimate and estimate error covariance, the KF produces posterior estimates with the minimum mean square error (MSE) achievable for \textit{any} estimator when all measurements $\vec{y}_1,\dots,\vec{y}_k$ are observed, models are Gaussian and linear, and the same initialisation is used. Since the KF also preserves initial error covariance order,
 \begin{equation}
-   \mat{P}_k \prec \mat{P}_k^\prime \implies \mat{P}_{k+1} \prec \mat{P}_{k+1}^\prime\,,
+   \mat{P}_k \preceq \mat{P}_k^\prime \implies \mat{P}_{k+1} \preceq \mat{P}_{k+1}^\prime\,,
 \end{equation}
 we can define an error covariance lower-bound $\mat{P}_k^{(l)}$ for all possible initialisations by setting $\mat{P}_0^{(l)} = \mat{0}$ and computing the posterior KF error covariance using the combined predict and update equations
 \begin{equation}\label{eqn:lower_bound_error_cov}
@@ -449,8 +399,6 @@ This gives us a lower-bound at every time $k$, such that
 \end{equation}
 for any estimator $\mathcal{A}$ following definition \ref{def:estimator} and any Gaussian, linear and time-invariant models $\mathcal{M}_P$ and $\mathcal{M}_M$. This leads us into the sketch proof.
 
-%This has been proved using the orthogonailty princple and the unbiased Cramér–Rao lower bound (CRLB) []
-
 \subsubsection{Proof Sketch}
 As a cryptographically pseudorandom stream cipher is used in section \ref{subsec:gaussian_keystream}, the stream integers $q_t$, and therefore the uniform samples $u_t$ and normal Gaussian samples $z_t$, are indistinguishable to those generated from a truly random stream for any PPT estimator without the secret key. We persist with the previous assumption that floating-point representations of $z_t$ are sufficiently close to Gaussian and assume the KF to provide optimal estimation when using floats, as is standard in the state-of-the-art. Using the $\mathsf{Setup}$ and $\mathsf{Noise}$ algorithms for our scheme now leads to pseudorandom noisy measurements $\vec{y}^\prime_k$ that are indistinguishable from measurements following the unprivileged measurement model \eqref{eqn:unprivileged_measurement_model}. We can now compute a lower-bound $\mat{P}_k^{\prime(l)}$ for any unprivileged estimator as $\mat{P}_k^{\prime(l)}=\mat{0}$ and
 \begin{equation}\label{eqn:unprivileged_lower_bound_error_cov}
@@ -464,7 +412,7 @@ Taking the difference of bounds \eqref{eqn:unprivileged_lower_bound_error_cov} a
 \begin{equation}\label{eqn:covariance_difference_series}
    \mat{D}_k = \mat{P}_k^{\prime(l)} - \mat{P}_k^{(l)}\,,
 \end{equation}
-which can be scaled by the parameter $\mat{Z}$. Since both series $\mat{P}_k^{(l)}$ and $\mat{P}_k^{\prime(l)}$ give the lowest possible error covariance of the respective estimators, an estimator following model \eqref{eqn:linear_measurement_model} can always be created for one following the model \eqref{eqn:unprivileged_measurement_model} such that their error covariances at any time $k$ differ by at least $\mat{D}_k$. A reduction proof can be easily constructed where the existence of an unprivileged estimator in our scheme that can produce estimates such that \eqref{eqn:cov_privilege} does not hold, can be used to construct an estimator with an error covariance lower than $\mat{P}_k^{\prime(l)}$ given a known model of the form \eqref{eqn:unprivileged_measurement_model}. As no such estimator exists, we conclude that our scheme meets $\{\mat{D}_1,\mat{D}_2,\dots\}$-Covariance Privilege for Models $\mathcal{M}_P$ and $\mathcal{M}_M$, when $\mathcal{M}_P$ and $\mathcal{M}_M$ are Gaussian, linear and time-invariant. This concludes our proof sketch.
+for $k>0$, which can be scaled by the parameter $\mat{Z}$. Since both series $\mat{P}_k^{(l)}$ and $\mat{P}_k^{\prime(l)}$ give the lowest possible error covariance of the respective estimators, an estimator following model \eqref{eqn:linear_measurement_model} can always be created for one following the model \eqref{eqn:unprivileged_measurement_model} such that their error covariances at any time $k$ differ by at least $\mat{D}_k$. A reduction proof can be easily constructed where the existence of an unprivileged estimator in our scheme that can produce estimates such that \eqref{eqn:cov_privilege} does not hold, can be used to construct an estimator with an error covariance lower than $\mat{P}_k^{\prime(l)}$ given a known model of the form \eqref{eqn:unprivileged_measurement_model}. As no such estimator exists, we conclude that our scheme meets $\{\mat{D}_1,\mat{D}_2,\dots\}$-Covariance Privilege for Models $\mathcal{M}_P$ and $\mathcal{M}_M$, when $\mathcal{M}_P$ and $\mathcal{M}_M$ are Gaussian, linear and time-invariant. This concludes our proof sketch.
 
 In addition to the proof sketch, we stress caution when accepting a cryptographic guarantee in terms of models $\mathcal{M}_P$ and $\mathcal{M}_M$ when used to estimate a measured physical process or approximate continuous quantities. The following assumptions are made in this scenario.
 \begin{LaTeXdescription}
@@ -485,7 +433,7 @@ In addition to the proof sketch, we stress caution when accepting a cryptographi
 \subsection{Multiple Additional Noises}
 We have not defined a security notion for multiple levels of privileged estimation, but an intuitive and informal extension is briefly described here. 
 
-A suitable notion would require that for any subset of corrupted estimators, and thus any subset of secret keys $S \subset \{\mathsf{sk}_i,\,1\leq i\leq N\}$, given noisy measurements $\vec{y}_k^\prime$, an estimator given true measurements $\vec{y}_k$ can be constructed such that the difference between the corrupted subset's error covariance and its own is at least $\mat{D}^{(S)}_k$ at time $k$. Although this definition requires a series $\mat{D}^{(S)}_k$ for every possible subset of privilege level keys, $S$, complicating its formal specification, it captures the exact advantage of every such subset producing a general definition.
+A suitable notion would require that for any subset of corrupted estimators, and thus any subset of secret keys $S \subseteq \{\mathsf{sk}_i,\,1\leq i\leq N\}$, given noisy measurements $\vec{y}_k^{\prime\prime}$, an estimator given true measurements $\vec{y}_k$ can be constructed such that the difference between the corrupted subset's error covariance and its own is at least $\mat{D}^{(S)}_k$ at time $k$. Although this definition requires a series $\mat{D}^{(S)}_k$ for every possible subset of privilege level keys, $S$, complicating its formal specification, it captures the exact advantage of every such subset producing a general definition.
 
 Given the structure of our scheme in section \ref{subsec:mult_privileges} it can be readily seen how the above notion would be met. Similarly to the single level case, the KF can be used to compute the minimum error covariances for all compromised key subsets as well as for an estimator with the true measurements, and the relevant difference series $\mat{D}^{(S)}_k$ can be defined. 
 
@@ -566,7 +514,7 @@ and uses the same values for $\mat{R}$ and $\mat{Z}$ as given for the previous m
 
 % Figure two <here>
 
-Lastly, a simulation of multiple privilege levels was also performed using the bounded error covariance measurement model \eqref{eqn:bounded_sim_measurement_model} and using pseudorandom Gaussian samples with variances $\mat{Z}_0=20 \cdot \mat{I}$, $\mat{Z}_1=14 \cdot \mat{I}$ and $\mat{Z}_2=17 \cdot \mat{I}$. Note that the three matrices $\mat{Z}_i$, $0 \leq i < 3$ are such that \eqref{eqn:mult_covariance_restriction} is satisfied. Figures () and () again show the average traces and RMSE of estimation from 1000 runs and display the distinct difference in estimation error of the different privilege levels. Additionally, two special cases that bound all estimators are included, one holding all privilege level keys and another holding none.
+Lastly, a simulation of multiple privilege levels was also performed using the bounded error covariance measurement model \eqref{eqn:bounded_sim_measurement_model} and using pseudorandom Gaussian samples with variances $\mat{Z}_1=20 \cdot \mat{I}$, $\mat{Z}_2=14 \cdot \mat{I}$ and $\mat{Z}_3=17 \cdot \mat{I}$. Note that the three matrices $\mat{Z}_i$, $1 \leq i \leq 3$ are such that \eqref{eqn:mult_covariance_restriction} is satisfied. Figures () and () again show the average traces and RMSE of estimation from 1000 runs and display the distinct difference in estimation error of the different privilege levels. Additionally, two special cases that bound all estimators are included, one holding all privilege level keys and another holding none.
 
 % Figure three <here>
 
