@@ -81,7 +81,7 @@ Email: uwe.hanebeck@kit.edu}}
 % 
 
 \begin{abstract}
-State estimation via public channels requires additional planning with regards to state privacy and information leakage of involved parties. In some scenarios, it is desirable to allow partial leakage of state information, thus distinguishing between privileged and unprivileged estimators and their capabilities. Existing methods that distinguish between privileged and unprivileged, or trusted and untrusted, estimators typically result in reduced estimation quality for both parties or require additional secure communication channels. We introduce a method to decrease estimation quality at an unprivileged estimator using a stream of pseudorandom Gaussian samples while leaving privileged estimation unaffected and requiring no additional transmission beyond an initial key exchange. First, a cryptographic definition of privileged Bayesian estimation is presented, capturing a definition for the difference between estimations, before a privileged estimation scheme meeting the defined security criteria is developed. Achieving privileged estimation without additional channel requirements allows quantifiable estimation to be made available to the public while keeping the best estimation private to trusted privileged parties and can find uses in a variety of service providing and privacy-preserving scenarios.
+State estimation via public channels requires additional planning with regards to state privacy and information leakage of involved parties. In some scenarios, it is desirable to allow partial leakage of state information, thus distinguishing between privileged and unprivileged estimators and their capabilities. In state estimation, existing methods that distinguish between privileged and unprivileged, or trusted and untrusted, estimators typically result in reduced estimation quality for both parties or require additional secure communication channels. We introduce a method to decrease estimation quality at an unprivileged estimator using a stream of pseudorandom Gaussian samples while leaving privileged estimation unaffected and requiring no additional transmission beyond an initial key exchange. First, a cryptographic definition of privileged Bayesian estimation is presented, capturing a definition for the difference between estimations, before a privileged estimation scheme meeting the defined security criteria is developed. Achieving privileged estimation without additional channel requirements allows quantifiable estimation to be made available to the public while keeping the best estimation private to trusted privileged parties and can find uses in a variety of service-providing and privacy-preserving scenarios.
 \end{abstract}
 
 % no keywords
@@ -472,7 +472,7 @@ and
       0 & 0 & 0.1250 & 0.5000
    \end{bmatrix}\,,
 \end{equation*}
-with differing measurement models. In all cases, estimators were initialized with the same initial conditions, equal to the true starting condition of the processes they were estimating.
+with differing measurement models. In all cases, estimators were initialized with the same initial conditions, equal to the true starting condition of the processes they were estimating with initial error covariance $\mat{0}$.
 
 The first measurement model measures location and leads to an observable system with bounded error covariances as $k \rightarrow \infty$. It is given by
 \begin{equation*}\label{eqn:bounded_sim_measurement_model}
@@ -496,9 +496,14 @@ and the sensor adds pseudorandom Gaussian samples with covariance
       0 & 35
    \end{bmatrix}
 \end{equation*}
-to create an estimator privilege level. Figures () and () show the average error covariance traces and the root of mean square error (RMSE) of estimation from 1000 runs of our privileged estimation scheme, respectively, where the above models are followed. It can be seen that the trace of the privileged estimator's error covariance stays lower than that of the unprivileged one and that privileged estimation has lower RMSE. The difference in trace between the two estimators has also been plotted and exceeds the trace of the difference series \eqref{eqn:covariance_difference_series} at all times $k$ as expected.
+to create an estimator privilege level. Figure \ref{fig:bounded} shows the average error covariance traces and the root of mean square error (RMSE) of estimation from 1000 runs of our privileged estimation scheme, where the above models are followed. It can be seen that the trace of the privileged estimator's error covariance stays lower than that of the unprivileged one and that privileged estimation has lower RMSE. The difference in trace between the two estimators has also been plotted and is equal the trace of the difference series \eqref{eqn:covariance_difference_series} at all times $k$ due to the chosen initial error covariance.
 
-% Figure one <here>
+\begin{figure}[htbp]
+   \centering
+   \includegraphics{pictures/single_level_bounded.pdf}
+   \caption{Privileged estimation with bounded error covariance.}
+   \label{fig:bounded}
+\end{figure}
 
 The second simulation considers an unobservable system where only the velocity is measured and has an unbounded error covariance as $k \rightarrow \infty$. It is given by
 \begin{equation*}
@@ -508,13 +513,23 @@ The second simulation considers an unobservable system where only the velocity i
       0 & 0 & 0 & 1
    \end{bmatrix}
 \end{equation*}
-and uses the same values for $\mat{R}$ and $\mat{Z}$ as given for the previous model. Figures () and () show the average error covariance traces and RMSE of estimation from 1000 runs using this model and capture how error covariance boundedness does not affect the privileged estimation scheme's properties.
+and uses the same values for $\mat{R}$ and $\mat{Z}$ as given for the previous model. Figure \ref{fig:unbounded} shows the average error covariance traces and RMSE of estimation from 1000 runs using this model and capture how error covariance boundedness does not affect the privileged estimation scheme's properties.
 
-% Figure two <here>
+\begin{figure}[htbp]
+   \centering
+   \includegraphics{pictures/single_level_unbounded.pdf}
+   \caption{Privileged estimation with unbounded error covariance.}
+   \label{fig:unbounded}
+\end{figure}
 
-Lastly, a simulation of multiple privilege levels was also performed using the bounded error covariance measurement model \eqref{eqn:bounded_sim_measurement_model} and using pseudorandom Gaussian samples such that $\mat{E}_1=20 \cdot \mat{I}$, $\mat{E}_2=14 \cdot \mat{I}$ and $\mat{E}_3=17 \cdot \mat{I}$. Note that the three matrices $\mat{E}_i$, $1 \leq i \leq 3$ satisfy \eqref{eqn:mult_covariance_restriction}. Figures () and () again show the average traces and RMSE of estimation from 1000 runs and display the distinct difference in estimation error of the different privilege levels. Additionally, two special cases that bound all estimators are included, one holding all privilege level keys and another holding none.
+Lastly, a simulation of multiple privilege levels was also performed using the bounded error covariance measurement model \eqref{eqn:bounded_sim_measurement_model} and using pseudorandom Gaussian samples such that $\mat{E}_1=20 \cdot \mat{I}$, $\mat{E}_2=14 \cdot \mat{I}$ and $\mat{E}_3=17 \cdot \mat{I}$. Note that the three matrices $\mat{E}_i$, $1 \leq i \leq 3$ satisfy \eqref{eqn:mult_covariance_restriction}. Figure \ref{fig:multiple} again shows the average traces and RMSE of estimation from 1000 runs and display the distinct difference in estimation error of the different privilege levels. Additionally, two special cases that bound all estimators are included, one holding all privilege level keys and another holding none.
 
-% Figure three <here>
+\begin{figure}[htbp]
+   \centering
+   \includegraphics{pictures/multiple_level.pdf}
+   \caption{Estimation with multiple privilege levels.}
+   \label{fig:multiple}
+\end{figure}
 
 All of the included figures capture the difference in estimation error between the best possible estimators given the simulated processes (in terms of RMSE) and support the proposed security proof sketch given in section \ref{sec:scheme_security}.
 
