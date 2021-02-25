@@ -25,7 +25,7 @@
 % Local
 \usepackage{ISASmacros/isasmathmacros}
 % Equal last columns
-%\usepackage{flushend}
+\usepackage{flushend}
 % Fit more per page
 %\usepackage{microtype}
 
@@ -488,15 +488,7 @@ The first measurement model measures location and leads to an observable system 
       2 & 5
    \end{bmatrix}\,,
 \end{equation*}
-and the sensor adds pseudorandom Gaussian samples with covariance
-\begin{equation*}
-   \mat{Z}=
-   \begin{bmatrix}
-      35 & 0\\
-      0 & 35
-   \end{bmatrix}
-\end{equation*}
-to create an estimator privilege level. Figure \ref{fig:bounded} shows the average error covariance traces and the root of mean square error (RMSE) of estimation from 1000 runs of our privileged estimation scheme, where the above models are followed. It can be seen that the trace of the privileged estimator's error covariance stays lower than that of the unprivileged one and that privileged estimation has lower RMSE. The difference in trace between the two estimators has also been plotted and is equal the trace of the difference series \eqref{eqn:covariance_difference_series} at all times $k$ due to the chosen initial error covariance.
+and the sensor adds pseudorandom Gaussian samples with covariance $\mat{Z}=35 \cdot \mat{I}$ to create an estimator privilege level. Figure \ref{fig:bounded} shows the average error covariance traces and the root of mean square error (RMSE) of estimation from 1000 runs of our privileged estimation scheme, where the above models are followed. It can be seen that the trace of the privileged estimator's error covariance stays lower than that of the unprivileged one and that privileged estimation has lower RMSE. The difference in trace between the two estimators has also been plotted and is equal the trace of the difference series \eqref{eqn:covariance_difference_series} at all times $k$ due to the chosen initial error covariance.
 
 \begin{figure}[htbp]
    \centering
