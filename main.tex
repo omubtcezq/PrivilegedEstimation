@@ -27,7 +27,7 @@
 % Equal last columns
 \usepackage{flushend}
 % Fit more per page
-%\usepackage{microtype}
+\usepackage{microtype}
 
 % Environments
 \theoremstyle{definition}
@@ -474,20 +474,20 @@ and
 \end{equation*}
 with differing measurement models. In all cases, estimators were initialized with the same initial conditions, equal to the true starting condition of the processes they were estimating with initial error covariance $\mat{0}$.
 
-The first measurement model measures location and leads to an observable system with bounded error covariances as $k \rightarrow \infty$. It is given by
-\begin{equation*}\label{eqn:bounded_sim_measurement_model}
+The first measurement model measures location and leads to an observable system with bounded error covariances as $k \rightarrow \infty$. It is given by 
+$
    \mat{H}=
-   \begin{bmatrix}
+   \begin{bsmallmatrix}
       1 & 0 & 0 & 0\\
       0 & 0 & 1 & 0
-   \end{bmatrix}
+   \end{bsmallmatrix}
    \text{ and }
    \mat{R}=
-   \begin{bmatrix}
+   \begin{bsmallmatrix}
       5 & 2\\
       2 & 5
-   \end{bmatrix}\,,
-\end{equation*}
+   \end{bsmallmatrix}\,,
+$ 
 and the sensor adds pseudorandom Gaussian samples with covariance $\mat{Z}=35 \cdot \mat{I}$ to create an estimator privilege level. Figure \ref{fig:bounded} shows the average error covariance traces and the root of mean square error (RMSE) of estimation from 1000 runs of our privileged estimation scheme, where the above models are followed. It can be seen that the trace of the privileged estimator's error covariance stays lower than that of the unprivileged one and that privileged estimation has lower RMSE. The difference in trace between the two estimators has also been plotted and is equal the trace of the difference series \eqref{eqn:covariance_difference_series} at all times $k$ due to the chosen initial error covariance.
 
 \begin{figure}[htbp]
@@ -497,14 +497,14 @@ and the sensor adds pseudorandom Gaussian samples with covariance $\mat{Z}=35 \c
    \label{fig:bounded}
 \end{figure}
 
-The second simulation considers an unobservable system where only the velocity is measured and has an unbounded error covariance as $k \rightarrow \infty$. It is given by
-\begin{equation*}
+The second simulation considers an unobservable system where only the velocity is measured and has an unbounded error covariance as $k \rightarrow \infty$. It is given by 
+$
    \mat{H}=
-   \begin{bmatrix}
+   \begin{bsmallmatrix}
       0 & 1 & 0 & 0\\
       0 & 0 & 0 & 1
-   \end{bmatrix}
-\end{equation*}
+   \end{bsmallmatrix}
+$ 
 and uses the same values for $\mat{R}$ and $\mat{Z}$ as given for the previous model. Figure \ref{fig:unbounded} shows the average error covariance traces and RMSE of estimation from 1000 runs using this model and capture how error covariance boundedness does not affect the privileged estimation scheme's properties.
 
 \begin{figure}[htbp]
@@ -514,7 +514,7 @@ and uses the same values for $\mat{R}$ and $\mat{Z}$ as given for the previous m
    \label{fig:unbounded}
 \end{figure}
 
-Lastly, a simulation of multiple privilege levels was also performed using the bounded error covariance measurement model \eqref{eqn:bounded_sim_measurement_model} and using pseudorandom Gaussian samples such that $\mat{E}_1=20 \cdot \mat{I}$, $\mat{E}_2=14 \cdot \mat{I}$ and $\mat{E}_3=17 \cdot \mat{I}$. Note that the three matrices $\mat{E}_i$, $1 \leq i \leq 3$ satisfy \eqref{eqn:mult_covariance_restriction}. Figure \ref{fig:multiple} again shows the average traces and RMSE of estimation from 1000 runs and display the distinct difference in estimation error of the different privilege levels. Additionally, two special cases that bound all estimators are included, one holding all privilege level keys and another holding none.
+Lastly, a simulation of multiple privilege levels was also performed using the bounded error covariance measurement model and using pseudorandom Gaussian samples such that $\mat{E}_1=20 \cdot \mat{I}$, $\mat{E}_2=14 \cdot \mat{I}$ and $\mat{E}_3=17 \cdot \mat{I}$. Note that the three matrices $\mat{E}_i$, $1 \leq i \leq 3$ satisfy \eqref{eqn:mult_covariance_restriction}. Figure \ref{fig:multiple} again shows the average traces and RMSE of estimation from 1000 runs and display the distinct difference in estimation error of the different privilege levels. Additionally, two special cases that bound all estimators are included, one holding all privilege level keys and another holding none.
 
 \begin{figure}[htbp]
    \centering
