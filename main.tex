@@ -379,7 +379,7 @@ We consider the Bayesian process model \eqref{eqn:linear_process_model} and meas
 \end{LaTeXdescription}
 Additionally, we note that in the above $\mathsf{Setup}$ algorithm, the inclusion of the initial state and added noise covariance are not a requirement for the security of the scheme, but merely make relevant estimation parameters public for completeness.
 
-The idea behind our security roof relies on the optimality of the linear Kalman Filter (KF) \cite{haugBayesianEstimationTracking}. Given an initial estimate and estimate error covariance, the KF produces posterior Bayesian estimates with the minimum mean square error (MSE) achievable for \textit{any} estimator when all measurements $\vec{y}_1,\dots,\vec{y}_k$ are observed, models are Gaussian and linear, and the same initialization is used. Since the KF also preserves initial error covariance order,
+The idea behind our security roof relies on the optimality of the linear Kalman Filter (KF) \cite{haugBayesianEstimationTracking2012}. Given an initial estimate and estimate error covariance, the KF produces posterior Bayesian estimates with the minimum mean square error (MSE) achievable for \textit{any} estimator when all measurements $\vec{y}_1,\dots,\vec{y}_k$ are observed, models are Gaussian and linear, and the same initialization is used. Since the KF also preserves initial error covariance order,
 \begin{equation}
    \mat{P}_k \preceq \mat{P}_k^\prime \implies \mat{P}_{k+1} \preceq \mat{P}_{k+1}^\prime\,,
 \end{equation}
