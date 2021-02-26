@@ -488,13 +488,13 @@ $
       2 & 5
    \end{bsmallmatrix}\,,
 $ 
-and the sensor adds pseudorandom Gaussian samples with covariance $\mat{Z}=35 \cdot \mat{I}$ to create an estimator privilege level. Figure \ref{fig:bounded} shows the average error covariance traces and the root of mean square error (RMSE) of estimation from 1000 runs of our privileged estimation scheme, where the above models are followed. It can be seen that the trace of the privileged estimator's error covariance stays lower than that of the unprivileged one and that privileged estimation has lower RMSE. The difference in trace between the two estimators has also been plotted and is equal the trace of the difference series \eqref{eqn:covariance_difference_series} at all times $k$ due to the chosen initial error covariance.
+and the sensor adds pseudorandom Gaussian samples with covariance $\mat{Z}=35 \cdot \mat{I}$ to create an estimator privilege level. Figure \ref{fig:single_bounded} shows the average error covariance traces and the root of mean square error (RMSE) of estimation from 1000 runs of our privileged estimation scheme, where the above models are followed. It can be seen that the trace of the privileged estimator's error covariance stays lower than that of the unprivileged one and that privileged estimation has lower RMSE. The difference in trace between the two estimators has also been plotted and is equal to the trace of the difference series \eqref{eqn:covariance_difference_series} at all times $k$ due to the chosen initial error covariance.
 
 \begin{figure}[htbp]
    \centering
    \includegraphics{pictures/single_level_bounded.pdf}
    \caption{Privileged estimation with bounded error covariance.}
-   \label{fig:bounded}
+   \label{fig:single_bounded}
 \end{figure}
 
 The second simulation considers an unobservable system where only the velocity is measured and has an unbounded error covariance as $k \rightarrow \infty$. It is given by 
@@ -505,22 +505,22 @@ $
       0 & 0 & 0 & 1
    \end{bsmallmatrix}
 $ 
-and uses the same values for $\mat{R}$ and $\mat{Z}$ as given for the previous model. Figure \ref{fig:unbounded} shows the average error covariance traces and RMSE of estimation from 1000 runs using this model and capture how error covariance boundedness does not affect the privileged estimation scheme's properties.
+and uses the same values for $\mat{R}$ and $\mat{Z}$ as given for the previous model. Figure \ref{fig:single_unbounded} shows the average error covariance traces and RMSE of estimation from 1000 runs using this model and captures how error covariance boundedness does not affect the privileged estimation scheme's properties.
 
 \begin{figure}[htbp]
    \centering
    \includegraphics{pictures/single_level_unbounded.pdf}
    \caption{Privileged estimation with unbounded error covariance.}
-   \label{fig:unbounded}
+   \label{fig:single_unbounded}
 \end{figure}
 
-Lastly, a simulation of multiple privilege levels was also performed using the bounded error covariance measurement model and using pseudorandom Gaussian samples such that $\mat{E}_1=20 \cdot \mat{I}$, $\mat{E}_2=14 \cdot \mat{I}$ and $\mat{E}_3=17 \cdot \mat{I}$. Note that the three matrices $\mat{E}_i$, $1 \leq i \leq 3$ satisfy \eqref{eqn:mult_covariance_restriction}. Figure \ref{fig:multiple} again shows the average traces and RMSE of estimation from 1000 runs and display the distinct difference in estimation error of the different privilege levels. Additionally, two special cases that bound all estimators are included, one holding all privilege level keys and another holding none.
+Lastly, a simulation of multiple privilege levels was also performed using the bounded error covariance measurement model and using pseudorandom Gaussian samples such that $\mat{E}_1=20 \cdot \mat{I}$, $\mat{E}_2=14 \cdot \mat{I}$ and $\mat{E}_3=17 \cdot \mat{I}$. Note that the three matrices $\mat{E}_i$, $1 \leq i \leq 3$ satisfy \eqref{eqn:mult_covariance_restriction}. Figure \ref{fig:multiple_bounded} again shows the average traces and RMSE of estimation from 1000 runs and displays the distinct difference in estimation error of the different privilege levels. Additionally, two special cases that bound all estimators are included, one holding all privilege level keys and another holding none.
 
 \begin{figure}[htbp]
    \centering
    \includegraphics{pictures/multiple_level.pdf}
    \caption{Estimation with multiple privilege levels.}
-   \label{fig:multiple}
+   \label{fig:multiple_bounded}
 \end{figure}
 
 All of the included figures capture the difference in estimation error between the best possible estimators given the simulated processes (in terms of RMSE) and support the proposed security proof sketch given in section \ref{sec:scheme_security}.
