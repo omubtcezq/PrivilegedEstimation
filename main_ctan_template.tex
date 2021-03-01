@@ -1,26 +1,6 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%2345678901234567890123456789012345678901234567890123456789012345678901234567890
-%        1         2         3         4         5         6         7         8
+% Marko Ristic
 
-% Comment this line out if you need a4paper
-\documentclass[letterpaper, 10 pt, conference]{ieeeconf}
-
-% Use this line for a4 paper
-%\documentclass[a4paper, 10pt, conference]{ieeeconf}
-
-% This command is only needed if you want to use the \thanks command
-\IEEEoverridecommandlockouts                              
-
-% Needed to meet printer requirements.
-\overrideIEEEmargins
-
-%In case you encounter the following error:
-%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
-%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
-%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
-%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
-%\pdfobjcompresslevel=0
-\pdfminorversion=4
+\documentclass[letterpaper, 10 pt, conference]{IEEEtran}
 
 % 
 % 8888888 888b     d888 8888888b.   .d88888b.  8888888b. 88888888888 .d8888b.  
@@ -41,33 +21,48 @@
 % Maths
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{amsthm}
 % Local
 \usepackage{ISASmacros/isasmathmacros}
+% Equal last columns
+%\usepackage{flushend}
 
 % Environments
+\theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
 
-\title{\LARGE \bf
-Cryptographically Privileged State Estimation\\With Gaussian Keystreams
-}
-
-
-\author{Marko Ristic$^{1}$, Benjamin Noack$^{2}$ and Uwe D. Hanebeck$^{1}$% <-this % stops a space
-\thanks{$^{1}$Marko Ristic and Uwe D. Hanebeck are with the Intelligent Sensor-Actuator-Systems Laboratory (ISAS), Institute for Anthropomatics, Karlsruhe Institute of Technology (KIT), Germany.\newline
-{\tt\small \{marko.ristic,uwe.hanebeck\}@kit.edu}%
-}%
-\thanks{$^{2}$Benjamin Noack is with the \dots\newline
-{\tt\small \dots@\dots.edu}%
-}%
-}
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
 
 \begin{document}
 
-\maketitle
-\thispagestyle{empty}
-\pagestyle{empty}
+% paper title
+\title{Cryptographically Privileged State Estimation\\With Gaussian Keystreams}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% author names and affiliations
+\author{\IEEEauthorblockN{Marko Ristic}
+\IEEEauthorblockA{Intelligent Sensor-Actuator-\\
+Systems (ISAS)\\
+Karlsruhe Institute of\\
+Technology (KIT), Germany\\
+Email: marko.ristic@kit.edu}
+\and
+\IEEEauthorblockN{Benjamin Noack}
+\IEEEauthorblockA{Intelligent Sensor-Actuator-\\
+Systems (ISAS)\\
+Karlsruhe Institute of\\
+Technology (KIT), Germany\\
+Email: noack@kit.edu}
+\and
+\IEEEauthorblockN{Uwe D. Hanebeck}
+\IEEEauthorblockA{Intelligent Sensor-Actuator-\\
+Systems (ISAS)\\
+Karlsruhe Institute of\\
+Technology (KIT), Germany\\
+Email: uwe.hanebeck@kit.edu}}
+
+% make the title area
+\maketitle
 
 % 
 %        d8888 888888b.    .d8888b. 88888888888 8888888b.         d8888  .d8888b. 88888888888 
@@ -87,7 +82,11 @@ Cryptographically Privileged State Estimation\\With Gaussian Keystreams
 State estimation via public channels requires additional planning with regards to state privacy and information leakage of involved parties. In some scenarios, it is desirable to allow partial leakage of state information, thus distinguishing between privileged and unprivileged estimators and their capabilities. In state estimation, existing methods that distinguish between privileged and unprivileged, or trusted and untrusted, estimators typically result in reduced estimation quality for both parties or require additional secure communication channels. We introduce a method to decrease estimation quality at an unprivileged estimator using a stream of pseudorandom Gaussian samples while leaving privileged estimation unaffected and requiring no additional transmission beyond an initial key exchange. First, a cryptographic definition of privileged Bayesian estimation is presented, capturing a definition for the difference between estimations, before a privileged estimation scheme meeting the defined security criteria is developed. Achieving privileged estimation without additional channel requirements allows quantifiable estimation to be made available to the public while keeping the best estimation private to trusted privileged parties and can find uses in a variety of service-providing and privacy-preserving scenarios.
 \end{abstract}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% no keywords
+
+% For peer review papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
 
 % 
 % 8888888 888b    888 88888888888 8888888b.   .d88888b.  
@@ -435,20 +434,6 @@ A suitable notion would require that for any subset of corrupted estimators, and
 Given the structure of our scheme in section \ref{subsec:mult_privileges} it can be readily seen how the above notion would be met. Similarly to the single level case, the KF can be used to compute the minimum error covariances for all compromised key subsets as well as for an estimator with the true measurements, and the relevant difference series $\mat{D}^{(S)}_k$ can be defined. 
 
 % 
-%  ######     #     #####  #######    #######  #####  
-%  #     #   # #   #     # #          #       #     # 
-%  #     #  #   #  #       #          #       #     # 
-%  ######  #     # #  #### #####      #####   #     # 
-%  #       ####### #     # #          #       #   # # 
-%  #       #     # #     # #          #       #    #  
-%  #       #     #  #####  #######    #######  #### # 
-%                                                     
-% 
-
-% Needs to go on the SECOND LAST page and be adjusted by hand
-\addtolength{\textheight}{-3.375cm}
-
-% 
 %  .d8888b. 8888888 888b     d888 
 % d88P  Y88b  888   8888b   d8888 
 % Y88b.       888   88888b.d88888 
@@ -553,23 +538,16 @@ All of the included figures capture the difference in estimation error between t
 \section{Conclusion}\label{sec:conclusion}
 In this work, we have presented the idea of a privileged estimation scheme and given a formal cryptographic definition for its security. A concrete scheme was provided with a proof sketch for meeting this notion and an intuitive extension to multiple privileged levels was discussed. The benefits of controlling estimation accuracy on a per-party basis have countless applications from privatized localization hardware to subscription-based data access and a suitable simulation demonstrating a simple use case for object tracking has been presented. Possible future work on the topic includes reducing the requirement in \eqref{eqn:mult_covariance_restriction} to make multiple privilege levels more applicable, achieving formal security for broader model requirements, and implementing a privileged estimation scheme on hardware to demonstrate the real-time capability of the method.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% conference papers do not normally have an appendix
 
+% use section* for acknowledgment
+%\section*{Acknowledgment}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \section*{APPENDIX}
-
-% \section*{ACKNOWLEDGMENT}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+% Bibliography
 \bibliographystyle{IEEEtran}
 \bibliography{BibTeX/PrivilegedEstimation}
 
+% that's all folks
 \end{document}
+
+
