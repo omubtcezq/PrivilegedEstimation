@@ -252,7 +252,7 @@ The reviewer has the following specific comments.
 
 1. In Section II.A, would the secret key sk be unique for given setup input models and security parameter?}
 
-Our response.
+Our intention for the definition was that there is no requirement for a privileged estimation scheme to produce a unique secret key given fixed inputs; we allow for either deterministic or probabilistic instantiations of the Setup algorithm. For example, in the instance of a privileged estimation scheme that we propose in Section 3, the key is chosen at random given the security parameter, and is not unique. For this reason, definition 2.3 takes probabilities over the randomness introduced in the Setup algorithm as well. We hope this explains the scheme definition a little better.
 
 \item \reviewtext{2. The authors should better reorganise the problem statement part and make the definitions and notations more clearly. For example, the function A(.,.,.) is not defined before usage.}
 

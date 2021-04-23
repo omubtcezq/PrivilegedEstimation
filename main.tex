@@ -123,7 +123,7 @@ In section \ref{sec:problem_statement}, we introduce the cryptographic formaliza
 % 
 
 \subsection{Notation}
-Throughout this work, lowercase underlined characters $\vec{a}$ denote vectors, while uppercase bold characters $\mat{M}$ denote matrices. $\mat{M}\succ 0$ and $\mat{M} \succeq 0$ denote positive definitiveness and positive semi-definitiveness, respectively, and $\mat{M} \succ \mat{N}$ is shorthand for $\mat{M}-\mat{N}\succ 0$. Function $\mathsf{eig}(\mat{M})$ gives the set of eigenvalues for matrix $\mat{M}$, $\mathsf{Cov}[\cdot]$ computes the covariance of a random vector, $\mat{I}$ and $\mat{0}$ are the identity and zero matrices, respectively, with size inferrable from context, and $\sim$ denotes distribution while $\dot{\sim}$ denotes pseudorandom distribution.
+We use lowercase underlined characters $\vec{a}$ for vectors and uppercase bold characters $\mat{M}$ for matrices. $\mat{M}\succ 0$ and $\mat{M} \succeq 0$ denote positive definitiveness and semi-definitiveness, respectively, and $\mat{M} \succ \mat{N}$ is shorthand for $\mat{M}-\mat{N}\succ 0$. $\mat{I}$ and $\mat{0}$ are the identity and zero matrices, respectively, with sizes inferrable from context and the function $\mathsf{eig}(\mat{M})$ gives the set of eigenvalues for matrix $\mat{M}$. $\mathsf{Cov}[\cdot]$ computes the covariance of a random vector, $\sim$ denotes distribution, $\dot{\sim}$ denotes pseudorandom distribution, and $\mathcal{A}(\vec{i})$ denotes the output of an arbitrary algorithm $\mathcal{A}$ given inputs $\vec{i}$.
 
 % 
 % 8888888b.  8888888b.   .d88888b.  888888b.   
@@ -140,9 +140,9 @@ Throughout this work, lowercase underlined characters $\vec{a}$ denote vectors, 
 % 
 
 \section{Problem Statement}\label{sec:problem_statement}
-In this work, we consider the estimation scenario where system and measurement models are known and stochastic, and state estimators are either privileged, when holding a secret key, or unprivileged, without. We then develop a scheme that quantifies and cryptographically guarantees the difference between their estimation errors when models are Gaussian, linear, and time-invariant.
+In this work, we consider the estimation scenario where system and measurement models are known and stochastic, and state estimators are either privileged, when holding a secret key, or unprivileged, without. Our goal is to develop a scheme that quantifies and cryptographically guarantees the difference between their estimation errors when models are Gaussian, linear, and time-invariant.
 
-To first capture the aim of creating a privileged and unprivileged estimator, we must define how to assess estimation advantage between them, and which algorithms are required to characterize a privileged estimation scheme. In this section, we give the relevant formal definitions for security, followed by the system and measurement models considered in this work.
+To capture the aim of creating a privileged and unprivileged estimator, we must first define how to assess estimation advantage between them, and which algorithms are required to characterize a privileged estimation scheme. In this section, we give the relevant formal definitions for security, followed by the system and measurement models considered in this work.
 
 % 
 %  ######  ########  ##    ## ########  ########  #######  
@@ -176,7 +176,7 @@ In addition to the scheme above, we also give the following definitions to help 
    that returns a matrix $\mat{A}$ such that $\mat{A}$ is a valid covariance ($\mat{A}\succ 0$ and $\mat{A}=\mat{A}^\top$) and for each of its eigenvalues $e\in\mathsf{eig}(\mat{A})$, there exists a negligible function \cite[Def. 3.4]{katzIntroductionModernCryptography2008} $\eta$ such that $e\leq\eta(\kappa)$.
 \end{definition}
 
-With the terminology above, we can now introduce the security notion that captures the formal requirements of the estimation problem we want to solve.
+With the terminology above, we can introduce the security notion that captures the formal requirements of the estimation problem we want to solve.
 \begin{definition}\label{def:cov_privilege_security_notion}
    A privileged estimation scheme meets notion \textit{$\{\mat{D}_1,\mat{D}_2,\dots\}$-Covariance Privilege for Models $\mathcal{M}_S$ and $\mathcal{M}_M$} if for any PPT estimator $\mathcal{A}$, there exists a PPT estimator $\mathcal{A}^\prime$, such that
    \begin{equation}\label{eqn:cov_privilege}
