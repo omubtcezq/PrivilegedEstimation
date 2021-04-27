@@ -218,7 +218,7 @@ Thank you for pointing this out, the mistake has now been fixed.
 
 \item \reviewtext{In Definition 2.2, define what is meant by a ``negligible function''}
 
-We apologise that this was left undefined. Due to the term's prevalence in cryptography and the manuscript space restraints, we have not repeated the definition in our work, but have now added a reference to its definition within Definition 2.2.
+We apologize that this was left undefined. Due to the term's prevalence in cryptography and the manuscript space restraints, we have not repeated the definition in our work, but have now added a reference to its definition within Definition 2.2.
 
 \item \reviewtext{p.4: In the Proof Sketch, write down a formal statement of the actual theorem that is to be proved}
 
@@ -252,11 +252,11 @@ The reviewer has the following specific comments.
 
 1. In Section II.A, would the secret key sk be unique for given setup input models and security parameter?}
 
-Our intention for the definition was that there is no requirement for a privileged estimation scheme to produce a unique secret key given fixed inputs; we allow for either deterministic or probabilistic instantiations of the Setup algorithm. For example, in the instance of a privileged estimation scheme that we propose in Section 3, the key is chosen at random given the security parameter, and is not unique. For this reason, Definition 2.3 takes probabilities over the randomness introduced in the Setup algorithm as well. We hope this explains the scheme definition a little better.
+We regret that this was not made clearer. There is no requirement for a privileged estimation scheme to produce a unique secret key given fixed inputs, and we have now clarified this by pointing out that the Setup and Noise algorithms may be probabilistic. The instance of a privileged estimation scheme that we propose in Section 3 is an example of this case, as the key is chosen at random given the security parameter and is not fixed. Similarly, Definition 2.3 takes probabilities over the randomness introduced in the Setup and Noise algorithms for this reason.
 
 \item \reviewtext{2. The authors should better reorganise the problem statement part and make the definitions and notations more clearly. For example, the function A(.,.,.) is not defined before usage.}
 
-Our response.
+We are sorry that the problem statement was not found clear. Due to the novelty of the cryptographic requirements, we believe there is a need for a suitable cryptographic problem to be formally defined alongside the estimation problem to which we propose a solution. As is common in cryptography, security notions are defined as broadly as possible, minimising the assumptions on attackers and restrictions on implementations. For this reason, the problem statement has been given in its two distinct subsections, detailing a novel and reusable cryptographic security notion first, before a specific estimation problem where it can be used. We have made several minor changes to portray this intention further, including an added reference, corrected equations and an updated notation section. We hope this has made the structure clearer.
 
 \item \reviewtext{3. Could the setup cover other Gaussian keystream instead of the one the authors proposed in Section III.A?}
 
