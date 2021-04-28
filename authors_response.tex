@@ -222,13 +222,13 @@ We apologize that this was left undefined. Due to the term's prevalence in crypt
 
 \item \reviewtext{p.4: In the Proof Sketch, write down a formal statement of the actual theorem that is to be proved}
 
-Our response.
+Thank you for the suggestion. The section has now been updated to include the theorem being proved before the proof sketch.
 
 \item \reviewtext{In Fig. 3, what exactly does  Priv.1, Priv.2 and Priv.3 mean? Does it
 mean that it does not know one of the keys, while the other keys are
 known?}
 
-Our response.
+We are sorry that this was not made clear. The intention was that each privileged estimator holds a single secret key. We have changed the figure and its description to make this clearer.
 
 \end{rebuttal}
 
@@ -260,7 +260,7 @@ We are sorry that the problem statement was not found clear. Due to the novelty 
 
 \item \reviewtext{3. Could the setup cover other Gaussian keystream instead of the one the authors proposed in Section III.A?}
 
-Our response.
+The idea behind our proposed privileged estimation scheme would work with any Gaussian keystream, however, to meet the security notion defined it is required that the Gaussian keystream is indistinguishable from random independent Gaussian samples to a polynomially bound attacker. For this reason, the method described has been used (given our assumptions about floating-point numbers, it meets the requirement) and is relied on in our later proof. An alternative Gaussian keystream providing the same guarantee could always replace the one we give, but the reliance on the well studied and replaceble component of a stream cipher reduces the security to a tried-and-tested method. We have added some minor changes that imply that the choice of keystream is intentional but not compulsory.
 
 \end{rebuttal}
 
