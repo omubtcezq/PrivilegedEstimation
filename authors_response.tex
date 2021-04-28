@@ -206,7 +206,7 @@ Below are comments on the paper
 
 The proposed scheme for the unprivileged user appears to have the same stability properties as the privileged user, so that if the privileged user has bounded error covariance then the unprivileged user also has bounded error covariance. Is it possible to have situations where the privileged user has bounded error covariance and the unprivileged user has unbounded error covariance?}
 
-Our response.
+Thank you for the interesting comment. The idea of affecting the system stability by changing only the percieved measurement noise at an unprivileged estimator was initially explored but found not to work. The stability of a dynamical system is dependent on the reachability of (F,A), where AA\^{}T = Q, and the observability of (F, H). The proof for this can be found in Chapter 11 of ``Random Processes in Systems - Lecture Notes'' by J. Walrand and A. Dimakis. For this reason, by artificially increasing the measurement noise R at an estimator (R+Z substitues R for the unprivileged estimator in our scheme) only the rate of convergence or divergence can be changed, rather than convergence itself.
 
 \item \reviewtext{Another related work on adding noise to enhance security is ``On the Use of Artificial Noise for Secure State Estimation in the Presence of Eavesdroppers'', ECC 2018.}
 
