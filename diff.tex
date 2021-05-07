@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL main_init_submitted.tex   Fri Apr 23 09:20:25 2021
-%DIF ADD main.tex                  Fri May  7 11:44:29 2021
+%DIF ADD main.tex                  Fri May  7 11:56:50 2021
 %2345678901234567890123456789012345678901234567890123456789012345678901234567890
 %        1         2         3         4         5         6         7         8
 
@@ -660,7 +660,7 @@ $
       2 & 5
    \end{bsmallmatrix}
 $}, 
-for all $k$, }\DIFaddend and the sensor adds pseudorandom Gaussian samples with covariance $\mat{Z}=35 \cdot \mat{I}$ to create an estimator privilege level. Figure \ref{fig:single_bounded} shows the average error covariance traces and the \DIFdelbegin \DIFdel{root of }\DIFdelend mean square error (\DIFdelbegin \DIFdel{RMSE}\DIFdelend \DIFaddbegin \DIFadd{MSE}\DIFaddend ) of estimation from 1000 runs of our privileged estimation scheme, where the above models are followed. It can be seen that the trace of the privileged estimator's error covariance stays lower than that of the unprivileged one and that privileged estimation has lower \DIFdelbegin \DIFdel{RMSE}\DIFdelend \DIFaddbegin \DIFadd{MSE}\DIFaddend . The difference in trace between the two estimators has also been plotted and is equal to the trace of the difference series \eqref{eqn:covariance_difference_series} \DIFdelbegin \DIFdel{at }\DIFdelend \DIFaddbegin \DIFadd{for }\DIFaddend all time steps $k$ due to the chosen initial error covariance.
+for all $k$, }\DIFaddend and the sensor adds pseudorandom Gaussian samples with covariance $\mat{Z}=35 \cdot \mat{I}$ to create an estimator privilege level. Figure \ref{fig:single_bounded} shows the average error covariance traces and the \DIFdelbegin \DIFdel{root of }\DIFdelend mean square error (\DIFdelbegin \DIFdel{RMSE}\DIFdelend \DIFaddbegin \DIFadd{MSE}\DIFaddend ) of estimation from 1000 runs of our privileged estimation scheme, where the above models are followed. It can be seen that the trace of the privileged estimator's error covariance stays lower than that of the unprivileged one and that privileged estimation has lower \DIFdelbegin \DIFdel{RMSE}\DIFdelend \DIFaddbegin \DIFadd{MSE}\DIFaddend . The difference in trace between the two estimators has also been plotted and is equal to the trace of the \DIFdelbegin \DIFdel{difference }\DIFdelend series \eqref{eqn:covariance_difference_series} \DIFdelbegin \DIFdel{at }\DIFdelend \DIFaddbegin \DIFadd{for }\DIFaddend all time steps $k$ due to the chosen initial error covariance.
 
 \begin{figure}[htbp]
    \centering
