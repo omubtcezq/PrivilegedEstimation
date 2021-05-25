@@ -1,11 +1,18 @@
-%%
+%% modified version of
 %% IEEEtran.cls 2002/11/18 version V1.6b
+%% 2017/08/04
 %% 
 %% NOTE: This text file uses MS Windows line feed conventions. When (human)
 %% reading this file on other platforms, you may have to use a text
 %% editor that can handle lines terminated by the MS Windows line feed
 %% characters (0x0D 0x0A).
-%% 
+%%
+%%%%%%%%%% Class File Modification by LOKESH dated on 17-06-2017 %%%%%%%%%%
+%%%%% Class file has been updated with new name as ieeetran-v25-6.cls for   
+%%%%% including draft mode option. You need to insert an additional argument    
+%%%%% "draftversion" with \documentclass and add \usepackage{draftrule-v25-6} 
+%%%%% in your working file.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% 
 %% This is the official IEEE LaTeX class for authors of the Institute of 
 %% Electrical and Electronics Engineers (IEEE) Transactions journals and
@@ -73,8 +80,8 @@
 %%**********************************************************************
 %%
 %
-% Available class options 
-% (e.g., \documentclass[10pt,conference]{ieeeconf} 
+% Available class opti\qquadons 
+% (e.g., \documentclass[10pt,conference]{IEEEtran} 
 % 
 %             *** choose only one from each category ***
 %
@@ -661,21 +668,57 @@
 %
 %
 %
-\ProvidesClass{ieeeconf}[2016/4/23 revision V1.6b by Pradeep Misra]
-%\ProvidesClass{IEEEtran}[2002/11/18 revision V1.6b by Michael Shell]
-%\typeout{-- See the "IEEEtran_HOWTO" manual for usage information.}
-%\typeout{-- The source comments contain changelog notes.}
+\ProvidesClass{IEEEtran}[2002/11/18 revision V1.6b by Michael Shell]
+\typeout{-- See the "IEEEtran_HOWTO" manual for usage information.}
+\typeout{-- The source comments contain changelog notes.}
 \NeedsTeXFormat{LaTeX2e}
+\RequirePackage{color}
+
+%%%%%%%%%%%
+\DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\mathsf}
+
+\def\biosc#1{\hbox{\fontsize{6.5}{8}\selectfont\MakeUppercase{#1}}}
+%
+
 
 % define new needed flags to indicate document options
 % and set a few "failsafe" defaults
 \newif\if@twocolumnmode      \global\@twocolumnmodetrue
-\newif\if@draftversion       \global\@draftversionfalse
+\newif\if@draftversion       \global\@draftversionfalse %%%%% updated
+\newif\if@shade       \global\@shadefalse %%%%% updated
+\newif\if@web       \global\@webfalse %%%%% updated
+\newif\if@print       \global\@printfalse %%%%% updated
+\newif\if@myline       \global\@mylinefalse %%%%% updated
+\newdimen\@draftversionrule\@draftversionrule0pt %%%%% updated
+\DeclareOption{draftversion}{\setlength\overfullrule{5pt}\@draftversiontrue\@draftversionrule.1pt\overfullrule 5pt} %%%%% updated
+\DeclareOption{shade}{\@shadetrue} %%%%% updated
+\DeclareOption{web}{\global\@webtrue} %%%%% updated
+\DeclareOption{print}{\global\@printtrue} %%%%% updated
+\DeclareOption{myline}{\@mylinetrue} %%%%% updated
+\DeclareOption{shortpaper}{\global\@shortpapertrue}
+%%%%%%%%%%%%%%%
+\newif\if@edquery       \global\@edqueryfalse %%%%% updated
+\DeclareOption{edquery}{\global\@edquerytrue} %%%%% updated
+%%%%%%%%%%%%%%%
+\newif\if@query  \global\@queryfalse
+\newif\if@qry  \global\@qryfalse
+\newif\if@nquery  \global\@nqueryfalse
+\newif\if@tquery  \global\@tqueryfalse
+%%%%%%%%%%%%%%%
+\newif\if@equery  \global\@equeryfalse
+\newif\if@eqry  \global\@eqryfalse
+\newif\if@edquery  \global\@edqueryfalse
+\newif\if@etquery  \global\@etqueryfalse
+%%%%%%%%%%%%%%%
 \newif\if@draftclsmode       \global\@draftclsmodefalse
 \newif\if@draftclsmodefoot   \global\@draftclsmodefootfalse
 \newif\if@confmode           \global\@confmodefalse
 \newif\if@peerreviewoption   \global\@peerreviewoptionfalse
 \newif\if@peerreviewcaoption \global\@peerreviewcaoptionfalse
+\newif\if@shortpaper         \global\@shortpaperfalse %%%%% updated
+\newif\if@web       \global\@webfalse %%%%% updated
+\newif\if@print       \global\@printfalse %%%%% updated
+%
 
 % we HAVE to turn off technote as there is no
 % "not a tech note" option
@@ -715,35 +758,18 @@
 % \@IEEEmarginW is the wider side margin when the margins are not equal
 % NOTE: BOTH of the above margins are as they appear
 % on the paper - they are NOT offset by 1 inch
-%\DeclareOption{letterpaper}{\setlength{\paperheight}{11in}%
-%                            \setlength{\paperwidth}{8.5in}%
-%                            \def\@IEEEmarginE{0.680in}%
-%                            \def\@IEEEmarginW{0.775in}%
-%                            \@IEEEusingAfourpaperfalse}
-%
-%
-%\DeclareOption{a4paper}{\setlength{\paperheight}{297mm}%
-%                        \setlength{\paperwidth}{210mm}%
-%                        \def\@IEEEmarginE{14.32mm}%
-%                        \def\@IEEEmarginW{17mm}
-%                        \@IEEEusingAfourpapertrue}
-%
-% [2004/1/15 revision V1.6b by Pradeep Misra]
 \DeclareOption{letterpaper}{\setlength{\paperheight}{11in}%
                             \setlength{\paperwidth}{8.5in}%
-%			    \setlength{\topmargin}{0in}%
-			    \setlength{\topmargin}{-22pt}% HK May 15 2013
-                            \def\@IEEEmarginE{0.75in}%
-                            \def\@IEEEmarginW{0.75in}}
+                            \def\@IEEEmarginE{0.680in}%
+                            \def\@IEEEmarginW{0.775in}%
+                            \@IEEEusingAfourpaperfalse}
 
 
 \DeclareOption{a4paper}{\setlength{\paperheight}{297mm}%
                         \setlength{\paperwidth}{210mm}%
-%			\setlength{\topmargin}{-0.69in}% HK May 15 2013
-			\setlength{\topmargin}{+32pt}% HK May 15 2013
-                        \def\@IEEEmarginE{13.15mm}%
-                        \def\@IEEEmarginW{0.75in}}
-
+                        \def\@IEEEmarginE{14.32mm}%
+                        \def\@IEEEmarginW{17mm}
+                        \@IEEEusingAfourpapertrue}
 
 \DeclareOption{oneside}{\@twosidefalse \@mparswitchfalse}
 \DeclareOption{twoside}{\@twosidetrue \@mparswitchtrue}
@@ -754,35 +780,49 @@
 
 % If the user selects draft, then this class AND any packages
 % will go into draft mode.
-\DeclareOption{draft}{\global\@draftversiontrue \global\@draftclsmodetrue
-\global\@draftclsmodefoottrue} 
+%%%%\DeclareOption{draft}{\global\@draftversiontrue \global\@draftclsmodetrue
+%%%%\global\@draftclsmodefoottrue} 
 % draftcls is for a draft mode which will not affect any packages
 % used by the document.
-\DeclareOption{draftcls}{\global\@draftversionfalse \global\@draftclsmodetrue
-\global\@draftclsmodefoottrue} 
+%%%%\DeclareOption{draftcls}{\global\@draftversionfalse \global\@draftclsmodetrue
+%%%%\global\@draftclsmodefoottrue} 
 % draftclsnofoot is like draftcls, but without the footer.
-\DeclareOption{draftclsnofoot}{\global\@draftversionfalse \global\@draftclsmodetrue
-\global\@draftclsmodefootfalse} 
+%%%%\DeclareOption{draftclsnofoot}{\global\@draftversionfalse \global\@draftclsmodetrue
+%%%%\global\@draftclsmodefootfalse} 
 % we provide a final option just for completeness (article.cls has one)
-\DeclareOption{final}{\global\@draftversionfalse \global\@draftclsmodefalse
-\global\@draftclsmodefootfalse}
+%%%%\DeclareOption{final}{\global\@draftversionfalse \global\@draftclsmodefalse
+%%%%\global\@draftclsmodefootfalse}
 
 \DeclareOption{journal}{\global\@peerreviewoptionfalse \global\@peerreviewcaoptionfalse
-\global\@confmodefalse \global\@technotefalse}
+\global\@confmodefalse \global\@technotefalse \global\@shortpaperfalse}
 
 \DeclareOption{conference}{\global\@peerreviewoptionfalse \global\@peerreviewcaoptionfalse
-\global\@confmodetrue \global\@technotefalse}
+\global\@confmodetrue \global\@technotefalse \global\@shortpaperfalse}
 
 \DeclareOption{technote}{\global\@peerreviewoptionfalse \global\@peerreviewcaoptionfalse
-\global\@confmodefalse \global\@technotetrue}
+\global\@confmodefalse \global\@shortpaperfalse \global\@technotetrue}
 
+%%%%% For Short Paper [BRIEF PAPER/CORRESPONDENCE/COMMUNICATION/ERRATUM/COMMENTS-REPLY/CORRECTIONS ETC.] %%%%%
+%%%%%%%%%%%%%%%%%%%% Just Pass an Arguments "shortpaper, 9pt" in Documentclass Line %%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+\DeclareOption{shortpaper}{\global\@peerreviewoptionfalse \global\@peerreviewcaoptionfalse
+\global\@confmodefalse \global\@technotefalse \global\@shortpapertrue}
+%
+%%%%%
+\DeclareOption{web}{\global\@peerreviewoptionfalse \global\@peerreviewcaoptionfalse
+\global\@confmodefalse \global\@shortpaperfalse \global\@technotefalse \global\@printfalse \global\@webtrue}
+%
+\DeclareOption{print}{\global\@peerreviewoptionfalse \global\@peerreviewcaoptionfalse
+\global\@confmodefalse \global\@shortpaperfalse \global\@technotefalse \global\@webfalse \global\@printtrue}
+%%%%%
 \DeclareOption{peerreview}{\global\@peerreviewoptiontrue \global\@peerreviewcaoptionfalse
-\global\@confmodefalse \global\@technotefalse}
+\global\@confmodefalse \global\@technotefalse \global\@shortpaperfalse}
 
 \DeclareOption{peerreviewca}{\global\@peerreviewoptiontrue \global\@peerreviewcaoptiontrue
-\global\@confmodefalse \global\@technotefalse}
+\global\@confmodefalse \global\@technotefalse \global\@shortpaperfalse}
 
 \DeclareOption{nofonttune}{\global\@fonttunesettingsfalse}
+
 
 
 % IEEE uses Times font, so we'll default to times.
@@ -812,6 +852,10 @@
 \typeout{ uses only Type 1 fonts and that every step in the generation}%
 \typeout{ process uses the US letter (8.5in X 11in) paper size.}%
 \typeout{}%
+\else
+%\newpage\clearpage
+%\section*{Author Queries}
+%\listofqueries
 \fi}
 
 
@@ -892,8 +936,12 @@
 % sublargesize is the same as large - 10pt
 \def\sublargesize{\@setfontsize{\sublargesize}{10}{12pt}}
 \def\large{\@setfontsize{\large}{10}{12pt}}
+\def\nlarge{\@setfontsize{\nlarge}{11}{13pt}}
 \def\Large{\@setfontsize{\Large}{12}{14pt}}
 \def\LARGE{\@setfontsize{\LARGE}{14}{17pt}}
+%%%%
+\def\nLARGE{\@setfontsize{\nLARGE}{16}{18pt}}
+%%%%
 \def\huge{\@setfontsize{\huge}{17}{20pt}}
 \def\Huge{\@setfontsize{\Huge}{20}{24pt}}
 \fi
@@ -916,8 +964,12 @@
 % sublargesize is a tad smaller than large - 11pt
 \def\sublargesize{\@setfontsize{\sublargesize}{11}{13.4pt}}
 \def\large{\@setfontsize{\large}{12}{14pt}}
+\def\nlarge{\@setfontsize{\nlarge}{13}{15pt}}
 \def\Large{\@setfontsize{\Large}{14}{17pt}}
-\def\LARGE{\@setfontsize{\LARGE}{16}{20pt}}
+\def\LARGE{\@setfontsize{\LARGE}{17}{20pt}}
+%%%%
+\def\nLARGE{\@setfontsize{\nLARGE}{19}{21pt}}
+%%%%
 \def\huge{\@setfontsize{\huge}{20}{24pt}}
 \def\Huge{\@setfontsize{\Huge}{24}{28pt}}
 \fi
@@ -940,8 +992,12 @@
 % sublargesize is the same as large - 12pt
 \def\sublargesize{\@setfontsize{\sublargesize}{12}{14pt}}
 \def\large{\@setfontsize{\large}{12}{14pt}}
+\def\nlarge{\@setfontsize{\nlarge}{13}{15pt}}
 \def\Large{\@setfontsize{\Large}{14}{17pt}}
 \def\LARGE{\@setfontsize{\LARGE}{17}{20pt}}
+%%%%
+\def\nLARGE{\@setfontsize{\nLARGE}{19}{21pt}}
+%%%%
 \def\huge{\@setfontsize{\huge}{20}{24pt}}
 \def\Huge{\@setfontsize{\Huge}{24}{28pt}}
 \fi
@@ -964,8 +1020,12 @@
 % sublargesize is the same as large - 14pt
 \def\sublargesize{\@setfontsize{\sublargesize}{14}{17pt}}
 \def\large{\@setfontsize{\large}{14}{17pt}}
+\def\nlarge{\@setfontsize{\nlarge}{15}{18pt}}
 \def\Large{\@setfontsize{\Large}{17}{20pt}}
 \def\LARGE{\@setfontsize{\LARGE}{20}{24pt}}
+%%%%
+\def\nLARGE{\@setfontsize{\nLARGE}{22}{26pt}}
+%%%%
 \def\huge{\@setfontsize{\huge}{22}{26pt}}
 \def\Huge{\@setfontsize{\Huge}{24}{28pt}}
 \fi
@@ -986,6 +1046,13 @@
  \fi%
 \fi
 
+%%%%%%%% For Short Paper %%%%%%%%
+\if@shortpaper%
+ \ifx\@IEEEptsize\@IEEEptsizenine\else%
+  \typeout{** ATTENTION: Technotes are normally 9pt documents.}%
+ \fi%
+\fi
+%%%%%%%%
 
 % set \baselinestretch
 \def\baselinestretch{1}
@@ -1113,9 +1180,7 @@
 \@IEEEtunefonts
 
 % and again at the start of the document in case the user loaded different fonts
-\AtBeginDocument{\@IEEEtunefonts}
-
-
+\AtBeginDocument{\@IEEEtunefonts} %\@ifundefined{url}{\def\url#1{\protect{#1}}} 
 
 % V1.6 
 % LaTeX is a little to quick to use hyphenations
@@ -1141,29 +1206,26 @@
 % IEEE textwidth is 21 pica. They have a colsep of 1 pica.
 % V1.6 conference mode margins
 \if@confmode
-  % [2004/10/15 revision V1.6c by Pradeep Misra]
- %\topmargin        -0.25in % HK May 15 2013
- \textheight        9.5in % The standard for conferences
+ \topmargin        -0.25in
+ \textheight        9.25in % The standard for conferences
   % However, we will adjust this a  tad so that an integer number
   % of lines will always fit on each page
   % The baselineskip (leading) for each document point size is used 
   % to determine these values
   % rounded up an extra 0.1pt or so to prevent trouble with any rounding errors
- \ifx\@IEEEptsize\@IEEEptsizenine\textheight=682.0pt\fi      %9.4722in  61 lines/page
- \ifx\@IEEEptsize\@IEEEptsizeten\textheight=684.0pt\fi       %9.5in  57 lines/page
- \ifx\@IEEEptsize\@IEEEptsizeeleven\textheight=673.2pt\fi   %9.2611in  51 lines/page
- \ifx\@IEEEptsize\@IEEEptsizetwelve\textheight=676.8pt\fi   %9.2473in  47 lines/page
+ \ifx\@IEEEptsize\@IEEEptsizenine\textheight=674.0pt\fi      %9.3261in  61 lines/page
+ \ifx\@IEEEptsize\@IEEEptsizeten\textheight=672.1pt\fi       %9.2998in  56 lines/page
+ \ifx\@IEEEptsize\@IEEEptsizeeleven\textheight=669.3pt\fi   %9.2611in  50 lines/page
+ \ifx\@IEEEptsize\@IEEEptsizetwelve\textheight=668.3pt\fi   %9.2473in  48 lines/page
 \else
- \topmargin        -49.0pt
+ \topmargin        -42.0pt%49.0pt
  \textheight        58pc % = 9.63in or 696pt
 \fi
 
-  % [2004/1/15 revision V1.6b by Pradeep Misra]
-%\textwidth         43pc   % 2 x 21pc + 1pc = 43pc
-%\columnsep          1pc
 
-\textwidth         7.0in   % 2 x 21pc + 1pc = 43pc
-\columnsep         0.2in
+\textwidth         43pc   % 2 x 21pc + 1pc = 43pc
+\columnsep          1pc
+
 
 % IEEE MARGIN INFO and new \overrideIEEEmargins command
 % V1.6 revised margins again
@@ -1220,8 +1282,8 @@
 \headsep          0in
 \headheight       0in
 \else
-\headsep          0.25in
-\headheight       12pt
+\headsep          18pt%0.25in
+\headheight       6pt
 \fi
 
 % V1.6, if things get too close, go ahead and let them touch
@@ -1638,6 +1700,9 @@
 \def\@endIEEEenumerate{\endlist}
 \def\@endIEEEdescription{\endlist}
 
+% DEFINE FOR FOOTNOTE NEW QUERY
+\def\aqfa#1{\hspace*{-4.4pc}{AQ:#1\hspace*{3pc}}}
+\def\aqfb#1{\hspace*{-3.8pc}{AQ:#1\hspace*{2.35pc}}}
 
 % DO NOT ALLOW BLANK LINES TO BE IN THESE IED ENVIRONMENTS
 % AS THIS WILL FORCE NEW PARAGRAPHS AFTER THE IED LISTS
@@ -1878,7 +1943,6 @@
    \setcounter{secnumdepth}{4}
 \fi
 
-
 \newcounter{section}
 \newcounter{subsection}[section]
 \newcounter{subsubsection}[subsection]
@@ -1923,6 +1987,49 @@
 % VIII; VIII-A; and VIII-A.1 are usually the worst offenders.
 % MDS 1/2001
 \def\tableofcontents{\section*{Contents}\@starttoc{toc}}
+%%%%%%%%%%%%%%%
+\def\listofqueryall{\vfill\pagebreak\newpage\clearpage\thispagestyle{empty}\nolinenumbers{\parindent0pt\fontsize{15}{15}\selectfont EDITOR QUERY}\vskip48pt\parindent0pt\@starttoc{loe}\vskip52pt
+{\parindent0pt\fontsize{15}{15}\selectfont AUTHOR QUERY}\parindent0pt\@starttoc{loq}\vskip12pt
+}
+\def\listofedquery{\vfill\pagebreak\newpage\clearpage\thispagestyle{empty}\nolinenumbers{\parindent0pt\fontsize{15}{15}\selectfont EDITOR QUERY}\vskip48pt\parindent0pt\@starttoc{loe}\vskip52pt
+{\parindent0pt\fontsize{15}{15}\selectfont AUTHOR QUERIES}\parindent0pt\@starttoc{loq}\vskip12pt
+}
+\def\listofedqueries{\vfill\pagebreak\newpage\clearpage\thispagestyle{empty}\nolinenumbers%\vspace*{24pt}
+{{\parindent0pt\fontsize{15}{15}\selectfont EDITOR QUERIES}}\vskip48pt\parindent0pt\@starttoc{loe}\vskip64pt
+{\parindent0pt\fontsize{15}{15}\selectfont AUTHOR QUERIES}\parindent0pt\@starttoc{loq}%\vskip12pt
+}
+%%%%%%%%%%%%%%%
+\def\listofquery{\vfill\pagebreak\newpage\clearpage\thispagestyle{empty}\hsize43pc\nolinenumbers{\parindent0pt\fontsize{15}{15}\selectfont AUTHOR QUERIES\\[10pt]AUTHOR PLEASE ANSWER ALL QUERIES\\[10pt]\fontsize{10}{12}\selectfont \bf PLEASE NOTE:\ We cannot accept new source files as corrections for your paper. If possible, please annotate the PDF proof we have sent you with your corrections and upload it via the Author Gateway. Alternatively, you may send us your corrections in list format. You may also upload revised graphics via the Author Gateway.}\vskip24pt\parindent0pt\@starttoc{loq}}
+\def\listofqueries{\vfill\pagebreak\newpage\clearpage\thispagestyle{empty}\hsize43pc\nolinenumbers%\vspace*{24pt}
+{{\parindent0pt\fontsize{15}{15}\selectfont AUTHOR QUERIES\\[10pt]AUTHOR PLEASE ANSWER ALL QUERIES\\[10pt]\fontsize{10}{12}\selectfont \bf PLEASE NOTE:\ We cannot accept new source files as corrections for your paper. If possible, please annotate the PDF proof we have sent you with your corrections and upload it via the Author Gateway. Alternatively, you may send us your corrections in list format. You may also upload revised graphics via the Author Gateway.}}\vskip24pt\parindent0pt
+\@starttoc{loq}}
+%%%%%%%%%%%%%%%
+\def\l@query#1{\addpenalty{\@secpenalty}\addvspace{1.0em plus 1pt}%
+    \@tempdima 2.75em \begingroup \parindent \z@ \rightskip \@pnumwidth%
+    \parfillskip-\@pnumwidth {\bfseries\leavevmode #1}\par%
+    \endgroup}
+\def\l@nquery#1{\addpenalty{\@secpenalty}\addvspace{1.0em plus 1pt}%
+    \@tempdima 2.75em \begingroup \parindent \z@ \rightskip \@pnumwidth%
+    \parfillskip-\@pnumwidth {\bfseries\leavevmode #1}\par%
+    \endgroup}
+\def\l@tquery#1{\addpenalty{\@secpenalty}\addvspace{1.0em plus 1pt}%
+    \@tempdima 2.75em \begingroup \parindent \z@ \rightskip \@pnumwidth%
+    \parfillskip-\@pnumwidth {\bfseries\leavevmode #1}\par%
+    \endgroup}
+%%%%%%%%%%%%%%%
+\def\l@equery#1{\addpenalty{\@secpenalty}\addvspace{1.0em plus 1pt}%
+    \@tempdima 2.75em \begingroup \parindent \z@ \rightskip \@pnumwidth%
+    \parfillskip-\@pnumwidth {\bfseries\leavevmode #1}\par%
+    \endgroup}
+\def\l@edquery#1{\addpenalty{\@secpenalty}\addvspace{1.0em plus 1pt}%
+    \@tempdima 2.75em \begingroup \parindent \z@ \rightskip \@pnumwidth%
+    \parfillskip-\@pnumwidth {\bfseries\leavevmode #1}\par%
+    \endgroup}
+\def\l@etquery#1{\addpenalty{\@secpenalty}\addvspace{1.0em plus 1pt}%
+    \@tempdima 2.75em \begingroup \parindent \z@ \rightskip \@pnumwidth%
+    \parfillskip-\@pnumwidth {\bfseries\leavevmode #1}\par%
+    \endgroup}
+%%%%%%%%%%%%%%%
 \def\l@section#1#2{\addpenalty{\@secpenalty}\addvspace{1.0em plus 1pt}%
     \@tempdima 2.75em \begingroup \parindent \z@ \rightskip \@pnumwidth%
     \parfillskip-\@pnumwidth {\bfseries\leavevmode #1}\hfil\hbox to\@pnumwidth{\hss #2}\par%
@@ -2003,42 +2110,194 @@
 % overridden by a user
 \def\@IEEEfigurecaptionsepspace{\vskip\abovecaptionskip\relax}%
 \def\@IEEEtablecaptionsepspace{\vskip\abovecaptionskip\relax}%
-
+\def\@IEEEtablecaptionsabspace{\vskip4pt\relax}%
+\def\@IEEEtablecaptionsbespace{\vskip1.5pt\relax}%
 
 % 1.6b revise caption system so that \@makecaption uses two arguments
 % as with LaTeX2e. Otherwise, there will be problems when using hyperref.
 \def\@IEEEtablestring{table}
 
+%%%%% For Pyramid Style in Caption %%%%%
+\newcommand\stupidsingle[1]{%
+        \vbox{%
+                \vskip3pt
+                \hsize=3.5in
+                \parindent=0pt
+                \leftskip=0pt plus.5fil
+                \rightskip=0pt plus-0.5fil
+                \parfillskip=0pt plus1fil
+                \emergencystretch=1in
+                \parshape15
+                0pc 21pc
+                0.5pc 20pc
+                1pc 19pc
+                1.5pc 18pc
+                2pc 17pc
+                2.5pc 16pc
+                3pc 15pc
+                3.5pc 14pc
+                4pc 13pc
+                4.5pc 12pc
+                5pc 11pc
+                5.5pc 10pc
+                6pc 9pc
+                6.5pc 8pc
+                7pc 7pc
+                \strut
+                #1%
+        }\vspace*{-2pt}
+}
+%
+\newcommand\stupiddouble[1]{%
+        \vbox{%
+                \vskip3pt
+                \hsize=43pc
+                \parindent=0pt
+                \leftskip=0pt plus.5fil
+                \rightskip=0pt plus-0.5fil
+                \parfillskip=0pt plus1fil
+                \emergencystretch=1in
+                \parshape7
+                0pc 43pc
+                1pc 41pc
+                2pc 39pc
+                3pc 37pc
+                4pc 35pc
+                5pc 33pc
+                6pc 31pc
+                \strut
+                #1%
+        }\vspace*{-2pt}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%
+\newsavebox\figbox
+%%%%
+
+\newif\if@myimage \global\@myimagefalse
+
+\def\myimage#1{\hphantom{\vbox{\includegraphics{#1}}}
+\newdimen\height
+\newdimen\width
+\setbox0=\hbox{\epsfbox{#1}}
+\setbox1=\hbox{\epsfbox{#1}}
+\height=\ht0 \advance\height by \dp0
+\width=\wd1 %\advance\width by \dp0
+}
+%   \setbox\figbox\vbox{\includegraphics{#1}}}
+%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\def\tablefont{\fontencoding{T1}
+   \fontfamily{phv}
+   \fontseries{m}
+   \fontshape{n}
+   \fontsize{8}{10}
+   \selectfont }
+
+\def\figfont{\sffamily
+\fontencoding{T1}
+\fontfamily{phv}
+\fontseries{m}
+\fontshape{n}
+\fontsize{8}{10}
+\selectfont \mediummath}
+
+\AtBeginDocument{% This is set for correcting the title, section, figure & table caption math
+   \DeclareMathSizes{7}{7}{6}{6}
+   \DeclareMathSizes{9}{9}{7.2}{6}
+   \DeclareMathSizes{22}{22}{16}{12}
+} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \long\def\@makecaption#1#2{%
+%
+   \fontencoding{T1}
+   \fontfamily{phv}
+   \fontseries{m}
+   \fontshape{n}
+   \fontsize{8}{10}
+   \selectfont 
+%
+\scshape
 % test if is a for a figure or table
 \ifx\@captype\@IEEEtablestring%
 % if a table, do table caption
-\begin{center}{\footnotesize #1}\\{\footnotesize\scshape #2}\end{center}%
-\@IEEEtablecaptionsepspace% V1.6 was a hard coded 8pt
+\@IEEEtablecaptionsabspace
+%\setbox\figbox\hbox{\myimagebox{}}
+\begin{center}
+\if@myimage
+\ifdim \width > 255pt
+{\strut #1\color{black}}\\ {\footnotesize\scshape 
+\if\boldmath #2\color{black}\null\else\strut\stupiddouble{\boldmath #2\color{black}\normalcolor}\fi}
+\else
+{\strut #1\color{black}}\\ {\footnotesize\scshape 
+\if\boldmath #2\color{black}\null\else\strut\stupidsingle{\boldmath #2\color{black}\normalcolor}\fi}
+\fi
+\else
+%%%
+\ifdim \width > 255pt
+{\strut #1}\\ {\footnotesize\scshape 
+\if\boldmath #2\null\else\strut\stupiddouble{\boldmath #2\color{black}}\fi}
+\else
+{\strut #1}\\ {%\footnotesize\scshape 
+\if\boldmath #2\null\else\strut\stupidsingle{\boldmath #2\color{black}}\fi}
+\fi
+%%%
+\fi
+\end{center}%
+\@IEEEtablecaptionsbespace% V1.6 was a hard coded 8pt
 % if not a table, format it as a figure
 \else
 \@IEEEfigurecaptionsepspace% V1.6 was a hard coded 5pt
 % 3/2001 use footnotesize, not small; use two nonbreaking spaces, not one
-\setbox\@tempboxa\hbox{\footnotesize #1.~~ #2}%
+\setbox\@tempboxa\hbox{\footnotesize #1.\color{black}\normalcolor~~\sf\boldmath #2}%
 \ifdim \wd\@tempboxa >\hsize%
 % if caption is longer than a line, let it wrap around
-\setbox\@tempboxa\hbox{\footnotesize #1.~~ }%
-\parbox[t]{\hsize}{\footnotesize \noindent\unhbox\@tempboxa#2}%
+\setbox\@tempboxa\hbox{\footnotesize #1.\color{black}\normalcolor~~ }%
+\parbox[t]{\hsize}{\footnotesize \noindent\unhbox\@tempboxa\sf\boldmath #2}%
 % if caption is shorter than a line,
 % allow user to control short figure caption justification (left or center)
 \else%
 \ifcenterfigcaptions \hbox to\hsize{\footnotesize\hfil\box\@tempboxa\hfil}%
 \else \hbox to\hsize{\footnotesize\box\@tempboxa\hfil}%
-\fi\fi\fi}
+\fi\fi\fi\color{black}}
+
 
 
 \newcounter{figure}
 \def\thefigure{\@arabic\c@figure}
 \def\fps@figure{tbp}
 \def\ftype@figure{1}
+%%%%%%%%%%%%%%
+\newcounter{query}
+\def\thequery{\@arabic\c@query}
+\newcounter{qry}
+\def\theqry{\@arabic\c@qry}
+\newcounter{nquery}
+\def\thenquery{\@arabic\c@nquery}
+\newcounter{tquery}
+\def\thetquery{\@arabic\c@tquery}
+\def\ext@query{loq}
+%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%
+\newcounter{equery}
+\def\theequery{\@arabic\c@equery}
+\newcounter{eqry}
+\def\theeqry{\@arabic\c@eqry}
+\newcounter{edquery}
+\def\theedquery{\@arabic\c@edquery}
+\newcounter{etquery}
+\def\theetquery{\@arabic\c@etquery}
+\def\ext@equery{loe}
+%%%%%%%%%%%%%%
 \def\ext@figure{lof}
-\def\fnum@figure{Fig.~\thefigure}
-\def\figure{\@float{figure}}
+\def\fnum@figure{\color{subsectioncolor}\sf Fig.~\thefigure}
+\def\figure{\sf\@float{figure}}
 \let\endfigure\end@float
 \@namedef{figure*}{\@dblfloat{figure}}
 \@namedef{endfigure*}{\end@dblfloat}
@@ -2047,13 +2306,21 @@
 \def\fps@table{tbp}
 \def\ftype@table{2}
 \def\ext@table{lot}
-\def\fnum@table{TABLE~\thetable}
+\def\fnum@table{\color{subsectioncolor}\sf TABLE~\thetable}
 % V1.6 IEEE uses 8pt text for tables
 % to default to footnotesize, we hack into LaTeX2e's \@floatboxreset and pray
-\def\table{\def\@floatboxreset{\reset@font\footnotesize\@setminipage}\@float{table}}
+\def\table{%
+\newdimen\width
+\setbox2=\hbox{\hphantom{\hspace*{255pt}}}
+\width=\wd2 %\advance\width by \dp0%
+\def\@floatboxreset{\reset@font\footnotesize\@setminipage}\@float{table}}
 \let\endtable\end@float
 % v1.6b double column tables need to default to footnotesize as well.
-\@namedef{table*}{\def\@floatboxreset{\reset@font\footnotesize\@setminipage}\@dblfloat{table}}
+\@namedef{table*}{%
+\newdimen\width
+\setbox2=\hbox{\hphantom{\hspace*{516pt}}}
+\width=\wd2 %\advance\width by \dp0%
+\def\@floatboxreset{\reset@font\footnotesize\@setminipage}\@dblfloat{table}}
 \@namedef{endtable*}{\end@dblfloat}
 
 
@@ -3136,6 +3403,8 @@ between column types.}%
 
 % set up the running headings, this complex because of all the different
 % modes IEEEtran supports
+\newlength{\firstpagerule}
+\newlength{\logowidth}
 \if@twoside
  \if@technote
    \def\ps@headings{%
@@ -3157,8 +3426,16 @@ between column types.}%
         \def\@oddhead{}
         \def\@evenhead{}
        \else
-        \def\@oddhead{\hbox{}\scriptsize\rightmark \hfil \thepage}
-        \def\@evenhead{\scriptsize\thepage \hfil \leftmark\hbox{}}
+%        \def\@oddhead{\hbox{}\scriptsize\rightmark \hfil \thepage}
+%        \def\@evenhead{\scriptsize\thepage \hfil \leftmark\hbox{}}
+%
+   \def\@oddhead{\begin{tabular}{@{}p{43pc}@{}}\\[-24pt]\vbox{\hsize43pc\scriptsize\textsf\rightmark \hfill \textsf\thepage\hbox{}}\\[-19pt]
+         \vbox{\color{subsectioncolor}\hrule height1pt width43pc depth0pt} \end{tabular}}%
+%
+%
+   \def\@evenhead{\begin{tabular}{@{}p{43pc}@{}}\\[-24pt]\vbox{\hsize43pc\scriptsize\textsf\thepage \hfill \textsf\leftmark\hbox{}}\\[-19pt]
+         \vbox{\color{subsectioncolor}\hrule height1pt width43pc depth0pt} \end{tabular}}%
+%
        \fi
        \if@draftclsmode
             \def\@oddhead{\hbox{}\scriptsize\rightmark \hfil \thepage}
@@ -3202,9 +3479,31 @@ between column types.}%
 \if@confmode
    \def\@oddhead{}%
    \def\@evenhead{}%
-\else
-   \def\@oddhead{\hbox{}\scriptsize\leftmark \hfil \thepage}%
-   \def\@evenhead{\scriptsize\thepage \hfil \leftmark\hbox{}}%
+\else %%%%%%%%%%%%%%%%%%%%%% Updated %%%%%%%%%%%%%%%%%%%
+%   \def\@oddhead{\hbox{}\scriptsize\leftmark \hfil \thepage}%
+   \if@web
+   \def\@oddhead{\vbox{\vbox{\vspace*{-5pt}\includegraphics[width=\logowidth]{\logoname.eps}}\hskip-3pc\null\hskip\logowidth
+         \vbox{\begin{tabular}{@{\hspace*{43pt}}p{\firstpagerule}@{}}\\[-32pt]{\vbox{\hsize\firstpagerule\scriptsize\textsf\leftmark \hfill \textsf\thepage\hbox{}\par\vspace*{-3pt} 
+         \vbox{\color{subsectioncolor}\hrule height1pt width\firstpagerule depth0pt} }}\end{tabular}} }}%
+   \else\if@print
+   \def\@oddhead{\vbox{\vbox{\vspace*{-5pt}\includegraphics[width=\logowidth]{\logoname.eps}}\hskip-3pc\null\hskip\logowidth
+         \vbox{\begin{tabular}{@{\hspace*{43pt}}p{\firstpagerule}@{}}\\[-32pt]{\vbox{\hsize\firstpagerule\scriptsize\textsf\leftmark \hfill \textsf\thepage\hbox{}\par\vspace*{-3pt} 
+         \vbox{\color{subsectioncolor}\hrule height1pt width\firstpagerule depth0pt} }}\end{tabular}} }}%
+   \else
+   \PackageError{}{NEED OPTION "web" or "print" in documentclass !!!}{help text}
+   \fi\fi
+   \if@web 
+   \def\@evenhead{\begin{tabular}{@{}p{\firstpagerule}@{}}\\[-38pt]{\vbox{\hsize\firstpagerule\scriptsize\textsf\thepage \hfill \textsf\leftmark\hbox{}\par\vspace*{-3pt} 
+         \vbox{\color{subsectioncolor}\hrule height1pt width\firstpagerule depth0pt} }}\end{tabular}\hskip-5pc\null\hskip\logowidth
+         \lower-7.5pt\vbox{\vspace*{-4pt}\vbox{\includegraphics[width=\logowidth]{\logoname.eps}}}}%
+%         \lower-7.5pt\vbox{\vspace*{-4pt}\vbox{\includegraphics[width=\logowidth]{\logoname.eps}}}}%
+   \else\if@print
+   \def\@evenhead{\begin{tabular}{@{}p{\firstpagerule}@{}}\\[-38pt]{\vbox{\hsize\firstpagerule\scriptsize\textsf\thepage \hfill \textsf\leftmark\hbox{}\par\vspace*{-3pt} 
+         \vbox{\color{subsectioncolor}\hrule height1pt width\firstpagerule depth0pt} }}\end{tabular}\hskip-5pc\null\hskip\logowidth
+         \lower-7.5pt\vbox{\vspace*{-4pt}\vbox{\includegraphics[width=\logowidth]{\logoname.eps}}}}%
+   \else
+   \PackageError{mypackage}{NEED OPTION "web" or "print" in documentclass !!!}{help text}
+   \fi\fi 
 \fi
 \if@draftclsmode
    \def\@oddhead{\hbox{}\scriptsize\leftmark \hfil \thepage}%
@@ -3221,8 +3520,8 @@ between column types.}%
       \if@peerreviewoption
       \else
          \footskip 0pt%
-         \def\@oddfoot{\hss\normalfont\footnotesize\raisebox{1.5ex}[1.5ex]{\@pubid}\hss}%
-         \def\@evenfoot{\hss\normalfont\footnotesize\raisebox{1.5ex}[1.5ex]{\@pubid}\hss}%
+         \def\@oddfoot{\hss\normalfont\footnotesize\raisebox{-1.6ex}[-1.6ex]{\@pubid}\hss}%
+         \def\@evenfoot{\hss\normalfont\footnotesize\raisebox{-1.6ex}[-1.6ex]{\@pubid}\hss}%
       \fi
    \fi
 \fi}
@@ -3347,7 +3646,7 @@ which is provided to fool Hyperref.}}
 
 \def\@biblabel#1{[#1]}
 
-\def\thebibliography#1{\section*{References}%
+\def\thebibliography#1{\section*{References\color{black}}%
     \addcontentsline{toc}{section}{References}%
     % V1.6 add some rubber space here and provide a command trigger
     \footnotesize \vskip 0.3\baselineskip plus 0.1\baselineskip minus 0.1\baselineskip%
@@ -3383,7 +3682,7 @@ which is provided to fool Hyperref.}}
 % 
 % \IEEEmembership is used to produce the sublargesize italic font used to indicate author 
 % IEEE membership.
-\def\IEEEmembership#1{{\sublargesize\normalfont\textit{#1}}}
+\def\IEEEmembership#1{{\sublargesize\normalfont\sf\textit{#1}}}
  
 
 % \authorrefmark{} produces a footnote type symbol to indicate author affiliation.
@@ -3585,6 +3884,18 @@ which is provided to fool Hyperref.}}
 \hbox{}\thispagestyle{#1}\newpage\if@twocolumn\hbox{}\thispagestyle{#1}\newpage\fi\fi\fi}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\def\emailname{e\raise1.7pt\hbox{\vrule width1.5pt height1pt depth0pt\relax%
+%}mail$:$\ }
+%\def\email#1{\protect\url{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%
+\def\thanks#1{\footnotemark
+    \protected@xdef\@thanks{\@thanks
+        \protect\footnotetext[\the\c@footnote]{\sf #1}}%
+}
+%%%%%
+
+
 % user command to invoke the title page
 \def\maketitle{\par%
   \begingroup%
@@ -3601,9 +3912,14 @@ which is provided to fool Hyperref.}}
      \if@twocolumn%
         \if@technote%
            \newpage\global\@topnum\z@ \@maketitle\@IEEEstatictitlevskip\@IEEEaftertitletext%
+%%%%%%%% For Short Paper %%%%%%%%%%
+        \else
+        \if@shortpaper
+           \twocolumn[\@maketitle\@IEEEdynamictitlevspace\@IEEEaftertitletext]%
+%%%%%%%%
         \else
            \twocolumn[\@maketitle\@IEEEdynamictitlevspace\@IEEEaftertitletext]%
-        \fi
+        \fi\fi
      \else
         \newpage\global\@topnum\z@ \@maketitle\@IEEEstatictitlevskip\@IEEEaftertitletext%
      \fi
@@ -3624,13 +3940,25 @@ which is provided to fool Hyperref.}}
 % formats the Title, authors names, affiliations and special paper notice
 % THIS IS A CONTROLLED SPACING COMMAND! Do not allow blank lines or unintentional
 % spaces to enter the definition - use % at the end of each line
-% Changed Title font to \LARGE from \Huge
 \def\@maketitle{\newpage
 \begin{center}%
 \if@technote%
-   {\bfseries\large\@title\par}\vskip 1.3em{\lineskip .5em\@author\@specialpapernotice\par}%
+   {\bfseries\large\@title\par}\vskip 1.3em{\lineskip .5em\@author\centerline\@specialpapernotice\par}%
 \else% not a technote
-   \vskip0.25in{\LARGE\@title\par}\vskip1.0em\par%
+%%%%%%%% For Short Paper %%%%%%%%%
+\if@shortpaper
+  \definecolor{nblue}{rgb}{0,0.263,0.576}%{cmyk}{0.96,0.71,0.03,0}
+   \vskip0.2em{\color{nblue}\sf\nLARGE\@title\par}\vskip1.0em\par%
+   {\sf\nlarge\@author}\par%
+%%%%%%%% 0, 63.1, 87.5
+  \else\if@web
+  \definecolor{nblue}{rgb}{0,0.263,0.576}%{cmyk}{0.96,0.71,0.03,0}
+  \definecolor{mblue}{rgb}{0.075,0.541,0.855}%{cmyk}{0.90,0,0.94,0.05}  %R0 G138 B218 %7.5, 54.1, 85.5
+  \else
+  \definecolor{nblue}{cmyk}{0,0,0,1}
+  \definecolor{mblue}{cmyk}{0,0,0,1}
+  \fi
+   \vskip0.9em{\color{nblue}\Huge\sf\@title\par}\vskip1.0em\par%
    % V1.6 handle \author differently if in conference mode
    \if@confmode%
       {\@specialpapernotice\mbox{}\vskip\@IEEEauthorblockconfadjspace%
@@ -3639,12 +3967,12 @@ which is provided to fool Hyperref.}}
       \if@peerreviewcaoption
          % peerreviewca handles author names just like conference mode
          {\@specialpapernotice\mbox{}\vskip\@IEEEauthorblockconfadjspace%
-         \mbox{}\hfill\begin{@IEEEauthorhalign}\@author\end{@IEEEauthorhalign}\hfill\mbox{}\par}%
+         \mbox{}\hfill\begin{@IEEEauthorhalign}**\@author\centerline\end{@IEEEauthorhalign}\hfill\mbox{}\par}%
       \else % journal or peerreview
-         {\lineskip.5em\sublargesize\@author\@specialpapernotice\par}%
+         {\lineskip.5em\sublargesize\sf\@author\centerline\@specialpapernotice\par}%
       \fi
    \fi
-\fi\end{center}}
+\fi\fi\end{center}}
 
 
 
@@ -3794,9 +4122,18 @@ which is provided to fool Hyperref.}}
 
 % V1.6 have abstract and keywords strip leading spaces, pars and newlines
 % so that spacing is more tightly controlled.
-\def\abstract{\normalfont%
+\def\abstract{\everymath={\sf}\sf%\normalfont%
     \if@twocolumn%
-      \@IEEEabskeysecsize\bfseries\textit{Abstract}---\,%
+    \if@web  \definecolor{nblue}{rgb}{0,0.263,0.576}%{cmyk}{0.96,0.71,0.03,0}
+    \definecolor{mblue}{rgb}{0.075,0.541,0.855}%{cmyk}{0.90,0,0.94,0.05} 
+    \else
+    \definecolor{nblue}{cmyk}{0,0,0,1}
+    \definecolor{mblue}{cmyk}{0,0,0,1}\fi
+    \if@shortpaper
+      \footnotesize\bfseries\color{subsectioncolor}\textit{Abstract}---\,\normalcolor%
+    \else
+      \@IEEEabskeysecsize\bfseries\color{subsectioncolor}\textit{Abstract}---\,\normalcolor%
+    \fi
     \else%
       \begin{center}\vspace{-1.78ex}\@IEEEabskeysecsize\textbf{Abstract}\end{center}\quotation\@IEEEabskeysecsize%
     \fi\@IEEEgobbleleadPARNLSP}
@@ -3806,15 +4143,25 @@ which is provided to fool Hyperref.}}
     \normalfont\normalsize}
 
 
-\def\keywords{\normalfont%
+\def\keywords{\everymath={\sf}\sf%\normalfont%
     % IEEE uses the term (in bold italics) "Index Terms" now. 
     \if@twocolumn%
-      \@IEEEabskeysecsize\bfseries\textit{Index Terms}---\,\relax%
+    \if@web  \definecolor{nblue}{rgb}{0,0.263,0.576}%{cmyk}{0.96,0.71,0.03,0}
+    \definecolor{mblue}{rgb}{0.075,0.541,0.855}%{cmyk}{0.90,0,0.94,0.05}
+    \else
+    \definecolor{nblue}{cmyk}{0,0,0,1}
+    \definecolor{mblue}{cmyk}{0,0,0,1}\fi
+    \if@shortpaper
+      \normalsize\bfseries\color{subsectioncolor}\textit{Index Terms}---\,\relax\normalcolor%
+    \else
+      \@IEEEabskeysecsize\bfseries\color{subsectioncolor}\textit{Index Terms}---\,\relax\normalcolor%
+    \fi
     \else%
       \begin{center}\@IEEEabskeysecsize\bfseries Index Terms\end{center}\quotation\@IEEEabskeysecsize%
     \fi\@IEEEgobbleleadPARNLSP}
 \def\endkeywords{\relax\if@technote\vspace{1.34ex}\else\vspace{0.67ex}\fi%
     \par\if@twocolumn\else\endquotation\fi%
+%    \@IEEEptsize\normalfont}
     \normalsize\normalfont}
 
 
@@ -3872,9 +4219,9 @@ which is provided to fool Hyperref.}}
      \begingroup #6\relax% or low level heading
       \noindent % subsections are NOT indented
        % print top level headings. \@svsec is label, #8 is heading title
-       %\@hangfrom{\hskip #3\relax\@svsec}{\interlinepenalty \@M #8\par}
+       %\@hangfrom{\hskip #3\relax\@svsec}{\interlinepenalty \@M #8\color{black}\par}
        % IEEE does not block indent the section title text, it flows like normal
-       \relax{\hskip #3\relax\@svsec}{\interlinepenalty \@M #8\par}%
+       \relax{\hskip #3\relax\@svsec}{\interlinepenalty \@M #8\color{black}\par}%
      \endgroup%
      % got rid of sectionmark stuff
      % \csname #1mark\endcsname{#7}
@@ -3883,7 +4230,7 @@ which is provided to fool Hyperref.}}
   \else % printout low level headings
      % svsechd seems to swallow the trailing space, protect it with \mbox{}
      % got rid of sectionmark stuff
-     \def\@svsechd{#6\hskip #3\@svsec #8\@IEEEsectpunct\mbox{}%\csname #1mark\endcsname{#7}
+     \def\@svsechd{#6\hskip #3\@svsec #8\color{black}\@IEEEsectpunct\mbox{}%\csname #1mark\endcsname{#7}
      \addcontentsline{toc}{#1}{\ifnum #2>\c@secnumdepth\relax\else%
                \protect\numberline{\csname the#1\endcsname}\fi#7}}
   \fi%skip down
@@ -3898,7 +4245,6 @@ which is provided to fool Hyperref.}}
   % svsechd swallows the trailing space, protect it with \mbox{}
   \else \def\@svsechd{#4\hskip #1\relax #5\@IEEEsectpunct\mbox{}}\fi%
   \@xsect{#3}}
-
 
 %% SECTION heading spacing and font
 %%
@@ -3920,20 +4266,35 @@ which is provided to fool Hyperref.}}
 \if@confmode%
 % IEEE wants section heading spacing to decrease for conference mode
 \def\section{\@startsection{section}{1}{\z@}{1.5ex plus 1.5ex minus 0.5ex}%
-{0.7ex plus 1ex minus 0ex}{\normalfont\normalsize\centering\scshape}}%
+{0.7ex plus 1ex minus 0ex}{\color{nblue}\normalsize\centering\sf\bfseries}}%
 \def\subsection{\@startsection{subsection}{2}{\z@}{1.5ex plus 1.5ex minus 0.5ex}%
-{0.7ex plus .5ex minus 0ex}{\normalfont\normalsize\itshape}}%
+{0.7ex plus .5ex minus 0ex}{\normalfont\normalsize\itshape\raggedright}}%
 \else % for journals
+\if@web  \definecolor{nblue}{rgb}{0,0.263,0.576}%{cmyk}{0.96,0.71,0.03,0}
+  \definecolor{mblue}{rgb}{0.075,0.541,0.855}%{cmyk}{0.90,0,0.94,0.05}
+  \else
+  \definecolor{nblue}{cmyk}{0,0,0,1}
+  \definecolor{mblue}{cmyk}{0,0,0,1} \fi
 \def\section{\@startsection{section}{1}{\z@}{3.0ex plus 1.5ex minus 1.5ex}% V1.6 3.0ex from 3.5ex
-{0.7ex plus 1ex minus 0ex}{\normalfont\normalsize\centering\scshape}}%
+{0.7ex plus 1ex minus 0ex}{\color{nblue}\centering
+%
+   \fontencoding{T1}
+   \fontfamily{phv}
+   \fontseries{m}
+   \fontshape{n}
+   \fontsize{10}{12}
+   \selectfont 
+%
+\scshape}}%
+%\def\mysection#1{\section{\uppercase{#1}}}
 \def\subsection{\@startsection{subsection}{2}{\z@}{3.5ex plus 1.5ex minus 1.5ex}%
-{0.7ex plus .5ex minus 0ex}{\normalfont\normalsize\itshape}}%
+{0.7ex plus .5ex minus 0ex}{\color{subsectioncolor}\normalsize\normalfont\everymath={\sf}\sf\itshape\raggedright}}%
 \fi
 % decided to put in a little rubber above the section, might help somebody
 \def\subsubsection{\@startsection{subsubsection}{3}{\parindent}{0ex plus 0.1ex minus 0.1ex}%
-{0ex}{\normalfont\normalsize\itshape}}%
+{0ex}{\color{nblue}\normalfont\fontsize{9}{11}\selectfont\everymath={\sf}\sf\itshape}}%
 \def\paragraph{\@startsection{paragraph}{4}{2\parindent}{0ex plus 0.1ex minus 0.1ex}%
-{0ex}{\normalfont\normalsize\itshape}}%
+{0ex}{\normalfont\fontsize{9}{11}\selectfont\itshape}}%
 
 
 
@@ -4289,7 +4650,7 @@ which is provided to fool Hyperref.}}
                                   % \baselineskip, rounded up
 \def\@IEEEBIOskipN{4\baselineskip}% nominal value of the vskip above the biography
 
-\newenvironment{biography}[2][]{\normalfont\footnotesize%
+\newenvironment{biography}[2][]{\everymath={\sf}\sf\footnotesize%
 \unitlength 1in\parskip=0pt\par\parindent 1em\interlinepenalty500%
 % we need enough space to support the hanging indent
 % the nominal value of the spacer
@@ -4344,7 +4705,7 @@ which is provided to fool Hyperref.}}
 % set the photo box, give it zero width and height so as not to disturb anything
 \noindent\makebox[0pt][l]{\hspace{-\@IEEEBIOhangwidth}\raisebox{\@IEEEtrantmpdimenB}[0pt][0pt]{\raisebox{-\@IEEEBIOphotodepth}[0pt][0pt]{\@IEEEtempbiographybox}}}%
 % now place the author name and begin the bio text
-\noindent\textbf{#2\ }\@IEEEgobbleleadPARNLSP}{\relax\let\par=\@IEEEBIOORGparCMD\par%
+\noindent\textbf{\color{nblue}#2\ \color{black}}\@IEEEgobbleleadPARNLSP}{\relax\let\par=\@IEEEBIOORGparCMD\par%
 % 7/2001 V1.5 detect when the biography text is shorter than the photo area
 % and pad the unused area - preventing a collision from the next biography entry
 % MDS
@@ -4361,7 +4722,7 @@ which is provided to fool Hyperref.}}
 
 % V1.6
 % added biography without a photo environment
-\newenvironment{biographynophoto}[1]{%
+\newenvironment{biographynophoto}[1]{\everymath={\sf}\sf%
 % Make an entry into the table of contents only if we have not done so before
 \if@biographyTOCentrynotmade%
 % link labels to the biography counter so hyperref will jump
@@ -4375,10 +4736,131 @@ which is provided to fool Hyperref.}}
 \refstepcounter{biography}%
 % Make an entry for this name into the table of contents 
 \addcontentsline{toc}{subsection}{#1}%
-\normalfont\footnotesize\interlinepenalty500%
+\everymath={\sf}\sf\footnotesize\interlinepenalty500%
 \vskip 4\baselineskip plus 1fil minus 0\baselineskip%
 \parskip=0pt\par%
-\noindent\textbf{#1\ }\@IEEEgobbleleadPARNLSP}{\relax\par\normalfont}
+\noindent\textbf{\color{nblue} #1\color{black}\ }\@IEEEgobbleleadPARNLSP}{\relax\par\normalfont}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Editorial Biography %%%%%%%%%%%%%%%%%%%%%%%%
+%
+% BIOGRAPHY ENVIRONMENT
+% Allows user to enter BIOGRAPHY leaving place for picture (adapts to font size)
+% As of V1.5, a new optional argument allows you to have a real graphic!
+% V1.5 and later also fixes the "colliding biographies" which could happen when a 
+% biography's text was shorter than the space for the photo.
+% MDS 7/2001
+% V1.6 prevent multiple biographies from making multiple TOC entries
+\newif\if@edbiographyTOCentrynotmade
+\global\@edbiographyTOCentrynotmadetrue
+
+% biography counter so hyperref can jump directly to the biographies
+% and not just the previous section
+\newcounter{edbiography}
+\setcounter{edbiography}{0}
+
+% photo area size
+\def\@IEEEBIOedphotowidth{114pt}    % width of the biography photo area
+\def\@IEEEBIOedphotodepth{144pt}   % depth (height) of the biography photo area
+% area cleared for photo
+\def\@IEEEBIOedhangwidth{128pt}    % width cleared for the biography photo area
+\def\@IEEEBIOedhangdepth{110pt}    % depth cleared for the biography photo area
+                                  % actual depth will be a multiple of 
+                                  % \baselineskip, rounded up
+\def\@IEEEBIOedskipN{4\baselineskip}% nominal value of the vskip above the biography
+
+\newenvironment{edbiography}[2][]{\everymath={\sf}\sf\footnotesize%
+\unitlength 1in\parskip=0pt\par\parindent 1em\interlinepenalty500%
+% we need enough space to support the hanging indent
+% the nominal value of the spacer
+% and one extra line for good measure
+\@IEEEtrantmpdimenA=\@IEEEBIOedhangdepth%
+\advance\@IEEEtrantmpdimenA by \@IEEEBIOedskipN%
+\advance\@IEEEtrantmpdimenA by 1\baselineskip%
+% if this page does not have enough space, break it and lets start
+% with a new one
+\@IEEEtranneedspace{\@IEEEtrantmpdimenA}{\relax}%
+% nominal spacer can strech, not shrink use 1fil so user can out stretch with \vfill
+\vskip \@IEEEBIOedskipN plus 1fil minus 0\baselineskip%
+% the default box for where the photo goes
+\def\@IEEEedtempbiographybox{{\setlength{\fboxsep}{0pt}\framebox{\begin{minipage}[b][\@IEEEBIOedphotodepth][c]{\@IEEEBIOedphotowidth}\centering PLACE\\ PHOTO\\ HERE \end{minipage}}}}%
+%
+% detect if the optional argument was supplied, this requires the
+% \@ifmtarg command as defined in the appendix section above
+% and if so, override the default box with what they want
+\@ifmtarg{#1}{\relax}{\def\@IEEEedtempbiographybox{\mbox{\begin{minipage}[b][\@IEEEBIOedphotodepth][c]{\@IEEEBIOedphotowidth}%
+\centering%
+#1%
+\end{minipage}}}}% end if optional argument supplied
+% Make an entry into the table of contents only if we have not done so before
+\if@edbiographyTOCentrynotmade%
+% link labels to the biography counter so hyperref will jump
+% to the biography, not the previous section
+\setcounter{edbiography}{-1}%
+\refstepcounter{edbiography}%
+\addcontentsline{toc}{section}{Biographies}%
+\global\@edbiographyTOCentrynotmadefalse%
+\fi%
+% one more biography
+\refstepcounter{edbiography}%
+% Make an entry for this name into the table of contents 
+\addcontentsline{toc}{subsection}{#2}%
+% V1.6 properly handle if a new paragraph should occur while the
+% hanging indent is still active. Do this by redefining \par so
+% that it will not start a new paragraph. (But it will appear to the
+% user as if it did.) Also, strip any leading pars, newlines, or spaces.
+\let\@IEEEBIOORGedparCMD=\par% save the original \par command
+\edef\par{\hfil\break\indent}% the new \par will not be a "real" \par
+\settoheight{\@IEEEtrantmpdimenA}{\@IEEEedtempbiographybox}% get height of biography box
+\@IEEEtrantmpdimenB=\@IEEEBIOedhangdepth%
+\@IEEEtrantmpcountA=\@IEEEtrantmpdimenB% countA has the hang depth
+\divide\@IEEEtrantmpcountA by \baselineskip%  calculates lines needed to produce the hang depth
+\advance\@IEEEtrantmpcountA by 1% ensure we overestimate
+% set the hanging indent
+\hangindent\@IEEEBIOedhangwidth%
+\hangafter-\@IEEEtrantmpcountA%
+% reference the top of the photo area to the top of a capital T
+\settoheight{\@IEEEtrantmpdimenB}{\mbox{T}}%
+% set the photo box, give it zero width and height so as not to disturb anything
+\noindent\makebox[0pt][l]{\hspace{-\@IEEEBIOedhangwidth}\raisebox{\@IEEEtrantmpdimenB}[0pt][0pt]{\raisebox{-\@IEEEBIOedphotodepth}[0pt][0pt]{\@IEEEedtempbiographybox}}}%
+% now place the author name and begin the bio text
+\noindent\textbf{\color{nblue}#2\color{black}\ }\@IEEEgobbleleadPARNLSP}{\relax\let\par=\@IEEEBIOORGedparCMD\par%
+% 7/2001 V1.5 detect when the biography text is shorter than the photo area
+% and pad the unused area - preventing a collision from the next biography entry
+% MDS
+\ifnum \prevgraf <\@IEEEtrantmpcountA\relax% detect when the biography text is shorter than the photo
+    \advance\@IEEEtrantmpcountA by -\prevgraf% calculate how many lines we need to pad
+    \advance\@IEEEtrantmpcountA by -1\relax% we compensate for the fact that we indented an extra line
+    \@IEEEtrantmpdimenA=\baselineskip% calculate the length of the padding
+    \multiply\@IEEEtrantmpdimenA by \@IEEEtrantmpcountA%
+    \noindent\rule{0pt}{\@IEEEtrantmpdimenA}% insert an invisible support strut
+\fi%
+\par\normalfont}
+
+
+
+% V1.6
+% added biography without a photo environment
+\newenvironment{edbiographynophoto}[1]{\everymath={\sf}\sf%
+% Make an entry into the table of contents only if we have not done so before
+\if@edbiographyTOCentrynotmade%
+% link labels to the biography counter so hyperref will jump
+% to the biography, not the previous section
+\setcounter{edbiography}{-1}%
+\refstepcounter{edbiography}%
+\addcontentsline{toc}{section}{Biographies}%
+\global\@edbiographyTOCentrynotmadefalse%
+\fi%
+% one more biography
+\refstepcounter{edbiography}%
+% Make an entry for this name into the table of contents 
+\addcontentsline{toc}{subsection}{#1}%
+\sf\footnotesize\interlinepenalty500%
+\vskip 4\baselineskip plus 1fil minus 0\baselineskip%
+\parskip=0pt\par%
+\noindent\textbf{\color{nblue}#1\color{black}\ }\@IEEEgobbleleadPARNLSP}{\relax\par\normalfont}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%% End Editorial Biography %%%%%%%%%%%%%%%%%%%%%%
+
 
 
 % provide the user with some old font commands
@@ -4392,7 +4874,6 @@ which is provided to fool Hyperref.}}
 \DeclareOldFontCommand{\sc}{\normalfont\scshape}{\@nomath\sc}
 \DeclareRobustCommand*\cal{\@fontswitch\relax\mathcal}
 \DeclareRobustCommand*\mit{\@fontswitch\relax\mathnormal}
-
 
 % SPECIAL PAPER NOTICE COMMANDS
 % 
@@ -4423,7 +4904,7 @@ which is provided to fool Hyperref.}}
 % publisher's ID footer
 % IEEE uses about 1.3\baselineskip for journals, 
 % dynamic title spacing will clean up the fraction
-\def\@pubidpullup{1.3\baselineskip}
+\def\@pubidpullup{1.9\baselineskip}
 \if@technote
 % for technotes it must be an integer of baselineskip as there can be no
 % dynamic title spacing for two column mode technotes (the title is in the
@@ -4433,7 +4914,7 @@ which is provided to fool Hyperref.}}
 % Information Theory") in which IEEE really pulls the text off the ID for
 % technotes - about 0.55in (or 4\baselineskip). We'll use 2\baselineskip
 % and call it even.
-\def\@pubidpullup{2\baselineskip}
+\def\@pubidpullup{1.92\baselineskip}
 \fi
 
 % holds the ID text
@@ -4444,7 +4925,8 @@ which is provided to fool Hyperref.}}
 \global\@IEEEusingpubidfalse
 % issue this command in the page to have the ID at the bottom
 % V1.6 use before \maketitle
-\def\pubid#1{\def\@pubid{#1} \global\@IEEEusingpubidtrue}
+%\def\pubid#1{\def\@pubid{\begin{tabular}{@{}p{40pc}@{}} \multicolumn{1}{c}{{#1.}~{Personal use is permitted, but republication/redistribution requires IEEE permission.}}\\ \multicolumn{1}{c}{See http://www.ieee.org/publications\_standards/publications/rights/index.html for more information.}\\[8pt]\end{tabular}} \global\@IEEEusingpubidtrue}
+\def\pubid#1{\def\@pubid{\sf #1} \global\@IEEEusingpubidtrue}
 
 
 % command which will pull up (shorten) the column it is executed in
@@ -4567,25 +5049,30 @@ which is provided to fool Hyperref.}}
 \def\IEEEaftertitletext#1{\if@IEEEWARNIEEEaftertitletext\typeout{** WARNING: \noexpand\IEEEaftertitletext is locked out when in conference mode (line \the\inputlineno).}\fi\global\@IEEEWARNIEEEaftertitletextfalse}
 \fi
 
+\def\IEEEPARstart{\PARstart}
+\newenvironment{IEEEbiography}{\begin{biography}}{\end{biography}}
+\newenvironment{IEEEkeywords}{\keywords}{\endkeywords}
+\newenvironment{IEEEbiographynophoto}{\begin{biographynophoto}}{\end{biographynophoto}}
+
 
 % provide a way to restore the commands that are locked out
-\def\IEEEoverridecommandlockouts{%
-\typeout{** ATTENTION: Overriding command lockouts (line \the\inputlineno).}%
-\let\thanks\@IEEESAVECMDthanks%
-\let\PARstart\@IEEESAVECMDPARstart%
-\let\CMPARstart\@IEEESAVECMDCMPARstart%
-\let\keywords\@IEEESAVECMDkeywords%
-\let\endkeywords\@IEEESAVECMDendkeywords%
-\let\biography\@IEEESAVECMDbiography%
-\let\endbiography\@IEEESAVECMDendbiography%
-\let\biographynophoto\@IEEESAVECMDbiographynophoto%
-\let\endbiographynophoto\@IEEESAVECMDendbiographynophoto%
-\let\pubid\@IEEESAVECMDpubid%
-\let\pubidadjcol\@IEEESAVECMDpubidadjcol%
-\let\IEEEmembership\@IEEESAVECMDIEEEmembership%
-\let\IEEEaftertitletext\@IEEESAVECMDIEEEaftertitletext}
+%\def\IEEEoverridecommandlockouts{%
+%\typeout{** ATTENTION: Overriding command lockouts (line \the\inputlineno).}%
+%\let\thanks\@IEEESAVECMDthanks%
+%\let\PARstart\@IEEESAVECMDPARstart%
+%\let\CMPARstart\@IEEESAVECMDCMPARstart%
+%\let\keywords\@IEEESAVECMDkeywords%
+%\let\endkeywords\@IEEESAVECMDendkeywords%
+%\let\biography\@IEEESAVECMDbiography%
+%\let\endbiography\@IEEESAVECMDendbiography%
+%\let\biographynophoto\@IEEESAVECMDbiographynophoto%
+%\let\endbiographynophoto\@IEEESAVECMDendbiographynophoto%
+%\let\pubid\@IEEESAVECMDpubid%
+%\let\pubidadjcol\@IEEESAVECMDpubidadjcol%
+%\let\IEEEmembership\@IEEESAVECMDIEEEmembership%
+%\let\IEEEaftertitletext\@IEEESAVECMDIEEEaftertitletext}
 
-
+% updating this class file a little
 \endinput
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% End of IEEEtran.cls  %%%%%%%%%%%%%%%%%%%%%%%%%%%%

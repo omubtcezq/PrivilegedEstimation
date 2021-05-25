@@ -1,6 +1,41 @@
-\documentclass[journal,twoside,web]{ieeecolor}
-% Default
-\usepackage{generic}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+% Comment this line out if you need a4paper
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}
+
+% Use this line for a4 paper
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}
+
+% This command is only needed if you want to use the \thanks command
+\IEEEoverridecommandlockouts                              
+
+% Needed to meet printer requirements.
+\overrideIEEEmargins
+
+%In case you encounter the following error:
+%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
+%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
+%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
+%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
+%\pdfobjcompresslevel=0
+\pdfminorversion=4
+
+% 
+% 8888888 888b     d888 8888888b.   .d88888b.  8888888b. 88888888888 .d8888b.  
+%   888   8888b   d8888 888   Y88b d88P" "Y88b 888   Y88b    888    d88P  Y88b 
+%   888   88888b.d88888 888    888 888     888 888    888    888    Y88b.      
+%   888   888Y88888P888 888   d88P 888     888 888   d88P    888     "Y888b.   
+%   888   888 Y888P 888 8888888P"  888     888 8888888P"     888        "Y88b. 
+%   888   888  Y8P  888 888        888     888 888 T88b      888          "888 
+%   888   888   "   888 888        Y88b. .d88P 888  T88b     888    Y88b  d88P 
+% 8888888 888       888 888         "Y88888P"  888   T88b    888     "Y8888P"  
+%                                                                              
+%                                                                              
+%                                                                              
+% 
+
 % Graphics
 \usepackage{graphicx}
 % Maths
@@ -13,16 +48,28 @@
 \newtheorem{definition}{Definition}[section]
 \newtheorem{theorem}{Theorem}[section]
 
-\begin{document}
+\title{\LARGE \bf
+Cryptographically Privileged State Estimation\\With Gaussian Keystreams
+}
 
-\title{Cryptographically Privileged State Estimation With Gaussian Keystreams}
-\author{Marko Ristic$^{1}$, Benjamin Noack$^{2}$, \IEEEmembership{Member, IEEE}, and Uwe D. Hanebeck$^{1}$, \IEEEmembership{Fellow, IEEE}
-\thanks{$^{1}$Marko Ristic and Uwe D. Hanebeck are with the Intelligent Sensor-Actuator-Systems Laboratory (ISAS), Institute for Anthropomatics, Karlsruhe Institute of Technology (KIT), Germany (e-mail: \{marko.ristic, uwe.hanebeck\}@kit.edu).}
-\thanks{$^{2}$Benjamin Noack is with the Autonomous Multisensor Systems Group (AMS), Institute for Intelligent Cooperating Systems (ICS), Otto von Guericke University Magdeburg (OVGU), Germany (e-mail: benjamin.noack@ovgu.de).}}
+
+\author{Marko Ristic$^{1}$, Benjamin Noack$^{2}$ and Uwe D. Hanebeck$^{1}$% <-this % stops a space
+\thanks{$^{1}$Marko Ristic and Uwe D. Hanebeck are with the Intelligent Sensor-Actuator-Systems Laboratory (ISAS), Institute for Anthropomatics, Karlsruhe Institute of Technology (KIT), Germany.\newline
+{\tt\small \{marko.ristic,uwe.hanebeck\}@kit.edu}%
+}%
+\thanks{$^{2}$Benjamin Noack is with the Institute for Intelligent Cooperating Systems (ICS),
+Otto von Guericke University Magdeburg (OVGU), Germany\newline
+{\tt\small benjamin.noack@ovgu.de}%
+}%
+}
+
+\begin{document}
 
 \maketitle
 \thispagestyle{empty}
 \pagestyle{empty}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 
 %        d8888 888888b.    .d8888b. 88888888888 8888888b.         d8888  .d8888b. 88888888888 
@@ -42,10 +89,6 @@
 State estimation via public channels requires additional planning with regards to state privacy and information leakage of involved parties. In some scenarios, it is desirable to allow partial leakage of state information, thus distinguishing between privileged and unprivileged estimators and their capabilities. Existing methods that make this distinction typically result in reduced estimation quality, require additional communication channels, or lack a formal cryptographic backing. We introduce a method to decrease estimation quality at an unprivileged estimator using a stream of pseudorandom Gaussian samples while leaving privileged estimation unaffected and requiring no additional transmission beyond an initial key exchange. First, a cryptographic definition of privileged estimation is given, capturing the difference between privileges, before a privileged estimation scheme meeting the security notion is presented. Achieving cryptographically privileged estimation without additional channel requirements allows quantifiable estimation to be made available to the public while keeping the best estimation private to trusted privileged parties and can find uses in a variety of service-providing and privacy-preserving scenarios.
 \end{abstract}
 
-\begin{IEEEkeywords}
-Encrypted State Estimation, Kalman Filtering, Stream Ciphers
-\end{IEEEkeywords}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 
@@ -63,11 +106,12 @@ Encrypted State Estimation, Kalman Filtering, Stream Ciphers
 % 
 
 \section{Introduction}
-\IEEEPARstart{T}{he} role of state estimation and sensor data processing has become increasingly prevalent in modern systems \cite{ligginsDistributedDataFusion2012}. Particularly, since the development of Kalman estimation theory, Bayesian state estimation has found common application, varying from autonomous systems to remote estimation \cite{mutambaraDecentralizedEstimationControl1998,sinopoliKalmanFilteringIntermittent2004}. As advancements in distributed algorithms and cloud computing develop, the use of wireless and public communication channels for data transmission has become widespread, bringing to light the requirements of data privacy and state secrecy \cite{renSecurityChallengesPublic2012,brennerSecretProgramExecution2011}.
+% no \IEEEPARstart
+The role of state estimation and sensor data processing has become increasingly prevalent in modern systems \cite{ligginsDistributedDataFusion2012}. Particularly, since the development of Kalman estimation theory, Bayesian state estimation has found common application, varying from autonomous systems to remote estimation \cite{mutambaraDecentralizedEstimationControl1998,sinopoliKalmanFilteringIntermittent2004}. As advancements in distributed algorithms and cloud computing develop, the use of wireless and public communication channels for data transmission has become widespread, bringing to light the requirements of data privacy and state secrecy \cite{renSecurityChallengesPublic2012,brennerSecretProgramExecution2011}.
 
-Typically, use cases for cryptographically guaranteeing data privacy over public channels involve hiding all transferred information such that eavesdroppers or untrusted parties learn no additional information from any observed data. This is achievable using common encryption schemes such as AES \cite{gueronIntelAdvancedEncryption2010} or RSA \cite{rivestMethodObtainingDigital1978}, which formally capture this requirement by satisfying cryptographic ciphertext indistinguishability \cite[Ch. 3]{katzIntroductionModernCryptography2008}. However, more advanced requirements using public channels also exist. When partial information needs to be made public, or computations need to be performed on data, homomorphic or aggregation encryption schemes can be used. In control theory, \cite{alexandruPrivateWeightedSum2020} uses an aggregation scheme to combine distributed control inputs without learning individual contributions, while \cite{alexandruEncryptedCooperativeControl2019,farokhiSecurePrivateControl2017} use homomorphic encryption to allow control inputs to be computed without decryption. In estimation, \cite{risticPrivacyPreservingLocalizationUsing} proposes navigation where individual sensor information and measurements remain private, while \cite{risticSecureFastCovariance2020} fuses encrypted estimates using only their error covariance ratios. Within the context of estimation, a quantifiable difference in estimation performance between untrusted and trusted parties can also provide levels of estimation \textit{privilege}. This was achieved in the original Global Positioning System (GPS) \cite{grovesPrinciplesGNSSInertial2015}, which relied on an additional encrypted channel for more accurate estimation. In another approach, \cite{murguiaInformationTheoreticPrivacyChaos2020,leongUseArtificialNoise2018a}, additive noise is used to increase eavesdropper estimation error by using a synchronized chaotic system and at the physical layer, respectively. These methods provide a solution to the privileged estimation problem but have not had their security guarantees cryptographically proven, and in \cite{leongUseArtificialNoise2018a}, an extension to multiple estimation privileges would require additional hardware. Our contribution in this work considers this context of privileged and unprivileged estimation and is comprised of a novel formal definition of privileged state estimation, crucial for cryptographic security, before proposing a scheme that provides one or more privileged levels of estimation without reliance on additional secure channels. We accompany the method with a cryptographic proof sketch and simulation results.
+Typically, use cases for cryptographically guaranteeing data privacy over public channels involve hiding all transferred information such that eavesdroppers or untrusted parties learn no additional information from any observed data. This is achievable using common encryption schemes such as AES \cite{gueronIntelAdvancedEncryption2010} or RSA \cite{rivestMethodObtainingDigital1978}, which formally capture this requirement by satisfying cryptographic ciphertext indistinguishability \cite[Ch. 3]{katzIntroductionModernCryptography2008}. However, more advanced requirements using public channels also exist. When partial information needs to be made public, or computations need to be performed on data, homomorphic or aggregation encryption schemes can be used. In control theory, \cite{alexandruPrivateWeightedSum2020} uses an aggregation scheme to combine distributed control inputs without learning individual contributions, while \cite{alexandruEncryptedCooperativeControl2019,farokhiSecurePrivateControl2017} use homomorphic encryption to allow control inputs to be computed without decryption. In estimation, \cite{risticPrivacyPreservingLocalizationUsing} proposes navigation where individual sensor information and measurements remain private, while \cite{risticSecureFastCovariance2020} fuses encrypted estimates using only their error covariance ratios. Within the context of estimation, a quantifiable difference in estimation performance between untrusted and trusted parties can also provide levels of estimation \textit{privilege}. This was achieved in the original Global Positioning System (GPS) \cite{grovesPrinciplesGNSSInertial2015}, which relied on an additional encrypted channel for more accurate estimation. In another approach, \cite{murguiaInformationTheoreticPrivacyChaos2020,leongUseArtificialNoise2018a}, additive noise is used to increase eavesdropper estimation error, using a synchronized chaotic system and at the physical layer, respectively. These methods provide a solution to the privileged esimtation problem, but have not had their security guarantees cryptographically proven, and in \cite{leongUseArtificialNoise2018a}, an extension to multiple estimation privileges would require additional hardware. Our contribution in this work considers this context of privileged and unprivileged estimation and is comprised of a novel formal definition of privileged state estimation, crucial for cryptographic security, before proposing a scheme that provides one or more privileged levels of estimation without reliance on additional secure channels. We accompany the method with a cryptographic proof sketch and simulation results.
 
-In section \ref{sec:problem_statement}, we introduce the cryptographic formalization for privileged estimation followed by the relevant estimation problem. Section \ref{sec:priv_estimation} introduces our proposed privileged estimation scheme and in section \ref{sec:scheme_security}, a cryptographic proof sketch is given. A simulation of the method is then explained and demonstrated in section \ref{sec:simulation}, while concluding remarks and future work are discussed in section \ref{sec:conclusion}.
+In section \ref{sec:problem_statement}, we introduce the cryptographic formalization for privileged estimation followed by the relevant estimation problem. Section \ref{sec:priv_estimation} introduces our proposed privileged estimation scheme and in section \ref{sec:scheme_security}, a cryptographic proof sketch is given. A simulation of the method is then demonstrated and explained in section \ref{sec:simulation}, while concluding remarks and future work are discussed in section \ref{sec:conclusion}.
 
 % 
 % ##    ##  #######  ########    ###    ######## ####  #######  ##    ## 
@@ -191,7 +235,7 @@ Next, we propose a privileged estimation scheme meeting definition \ref{def:cov_
 \section{Privileged Estimation}\label{sec:priv_estimation}
 The key idea behind the privileged estimation scheme we propose is to add pseudorandom noise to existing measurement noise at the sensor, degrading the state estimation at estimators that cannot remove it. The added noise is a keystream generated from a secret key and can be removed from measurements by any estimator holding the same key.
 
-To allow meeting the cryptographic notion in section \mbox{\ref{subsec:crypto_problem}}, we focus on Gaussian and linear models, where the minimum achievable error covariance is easily computable, and add a keystream of pseudorandom Gaussian noise. The keystream and added noise are given next.
+To allow meeting the cryptographic notion in section \mbox{\ref{subsec:crypto_problem}}, we focus on Gaussian and linear models where the minimum achievable error covariance is easily computable, and add a keystream of pseudorandom Gaussian noise. The keystream and added noise are given next.
 
 % 
 % ##    ## ######## ##    ##  ######  ######## ########  ########    ###    ##     ## 
@@ -204,7 +248,7 @@ To allow meeting the cryptographic notion in section \mbox{\ref{subsec:crypto_pr
 % 
 
 \subsection{Gaussian Keystream}\label{subsec:gaussian_keystream}
-To generate pseudorandom Gaussian samples, we choose to rely on first generating a typical cryptographic pseudorandom bitstream given a secret key $\mathsf{sk}$. This can be done with any cryptographic stream cipher and will reduce the security of our scheme to a single, well-studied, and replaceable component. We interpret the bitstream as sequential pseudorandom integers $q_t \in \mathbb{N}$, of a suitable size, for integer indices $t>0$ and use them to generate a sequence of pseudorandom uniform real numbers $u_t\ \dot{\sim}\ \mathcal{U}(0,1)$.
+To generate pseudorandom Gaussian samples, we choose to rely on first generating a typical cryptographic pseudorandom bitstream given a secret key $\mathsf{sk}$. This can be done with any cryptographic stream cipher and will reduce the security of our scheme to a single, well-studied, and replaceable component. We interpret the bitstream as sequential pseudorandom integers $q_t \in \mathbb{N}$, of a suitable size, for integer indexes $t>0$ and use them to generate a sequence of pseudorandom uniform real numbers $u_t\ \dot{\sim}\ \mathcal{U}(0,1)$.
 
 The conversion of $q_t$ to $u_t$ is cryptographically non-trivial due to the floating-point representation of $u_t$. Since it cannot be truly representative of the distribution $\mathcal{U}(0,1)$, the pseudorandomness of samples is affected, and meeting the desired cryptographic notion is complicated. For now, we will assume that the uniform floating-point numbers (floats) are sufficiently close to true uniform reals, as is the current industry standard, and rely on any common method for choosing the bit size of integers $q_t$ and the pseudorandom generation of uniforms $u_t$, \cite{goualardGeneratingRandomFloatingPoint2020}. In section \ref{sec:scheme_security}, we will state and further discuss this assumption.
 
@@ -236,7 +280,7 @@ To use the series of pseudorandom Gaussian samples $z_t$, $t>0$, at the sensor a
       z_{(k-1)n+1} & \dots & z_{kn}
    \end{bmatrix}^\top\,,
 \end{equation}
-for any matrix $\mat{A}$ such that $\mat{A}\mat{A}^\top=\mat{Z}$. We also note that for the correct removal of noise terms $\vec{p}_k$ by the privileged estimator, index information $k$ is required when communication channels are lossy or have some delay. While estimation over the internet may use the indexing information already present in TCP/IP, for the remainder of the work we consider the case when all measurements arrive, in order, and neglect additional index information for the sake of simplicity.
+for any matrix $\mat{A}$ such that $\mat{A}\mat{A}^\top=\mat{Z}$. We also note that for the correct removal of noise terms $\vec{p}_k$ by the privileged estimator, index information $k$ is required when communication channels are lossy or have delay. While estimation over the internet may use the indexing information already present in TCP/IP, for the remainder of the work we consider the case when all measurements arrive, in order, and neglect additional index information for the sake of simplicity.
 
 Before estimation, we assume that the secret key $\mathsf{sk}$, required for generating the Gaussian keystream in section \ref{subsec:gaussian_keystream}, has been shared between the sensor and privileged estimator. During estimation, the sensor modifies measurements $\vec{y}_k$ by
 \begin{equation}\label{eqn:modified_measurement}
@@ -283,7 +327,7 @@ where $\vec{v}^{(i)}_k\sim \mathcal{N}(\vec{0},\mat{R}_k+\mat{E}_i)$, with
 \begin{equation}\label{eqn:mult_privilege_covariances}
    \mat{E}_i = \sum^N_{j=1,j \neq i}\mat{Z}_j\,.
 \end{equation}
-As values $\mat{E}_i$ directly correspond to the relative estimation performances of each privilege level, we are also interested in the numerical restrictions when choosing these matrices. For the models to be valid for any measurement covariance $\mat{R}_k$, it is clear that $\mat{E}_i\succ 0$ and $\mat{E}_i=\mat{E}_i^\top$ must hold for all $1\leq i\leq N$, but due to the dependence of $\mat{Z}_i$, there is an additional restriction required to ensure all values of $\mat{Z}_i$ remain valid covariances as well. From \eqref{eqn:mult_privilege_covariances} we can write
+As values $\mat{E}_i$ directly correspond to the relative estimation performances of each privilege level, we are also interested in the numerical restrictions when choosing these matrices. For the models to be valid for any measurement covariance $\mat{R}_k$, it is clear that $\mat{E}_i\succ 0$ and $\mat{E}_i=\mat{E}_i^\top$ must hold for all $1\leq i\leq N$, but due to the dependence of $\mat{Z}_i$ there is an additional restriction required to ensure all values of $\mat{Z}_i$ remain valid covariances as well. From \eqref{eqn:mult_privilege_covariances} we can write
 \begin{equation}
    \begin{bmatrix}
       \mat{0} & \mat{I} & \mat{I} & \cdots & \mat{I}\\
@@ -414,6 +458,20 @@ A suitable notion would require that for any subset of corrupted estimators, and
 Given the structure of our scheme in section \ref{subsec:mult_privileges}, it can be readily seen how the above notion would be met. Similarly to the single level case, the KF can be used to compute the minimum error covariances for all compromised key subsets as well as for an estimator with the true measurements, and the relevant difference series $\mat{D}^{(S)}_k$ can be defined. 
 
 % 
+%  ######     #     #####  #######    #######  #####  
+%  #     #   # #   #     # #          #       #     # 
+%  #     #  #   #  #       #          #       #     # 
+%  ######  #     # #  #### #####      #####   #     # 
+%  #       ####### #     # #          #       #   # # 
+%  #       #     # #     # #          #       #    #  
+%  #       #     #  #####  #######    #######  #### # 
+%                                                     
+% 
+
+% Needs to go on the SECOND LAST page and be adjusted by hand
+\addtolength{\textheight}{-0.074cm}
+
+% 
 %  .d8888b. 8888888 888b     d888 
 % d88P  Y88b  888   8888b   d8888 
 % Y88b.       888   88888b.d88888 
@@ -522,6 +580,22 @@ All of the included figures capture the difference in estimation error between t
 
 \section{Conclusion}\label{sec:conclusion}
 In this work, we have presented the idea of a privileged estimation scheme and given a formal cryptographic definition for its security. A concrete scheme was provided that meets this notion and an intuitive extension to multiple privilege levels was discussed. A simulation demonstrating a simple use case has been presented, while the benefits of controlling estimation accuracy on a per-party basis have wide application from privatized localization hardware to subscription-based data access. Future work on the topic includes achieving formal security for broader model requirements and testing our scheme on dedicated hardware to demonstrate the method's real-time capability. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \section*{APPENDIX}
+
+% \section*{ACKNOWLEDGMENT}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibliographystyle{IEEEtranBST/IEEEtran}
 \bibliography{BibTeX/PrivilegedEstimation}
